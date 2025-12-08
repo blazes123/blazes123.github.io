@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BlazeGames - Game Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: #071021;
+  --glass: rgba(255,255,255,0.04);
+  --accent: #ff6600;
+  --accent-2: #ffcc00;
+  --card-radius: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Poppins",system-ui,Arial,sans-serif;
+  background-image: url('games bg.png');
+  background-size: cover; background-position:center;
+  color:#fff; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Loader */
+#intro {
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.9));
+  z-index:9999; flex-direction:column; gap:12px;
+}
+.logo-mark{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:28px}
+.progress{width:360px;max-width:90vw;height:12px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden}
+.progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .18s linear}
+
+/* App layout */
+.container{padding:20px;display:flex;flex-direction:column;align-items:center;gap:18px;opacity:0;transition:opacity .6s ease,transform .6s ease;transform:translateY(10px)}
+.container.visible{opacity:1;transform:none}
+
+/* Topbar */
+.topbar{width:100%;max-width:1250px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mark{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:20px}
+.brand h1{font-size:20px}
+.controls{display:flex;gap:12px;align-items:center}
+.search{display:flex;align-items:center;background:var(--glass);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+.search input{background:transparent;border:0;outline:0;color:white;width:260px}
+
+/* Main panel and nav */
+.main{width:100%;max-width:1250px;display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+.sidebar{background:rgba(0,0,0,0.45);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.05)}
+.content{background:rgba(0,0,0,0.45);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.05)}
+
+/* External links list (old games) */
+.external-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.external-list a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:white;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-size:14px;transition:all 0.2s ease}
+.external-list a:hover{background:rgba(255,255,255,0.05)}
+
+/* Game header */
+.game-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.category-row{display:flex;gap:8px;flex-wrap:wrap}
+.cat{padding:6px 10px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all 0.2s ease}
+.cat:hover{background:rgba(255,255,255,0.05)}
+.cat.active{background:var(--accent);color:#111;font-weight:600}
+
+/* Small helpers */
+.small{font-size:13px;color:rgba(255,255,255,0.75)}
+
+/* Responsive */
+@media(max-width:980px){
+  .main{grid-template-columns:1fr; padding-bottom:40px}
+  .sidebar{order:2}
+  .content{order:1}
+  .search input{width:140px}
+}
+
+
+
+/* External games grid */
+.external-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.external-game {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: white;
+  display: block;
+}
+
+.external-game:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.05);
+}
+
+.external-game .thumb {
+  width: 100%;
+  height: 120px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.external-game h3 {
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+
+.external-game .desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Logo image styling */
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO LOADER -->
+<div id="intro" aria-hidden="false">
+  <div class="logo-mark" id="intro-logo">
+    <!-- Using your provided image for the logo -->
+    <img src="Blaze games logo.png" alt="BlazeGames Logo" class="logo-img">
+  </div>
+  <div style="text-align:center">
+    <div style="font-weight:700;font-size:20px">BlazeGames</div>
+    <div class="small">Loading your ultimate game hub...</div>
+  </div>
+  <div style="height:8px"></div>
+  <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <i id="intro-bar"></i>
+  </div>
+  <div id="intro-text" class="small">0%</div>
+</div>
+
+<!-- APP -->
+<div class="container" id="app" aria-hidden="true">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark" id="brand-logo">
+        <!-- Using your provided image for the logo -->
+        <img src="Blaze games logo.png" alt="BlazeGames Logo" class="logo-img">
+      </div>
+      <div>
+        <h1>BlazeGames Hub</h1>
+        <div class="small">All your favorite games in one place</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="search" role="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/></svg>
+        <input id="global-search" placeholder="Search games..."/>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Navigation">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <strong>Menu</strong>
+        <span class="small">External Games</span>
+      </div>
+
+      <div style="font-weight:600;margin-bottom:8px">Game Categories</div>
+      <div class="category-row">
+        <div class="cat active" data-cat="all">All</div>
+        <div class="cat" data-cat="arcade">Arcade</div>
+        <div class="cat" data-cat="puzzle">Puzzle</div>
+        <div class="cat" data-cat="action">Action</div>
+        <div class="cat" data-cat="strategy">Strategy</div>
+      </div>
+
+      <hr style="margin:10px 0;border:none;border-top:1px solid rgba(255,255,255,0.04)">
+
+      <div style="font-weight:600;margin-bottom:8px">Quick Links</div>
+      <div class="external-list" id="external-list">
+        <!-- external links inserted here -->
+      </div>
+
+      <div style="height:12px"></div>
+      <div class="small">Tip: use the search bar to find games quickly.</div>
+    </aside>
+
+    <!-- CONTENT -->
+    <section class="content" id="content-area">
+      <!-- Hub view (default) -->
+      <div id="view-hub" class="view" data-name="hub">
+        <div class="game-header">
+          <div>
+            <h2>Game Hub</h2>
+            <div class="small">Click any game to open in a new tab</div>
+          </div>
+          <div class="small" id="game-count">26 games available</div>
+        </div>
+
+        <div class="external-grid" id="external-grid">
+          <!-- External games will be inserted here -->
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+/* ================== INIT & APP NAV ================== */
+function $(s){return document.querySelector(s)}
+function $all(s){return Array.from(document.querySelectorAll(s))}
+
+/* Intro loader simulation */
+const introBar = $('#intro-bar');
+const introText = $('#intro-text');
+let introProgress = 0;
+function introStep(){
+  introProgress += Math.random()*14;
+  if(introProgress > 99) introProgress = 99;
+  introBar.style.width = introProgress + '%';
+  introText.textContent = Math.floor(introProgress) + '%';
+  if(introProgress < 99){
+    setTimeout(introStep, 160 + Math.random()*260);
+  } else {
+    setTimeout(()=>{ introBar.style.width = '100%'; introText.textContent = '100%'; hideIntro(); }, 500);
+  }
+}
+function hideIntro(){
+  const intro = $('#intro');
+  intro.style.transition = 'opacity .5s ease';
+  intro.style.opacity = 0;
+  
+  // Remove the intro and show the app
+  setTimeout(() => {
+    intro.remove();
+    document.getElementById('app').classList.add('visible');
+    document.getElementById('app').setAttribute('aria-hidden','false');
+  }, 600);
+}
+
+
+
+/* Populate external list of old games */
+const external = [
+  {t:'Subway Surfers', u:'https://poki.com/en/g/subway-surfers', cat: 'arcade', emoji: '🚇'},
+  {t:'Level Devil', u:'https://poki.com/en/g/level-devil', cat: 'puzzle', emoji: '😈'},
+  {t:'Temple Run 2', u:'https://poki.com/en/g/temple-run-2', cat: 'action', emoji: '🏃'},
+  {t:'Monkey Mart', u:'https://poki.com/en/g/monkey-mart', cat: 'strategy', emoji: '🛒'},
+  {t:'Fruit Ninja', u:'https://poki.com/en/g/fruit-ninja', cat: 'action', emoji: '🥝'},
+  {t:'Vectaria', u:'https://poki.com/en/g/vectaria-io', cat: 'action', emoji: '⚔️'},
+  {t:'Red Ball 4', u:'https://poki.com/en/g/red-ball-4', cat: 'puzzle', emoji: '🔴'},
+  {t:'Temple Of Boom', u:'https://poki.com/en/g/temple-of-boom', cat: 'action', emoji: '💥'},
+  {t:'Battle Wheels', u:'https://poki.com/en/g/battle-wheels', cat: 'action', emoji: '🏎️'},
+  {t:'Champion Island Games', u:'https://sites.google.com/site/populardoodlegames/champion-island-games?authuser=0', cat: 'arcade', emoji: '🏆'},
+  {t:'Google Feud', u:'https://poki.com/en/g/google-feud', cat: 'puzzle', emoji: '🔍'},
+  {t:'Cow Bay', u:'https://poki.com/en/g/cow-bay', cat: 'strategy', emoji: '🐄'},
+  {t:'Brain Test', u:'https://poki.com/en/g/brain-test-2-tricky-stories', cat: 'puzzle', emoji: '🧠'},
+  {t:'Chess (external)', u:'chess.html', cat: 'strategy', emoji: '♟️'},
+  {t:'Cut the Rope', u:'https://www.crazygames.com/game/cut-the-rope-ebx', cat: 'puzzle', emoji: '✂️'},
+  {t:'Diep.io', u:'https://www.crazygames.com/game/diepio', cat: 'action', emoji: '🔫'},
+  {t:'Chess Former', u:'https://www.crazygames.com/game/chessformer', cat: 'strategy', emoji: '♟️'},
+  {t:'Google Doodle Cricket', u:'https://sites.google.com/site/populardoodlegames/doodle-cricket?authuser=0', cat: 'arcade', emoji: '🏏'},
+  {t:'Google Halloween 2016', u:'https://sites.google.com/site/populardoodlegames/halloween-2016?authuser=0', cat: 'arcade', emoji: '🎃'},
+  {t:'Pac-man', u:'https://sites.google.com/site/populardoodlegames/pac-man?authuser=0', cat: 'arcade', emoji: '👻'},
+  {t:'Garden Gnomes', u:'https://sites.google.com/site/populardoodlegames/celebrating-garden-gnomes?authuser=0', cat: 'puzzle', emoji: '🧙'},
+  {t:'Pony Express', u:'https://sites.google.com/site/populardoodlegames/155th-anniversary-of-the-pony-express?authuser=0', cat: 'arcade', emoji: '🐎'},
+  {t:'Popcorn Game', u:'https://sites.google.com/site/populardoodlegames/celebrating-popcorn?authuser=0', cat: 'arcade', emoji: '🍿'},
+  {t:'Checkers', u:'https://www.247checkers.com/', cat: 'strategy', emoji: '⛀'},
+  {t:'Slither.io', u:'http://slither.io/', cat: 'action', emoji: '🐍'},
+  {t:'Blox Fruits (Roblox)', u:'https://www.roblox.com/games/2753915549/Blox-Fruits', cat: 'action', emoji: '🍎'}
+];
+
+const externalList = $('#external-list');
+const externalGrid = $('#external-grid');
+
+// Update game count
+function updateGameCount() {
+  const visibleGames = $all('.external-game:not([style*="display: none"])').length;
+  $('#game-count').textContent = `${visibleGames} games available`;
+}
+
+// Create external game cards
+external.forEach(x=>{
+  // Add to sidebar list
+  const a = document.createElement('a');
+  a.href = x.u; 
+  a.target='_blank'; 
+  a.rel='noopener';
+  a.className='external-link';
+  a.textContent = x.t;
+  a.dataset.cat = x.cat;
+  externalList.appendChild(a);
+
+  // Add to main grid
+  const gameCard = document.createElement('a');
+  gameCard.href = x.u; 
+  gameCard.target='_blank'; 
+  gameCard.rel='noopener';
+  gameCard.className = 'external-game';
+  gameCard.dataset.cat = x.cat;
+  
+  gameCard.innerHTML = `
+    <div class="thumb">${x.emoji}</div>
+    <h3>${x.t}</h3>
+    <div class="desc">${x.cat.charAt(0).toUpperCase() + x.cat.slice(1)} Game</div>
+  `;
+  
+  externalGrid.appendChild(gameCard);
+});
+
+/* Global search filters both external and in-app names */
+$('#global-search').addEventListener('input', (e)=>{
+  const q = e.target.value.toLowerCase();
+  
+  // filter external-list
+  $all('#external-list .external-link').forEach(a=>{
+    const matches = a.textContent.toLowerCase().includes(q);
+    a.style.display = matches ? 'block' : 'none';
+  });
+  
+  // filter game cards
+  $all('.external-game').forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    const matches = title.includes(q);
+    card.style.display = matches ? 'block' : 'none';
+  });
+  
+  updateGameCount();
+});
+
+/* Category filtering */
+$all('.cat').forEach(cat => {
+  cat.addEventListener('click', () => {
+    $all('.cat').forEach(c => c.classList.remove('active'));
+    cat.classList.add('active');
+    
+    const category = cat.dataset.cat;
+    
+    // Filter game cards
+    $all('.external-game').forEach(card => {
+      if (category === 'all' || card.dataset.cat === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    // Filter sidebar list
+    $all('#external-list .external-link').forEach(a => {
+      if (category === 'all' || a.dataset.cat === category) {
+        a.style.display = 'block';
+      } else {
+        a.style.display = 'none';
+      }
+    });
+    
+    updateGameCount();
+  });
+});
+
+/* Initialize the app */
+window.addEventListener('load', () => {
+  introStep();
+  updateGameCount();
+});
+</script>
+<!-- Add this to all your pages -->
+<div id="home-nav" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+    <a href="index.html" style="display: inline-block; padding: 10px 15px; background: #ff8000; color: white; text-decoration: none; border-radius: 5px; font-family: Arial, sans-serif;">
+        Home
+    </a>
+</div>
+</body>
+</html>

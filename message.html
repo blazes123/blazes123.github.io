@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #007bff, #00c6ff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .chat-container {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-header {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+    .msg { margin: 10px 0; display: flex; flex-direction: column; }
+    .msg.user { align-items: flex-end; }
+    .msg.bot { align-items: flex-start; }
+    .msg div {
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 75%;
+      word-wrap: break-word;
+    }
+    .msg.user div {
+      background: #007bff;
+      color: #fff;
+      border-bottom-right-radius: 5px;
+    }
+    .msg.bot div {
+      background: #e9ecef;
+      color: #333;
+      border-bottom-left-radius: 5px;
+    }
+    .timestamp {
+      font-size: 11px;
+      color: gray;
+      margin-top: 3px;
+    }
+    .chat-input {
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 14px;
+      outline: none;
+      resize: none;
+      height: 70px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    button:hover { background: #0056b3; }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      display: none;
+      text-align: center;
+      font-size: 14px;
+    }
+    .typing {
+      display: inline-block;
+      background: #e9ecef;
+      color: #555;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-style: italic;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0.6; }
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">BLAZE AI Chat 💬</div>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-input">
+      <textarea id="userMessage" placeholder="Type your message..." required></textarea>
+      <button id="sendBtn">Send</button>
+      <div id="successMsg" class="success">✅ Your message has been sent!</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("LCted1Om_0IbYSFLL");
+    })();
+
+    const chatBox = document.getElementById("chatBox");
+    const sendBtn = document.getElementById("sendBtn");
+    const successMsg = document.getElementById("successMsg");
+    const userMessageInput = document.getElementById("userMessage");
+
+    function getTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function appendMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.className = `msg ${sender}`;
+      msg.innerHTML = `<div>${text}</div><div class="timestamp">${getTime()}</div>`;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function showTyping() {
+      const typingDiv = document.createElement("div");
+      typingDiv.className = "msg bot";
+      typingDiv.id = "typing";
+      typingDiv.innerHTML = `<div class="typing">Blaze is typing...</div>`;
+      chatBox.appendChild(typingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping() {
+      const typingDiv = document.getElementById("typing");
+      if (typingDiv) typingDiv.remove();
+    }
+
+    // Mini Offline AI Logic
+    function smartReply(input) {
+      const text = input.toLowerCase();
+
+      if (/(hi|hello|hey)/.test(text)) return "Hello 👋! Welcome to the BLAZE website — how can I help you today?";
+      if (/bye|goodbye|see you/.test(text)) return "Bye 👋! Hope to see you again soon!";
+      if (/what is blaze|about blaze/.test(text)) return "BLAZE is our creative website 🚀.";
+      if (/who (made|created|built)/.test(text)) return "BLAZE was built by our amazing team — Richard, Aayush, and Aveen!";
+      if (/what do you do|your work|purpose/.test(text)) return "We create new things 🌐.";
+      if (/contact|help|support/.test(text)) return "You can message us anytime here or via email at richu.linto.2015@gmail.com, aayushbkmala@gmail.com, and aaveenkrishna@gmail.com 📩.";
+      if (/nice|good|great|awesome|cool/.test(text)) return "Thank you 😊! Glad you liked it!";
+
+      const randomReplies = [
+        "That's interesting! Tell me more 🤔",
+        "Hmm, I’d love to know more about that!",
+        "Got it 👍, I’ll share this with our team!",
+        "I see! Thanks for reaching out 💬",
+        "Cool! Anything else you’d like to ask?"
+      ];
+      return randomReplies[Math.floor(Math.random() * randomReplies.length)];
+    }
+
+    // Auto welcome message when page loads
+    window.addEventListener("load", () => {
+      appendMessage("Hey there 👋, I’m Blaze AI!", "bot");
+    });
+
+    sendBtn.addEventListener("click", () => {
+      const message = userMessageInput.value.trim();
+      if (!message) return;
+
+      appendMessage(message, "user");
+      userMessageInput.value = "";
+
+      showTyping();
+
+      setTimeout(() => {
+        removeTyping();
+        const reply = smartReply(message);
+        appendMessage(reply, "bot");
+
+        // Send message via EmailJS
+        emailjs.send("service_egn0ltl", "template_bn6vtin", {
+          user_message: message,
+          auto_reply: reply,
+          admin_emails: "richu.linto.2015@gmail.com, aayushbkmala@gmail.com, aaveenkrishna@gmail.com"
+        })
+        .then(() => {
+          successMsg.style.display = "block";
+          setTimeout(() => successMsg.style.display = "none", 4000);
+        })
+        .catch(() => {});
+      }, 1200); // typing delay
+    });
+  </script>
+</body>
+</html>

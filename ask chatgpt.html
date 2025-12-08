@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Blaze AI Voice Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url('https://i.pinimg.com/736x/a0/9f/d7/a09fd769b1c973ff30eae88d7a867b57.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Add overlay for better readability */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+            overflow: hidden;
+            background: white;
+            padding: 10px;
+        }
+
+        .loading-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .chat-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Theme variations */
+        .chat-container.device-theme {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .chat-container.white-theme {
+            background-color: #ffffff;
+        }
+
+        .chat-container.black-theme {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .chat-container.black-theme .message-bubble {
+            color: #ffffff;
+        }
+
+        .chat-container.black-theme .bot-message .message-bubble {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+
+        .chat-container.black-theme .user-message .message-bubble {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .chat-container.black-theme .message-input {
+            background-color: #2d2d2d;
+            color: white;
+            border-color: #444;
+        }
+
+        .chat-container.black-theme .chat-area {
+            background-color: #1a1a1a;
+        }
+
+        .chat-container.black-theme .input-area {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        .chat-container.black-theme .code-container {
+            background: #000000;
+        }
+
+        .brand-header {
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .brand-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            position: relative;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .header-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Settings Dropdown */
+        .settings-dropdown {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            width: 250px;
+            padding: 15px;
+            z-index: 100;
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .settings-dropdown.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .settings-dropdown h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settings-dropdown .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .settings-dropdown .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e0e0e0;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ff7e5f;
+            cursor: pointer;
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .theme-option {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-2px);
+        }
+
+        .theme-option.active {
+            border-color: #ff7e5f;
+            background: rgba(255, 126, 95, 0.1);
+        }
+
+        .theme-option.device {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+        }
+
+        .theme-option.white {
+            background: #ffffff;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .theme-option.black {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .bot-message .message-bubble {
+            background-color: white;
+            border-bottom-left-radius: 5px;
+            color: #333;
+        }
+
+        .user-message .message-bubble {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            margin-top: 8px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .bot-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .input-area {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            background-color: #f8f9fa;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+            resize: none;
+            height: 50px;
+            max-height: 120px;
+        }
+
+        .message-input:focus {
+            background-color: white;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 2px rgba(79, 172, 254, 0.2);
+        }
+
+        .send-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border: none;
+            margin-left: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .send-button:active {
+            transform: scale(0.98);
+        }
+
+        .voice-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            border: none;
+            margin-left: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .voice-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .voice-button.listening {
+            background: linear-gradient(90deg, #ff0000, #ff6600);
+            animation: pulse 1.5s infinite;
+        }
+
+        .audio-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border: none;
+            margin-left: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .audio-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-toggle.active {
+            background: linear-gradient(90deg, #f44336, #ff9800);
+            box-shadow: 0 0 15px rgba(244, 67, 54, 0.5);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .typing-indicator.active {
+            opacity: 1;
+        }
+
+        .typing-dots {
+            display: flex;
+            margin-left: 10px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #bbb;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin: 20px 0 30px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .suggestion-chip {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .suggestion-chip:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .message-actions {
+            display: flex;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 15px;
+            padding: 5px 12px;
+            font-size: 12px;
+            color: #4facfe;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-btn:hover {
+            background: rgba(79, 172, 254, 0.2);
+        }
+
+        .links-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .links-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-item {
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .link-item:hover {
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .link-item a {
+            color: #4facfe;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .link-item a:hover {
+            text-decoration: underline;
+        }
+
+        .status {
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .status.ready {
+            background: rgba(0, 255, 0, 0.1);
+            color: #4cff4c;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff5555;
+        }
+
+        .calculator-result {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calculation {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff7e5f;
+        }
+
+        .code-container {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #444;
+        }
+
+        .code-language {
+            font-weight: bold;
+            color: #ff7e5f;
+        }
+
+        .code-copy-btn {
+            background: #4facfe;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .code-copy-btn:hover {
+            background: #3a9ae8;
+        }
+
+        .code-copy-btn.copied {
+            background: #4caf50;
+        }
+
+        .code-generator {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .code-generator-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .code-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .code-option {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .code-option:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .code-option.active {
+            background: #4facfe;
+            color: white;
+            border-color: #4facfe;
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .generate-code-btn {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .generate-code-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Chat History Sidebar */
+        .chat-history {
+            position: absolute;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            transition: left 0.3s ease;
+            border-radius: 20px 0 0 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-history.active {
+            left: 0;
+        }
+
+        .history-header {
+            padding: 20px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-header h3 {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-history {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-history:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .history-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+        }
+
+        .history-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .history-item.active {
+            background: linear-gradient(90deg, rgba(255, 126, 95, 0.1), rgba(254, 180, 123, 0.1));
+            border-color: #ff7e5f;
+        }
+
+        .history-preview {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
+
+        .history-time {
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .clear-history {
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .clear-history-btn {
+            width: 100%;
+            padding: 10px;
+            background: #ff7e5f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .clear-history-btn:hover {
+            background: #ff6b4a;
+            transform: translateY(-2px);
+        }
+
+        /* History Toggle Button */
+        .history-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .history-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 95vh;
+                border-radius: 15px;
+            }
+           
+            .message-bubble {
+                max-width: 85%;
+            }
+           
+            .brand-name {
+                font-size: 20px;
+            }
+
+            .suggestions {
+                flex-direction: column;
+            }
+            
+            .loading-bar {
+                width: 250px;
+            }
+
+            .chat-history {
+                width: 85%;
+                left: -85%;
+            }
+
+            .settings-dropdown {
+                width: 200px;
+                right: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">
+            <img src="Blazebot logo.png" alt="Blaze AI Logo" id="loadingLogo">
+        </div>
+        <div class="loading-text">Blaze AI is starting up...</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container device-theme" id="chatContainer">
+        <!-- Chat History Sidebar -->
+        <div class="chat-history" id="chatHistory">
+            <div class="history-header">
+                <h3><i class="fas fa-history"></i> Chat History</h3>
+                <button class="close-history" id="closeHistory">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- History items will be added dynamically -->
+            </div>
+            <div class="clear-history">
+                <button class="clear-history-btn" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> Clear History
+                </button>
+            </div>
+        </div>
+
+        <div class="brand-header">
+            <div class="brand-left">
+                <button class="history-toggle" id="historyToggle" title="Chat History">
+                    <i class="fas fa-history"></i>
+                </button>
+                <div class="brand-logo">
+                    <img src="Blazebot logo.png" alt="Blaze AI Logo" id="headerLogo">
+                </div>
+                <div>
+                    <div class="brand-name">Blaze AI</div>
+                    <div class="brand-tagline">Voice-Powered Assistant</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" title="New Chat" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="header-btn" title="Audio Response" id="audioToggleBtn">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="header-btn" title="Settings" id="settingsBtn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                
+                <!-- Settings Dropdown -->
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <h3><i class="fas fa-sliders-h"></i> Settings</h3>
+                    
+                    <div class="setting-item">
+                        <label><i class="fas fa-volume-up"></i> Volume</label>
+                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.8">
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label><i class="fas fa-palette"></i> Theme</label>
+                        <div class="theme-options">
+                            <div class="theme-option device active" data-theme="device">
+                                Device
+                            </div>
+                            <div class="theme-option white" data-theme="white">
+                                White
+                            </div>
+                            <div class="theme-option black" data-theme="black">
+                                Black
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label><i class="fas fa-robot"></i> Assistant Settings</label>
+                        <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                            Customize your Blaze AI experience
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="chat-area" id="chatArea">
+            <div class="welcome-message">
+                Welcome to Blaze AI! Your voice-powered assistant ready to help with coding, questions, and more.
+            </div>
+           
+            <div class="message bot-message">
+                <div class="bot-avatar">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s" alt="Blaze AI Avatar" id="botAvatar">
+                </div>
+                <div class="message-bubble">
+                    <b>🧠 Blaze:</b> Hello! I'm Blaze AI, your coding and voice-powered assistant. I can help you generate code in various languages, answer questions, perform calculations, and much more!
+                   
+                    <div class="code-generator">
+                        <div class="code-generator-title">
+                            <i class="fas fa-code"></i> Code Generator
+                        </div>
+                        <div class="code-options">
+                            <div class="code-option" data-lang="html">HTML</div>
+                            <div class="code-option" data-lang="css">CSS</div>
+                            <div class="code-option" data-lang="javascript">JavaScript</div>
+                            <div class="code-option" data-lang="python">Python</div>
+                            <div class="code-option" data-lang="java">Java</div>
+                        </div>
+                        <textarea class="code-input" id="codeInput" placeholder="Describe what you want to code (e.g., 'Create a responsive navigation bar')"></textarea>
+                        <button class="generate-code-btn" id="generateCodeBtn">
+                            <i class="fas fa-bolt"></i> Generate Code
+                        </button>
+                    </div>
+                   
+                    <div class="suggestions">
+                        <div class="suggestion-chip">Create a calculator in JavaScript</div>
+                        <div class="suggestion-chip">Make a responsive navbar</div>
+                        <div class="suggestion-chip">Python function to sort a list</div>
+                        <div class="suggestion-chip">CSS grid layout example</div>
+                    </div>
+                   
+                    <div class="message-time" id="currentTime"></div>
+                </div>
+            </div>
+           
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="bot-avatar">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s" alt="Blaze AI Avatar" id="typingAvatar">
+                </div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="input-area">
+            <textarea class="message-input" id="messageInput" placeholder="Type your question, request code, or click the mic 🎙️" rows="1"></textarea>
+            <button class="send-button" id="sendButton">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <button class="voice-button" id="voiceButton">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingProgress = document.getElementById('loadingProgress');
+            const chatContainer = document.getElementById('chatContainer');
+            const chatArea = document.getElementById('chatArea');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const voiceButton = document.getElementById('voiceButton');
+            const audioToggleBtn = document.getElementById('audioToggleBtn');
+            const typingIndicator = document.getElementById('typingIndicator');
+            const newChatBtn = document.getElementById('newChatBtn');
+            const codeInput = document.getElementById('codeInput');
+            const generateCodeBtn = document.getElementById('generateCodeBtn');
+            const codeOptions = document.querySelectorAll('.code-option');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const settingsDropdown = document.getElementById('settingsDropdown');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const themeOptions = document.querySelectorAll('.theme-option');
+            const historyToggle = document.getElementById('historyToggle');
+            const chatHistory = document.getElementById('chatHistory');
+            const closeHistory = document.getElementById('closeHistory');
+            const historyList = document.getElementById('historyList');
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+           
+            // Initialize chat history from localStorage
+            let chatHistoryData = JSON.parse(localStorage.getItem('blazeChatHistory')) || [];
+            let currentChatId = Date.now().toString();
+            
+            // State variables
+            let recognizing = false;
+            let recognition;
+            let audioEnabled = false;
+            let selectedLanguage = 'html';
+            let speechVolume = 0.8;
+            let currentTheme = 'device';
+            
+            // Set the logo image
+            const logoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s";
+            document.getElementById('loadingLogo').src = logoUrl;
+            document.getElementById('headerLogo').src = logoUrl;
+            document.getElementById('botAvatar').src = logoUrl;
+            document.getElementById('typingAvatar').src = logoUrl;
+           
+            // Simulate loading progress
+            let progress = 0;
+            const loadingInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadingInterval);
+                   
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        chatContainer.classList.add('visible');
+                    }, 500);
+                }
+                loadingProgress.style.width = `${progress}%`;
+            }, 200);
+           
+            // Set current time for the first message
+            document.getElementById('currentTime').textContent = getCurrentTime();
+           
+            // Function to get current time in HH:MM format
+            function getCurrentTime() {
+                const now = new Date();
+                return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }
+
+            // Function to get detailed time information
+            function getDetailedTime() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZoneName: 'short'
+                };
+                return now.toLocaleDateString('en-US', options);
+            }
+
+            // Function to perform calculations
+            function calculateExpression(expression) {
+                try {
+                    const cleanExpr = expression
+                        .replace(/[^-()\d/*+.]/g, '')
+                        .replace(/×/g, '*')
+                        .replace(/÷/g, '/');
+                    
+                    if (!/^[-+*/0-9().\s]+$/.test(cleanExpr)) {
+                        throw new Error('Invalid characters in expression');
+                    }
+                    
+                    const result = Function(`"use strict"; return (${cleanExpr})`)();
+                    
+                    if (isNaN(result) || !isFinite(result)) {
+                        throw new Error('Invalid calculation result');
+                    }
+                    
+                    return {
+                        success: true,
+                        expression: expression,
+                        result: result,
+                        formattedResult: Number(result.toFixed(6))
+                    };
+                } catch (error) {
+                    return {
+                        success: false,
+                        error: error.message
+                    };
+                }
+            }
+           
+            // Function to add a message to the chat
+            function addMessage(message, isUser, links = null, calculation = null, code = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
+               
+                if (!isUser) {
+                    const avatarDiv = document.createElement('div');
+                    avatarDiv.className = 'bot-avatar';
+                    const avatarImg = document.createElement('img');
+                    avatarImg.src = logoUrl;
+                    avatarImg.alt = 'Blaze AI Avatar';
+                    avatarDiv.appendChild(avatarImg);
+                    messageDiv.appendChild(avatarDiv);
+                }
+               
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = 'message-bubble';
+               
+                const messageText = document.createElement('div');
+                messageText.innerHTML = message;
+                bubbleDiv.appendChild(messageText);
+
+                if (calculation && calculation.success) {
+                    const calcDiv = document.createElement('div');
+                    calcDiv.className = 'calculator-result';
+                    
+                    const calcExpression = document.createElement('div');
+                    calcExpression.className = 'calculation';
+                    calcExpression.textContent = `${calculation.expression} =`;
+                    
+                    const calcResult = document.createElement('div');
+                    calcResult.className = 'result';
+                    calcResult.textContent = calculation.formattedResult;
+                    
+                    calcDiv.appendChild(calcExpression);
+                    calcDiv.appendChild(calcResult);
+                    bubbleDiv.appendChild(calcDiv);
+                }
+
+                if (code) {
+                    const codeDiv = document.createElement('div');
+                    codeDiv.className = 'code-container';
+                    
+                    const codeHeader = document.createElement('div');
+                    codeHeader.className = 'code-header';
+                    
+                    const codeLanguage = document.createElement('div');
+                    codeLanguage.className = 'code-language';
+                    codeLanguage.textContent = code.language || 'Code';
+                    
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'code-copy-btn';
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.addEventListener('click', function() {
+                        navigator.clipboard.writeText(code.content);
+                        copyBtn.textContent = 'Copied!';
+                        copyBtn.classList.add('copied');
+                        setTimeout(() => {
+                            copyBtn.textContent = 'Copy';
+                            copyBtn.classList.remove('copied');
+                        }, 2000);
+                    });
+                    
+                    codeHeader.appendChild(codeLanguage);
+                    codeHeader.appendChild(copyBtn);
+                    
+                    const codeContent = document.createElement('pre');
+                    codeContent.textContent = code.content;
+                    
+                    codeDiv.appendChild(codeHeader);
+                    codeDiv.appendChild(codeContent);
+                    bubbleDiv.appendChild(codeDiv);
+                }
+               
+                if (links && links.length > 0) {
+                    const linksContainer = document.createElement('div');
+                    linksContainer.className = 'links-container';
+                   
+                    const linksTitle = document.createElement('div');
+                    linksTitle.className = 'links-title';
+                    linksTitle.innerHTML = '<i class="fas fa-link"></i> Further Reading';
+                    linksContainer.appendChild(linksTitle);
+                   
+                    links.forEach(link => {
+                        const linkItem = document.createElement('div');
+                        linkItem.className = 'link-item';
+                       
+                        const linkAnchor = document.createElement('a');
+                        linkAnchor.href = link.url;
+                        linkAnchor.target = '_blank';
+                        linkAnchor.innerHTML = `<i class="fas fa-external-link-alt"></i> ${link.title}`;
+                       
+                        linkItem.appendChild(linkAnchor);
+                        linksContainer.appendChild(linkItem);
+                    });
+                   
+                    bubbleDiv.appendChild(linksContainer);
+                }
+               
+                if (!isUser) {
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'message-actions';
+                   
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'action-btn';
+                    copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy';
+                    copyBtn.addEventListener('click', function() {
+                        let textToCopy = message;
+                        if (calculation && calculation.success) {
+                            textToCopy += `\n\nCalculation: ${calculation.expression} = ${calculation.formattedResult}`;
+                        }
+                        if (code) {
+                            textToCopy += `\n\nCode:\n${code.content}`;
+                        }
+                        navigator.clipboard.writeText(textToCopy.replace(/<[^>]*>/g, ''));
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy';
+                        }, 2000);
+                    });
+                   
+                    const likeBtn = document.createElement('button');
+                    likeBtn.className = 'action-btn';
+                    likeBtn.innerHTML = '<i class="far fa-thumbs-up"></i> Helpful';
+                   
+                    actionsDiv.appendChild(copyBtn);
+                    actionsDiv.appendChild(likeBtn);
+                    bubbleDiv.appendChild(actionsDiv);
+                }
+               
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = getCurrentTime();
+               
+                bubbleDiv.appendChild(timeDiv);
+                messageDiv.appendChild(bubbleDiv);
+               
+                chatArea.insertBefore(messageDiv, typingIndicator);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+           
+            // Function to save chat history
+            function saveChatHistory(userMessage, botResponse) {
+                const chatItem = {
+                    id: currentChatId,
+                    userMessage: userMessage.substring(0, 100),
+                    botResponse: botResponse.message.substring(0, 150).replace(/<[^>]*>/g, ''),
+                    timestamp: Date.now(),
+                    timeString: getCurrentTime()
+                };
+                
+                // Find if this chat already exists in history
+                const existingIndex = chatHistoryData.findIndex(item => item.id === currentChatId);
+                
+                if (existingIndex > -1) {
+                    // Update existing chat
+                    chatHistoryData[existingIndex] = chatItem;
+                } else {
+                    // Add new chat to history
+                    chatHistoryData.push(chatItem);
+                }
+                
+                // Keep only last 50 chats
+                if (chatHistoryData.length > 50) {
+                    chatHistoryData.shift();
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('blazeChatHistory', JSON.stringify(chatHistoryData));
+                
+                // Update history display
+                updateHistoryDisplay();
+            }
+
+            // Function to update history display
+            function updateHistoryDisplay() {
+                historyList.innerHTML = '';
+                
+                chatHistoryData.forEach((item, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    if (item.id === currentChatId) {
+                        historyItem.classList.add('active');
+                    }
+                    
+                    historyItem.innerHTML = `
+                        <div class="history-preview">
+                            <strong>Q:</strong> ${item.userMessage}
+                        </div>
+                        <div class="history-preview">
+                            <strong>A:</strong> ${item.botResponse}
+                        </div>
+                        <div class="history-time">
+                            <span>${new Date(item.timestamp).toLocaleDateString()}</span>
+                            <span>${item.timeString}</span>
+                        </div>
+                    `;
+                    
+                    historyItem.addEventListener('click', () => {
+                        loadChatFromHistory(item.id);
+                    });
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+
+            // Function to load chat from history
+            function loadChatFromHistory(chatId) {
+                // Clear current chat except the first bot message
+                const messages = chatArea.querySelectorAll('.message');
+                messages.forEach((msg, index) => {
+                    if (index > 0) {
+                        msg.remove();
+                    }
+                });
+                
+                // Find and load the chat
+                const chatToLoad = chatHistoryData.find(item => item.id === chatId);
+                if (chatToLoad) {
+                    currentChatId = chatId;
+                    
+                    // Add user message
+                    addMessage(chatToLoad.userMessage, true);
+                    
+                    // Add bot response
+                    addMessage(`<b>🧠 Blaze:</b> ${chatToLoad.botResponse}`, false);
+                    
+                    // Update active state in history
+                    updateHistoryDisplay();
+                }
+            }
+           
+            // Function to generate helpful links based on user query
+            function generateLinks(query) {
+                const queryLower = query.toLowerCase();
+                const links = [];
+               
+                if (queryLower.includes('python') || queryLower.includes('programming')) {
+                    links.push(
+                        { title: 'Python Official Documentation', url: 'https://docs.python.org/3/' },
+                        { title: 'W3Schools Python Tutorial', url: 'https://www.w3schools.com/python/' },
+                        { title: 'Real Python Tutorials', url: 'https://realpython.com/' }
+                    );
+                }
+               
+                if (queryLower.includes('quantum') || queryLower.includes('physics')) {
+                    links.push(
+                        { title: 'IBM Quantum Computing', url: 'https://www.ibm.com/quantum-computing/' },
+                        { title: 'Microsoft Quantum', url: 'https://azure.microsoft.com/en-us/solutions/quantum-computing/' },
+                        { title: 'Quantum Computing for the Very Curious', url: 'https://quantum.country/qcvc' }
+                    );
+                }
+               
+                if (queryLower.includes('productivity') || queryLower.includes('efficient')) {
+                    links.push(
+                        { title: 'Getting Things Done (GTD) Methodology', url: 'https://gettingthingsdone.com/' },
+                        { title: 'Trello Productivity Guide', url: 'https://trello.com/en/guide' },
+                        { title: 'Todoist Productivity Methods', url: 'https://todoist.com/productivity-methods' }
+                    );
+                }
+               
+                if (queryLower.includes('news') || queryLower.includes('tech')) {
+                    links.push(
+                        { title: 'TechCrunch', url: 'https://techcrunch.com/' },
+                        { title: 'The Verge', url: 'https://www.theverge.com/' },
+                        { title: 'Wired', url: 'https://www.wired.com/' }
+                    );
+                }
+               
+                if (queryLower.includes('learn') || queryLower.includes('tutorial')) {
+                    links.push(
+                        { title: 'Coursera', url: 'https://www.coursera.org/' },
+                        { title: 'edX', url: 'https://www.edx.org/' },
+                        { title: 'Khan Academy', url: 'https://www.khanacademy.org/' }
+                    );
+                }
+
+                if (queryLower.includes('math') || queryLower.includes('calculate')) {
+                    links.push(
+                        { title: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/' },
+                        { title: 'Khan Academy Math', url: 'https://www.khanacademy.org/math' },
+                        { title: 'Desmos Graphing Calculator', url: 'https://www.desmos.com/calculator' }
+                    );
+                }
+
+                if (queryLower.includes('html') || queryLower.includes('css') || queryLower.includes('javascript')) {
+                    links.push(
+                        { title: 'MDN Web Docs', url: 'https://developer.mozilla.org/' },
+                        { title: 'W3Schools', url: 'https://www.w3schools.com/' },
+                        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' }
+                    );
+                }
+               
+                if (links.length === 0) {
+                    links.push(
+                        { title: 'Wikipedia', url: 'https://www.wikipedia.org/' },
+                        { title: 'Google Search', url: 'https://www.google.com/' },
+                        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' }
+                    );
+                }
+               
+                return links;
+            }
+            
+            // Function to generate code based on user request
+            function generateCode(query, language) {
+                const queryLower = query.toLowerCase();
+                
+                if (language === 'html') {
+                    if (queryLower.includes('button') || queryLower.includes('form')) {
+                        return {
+                            language: 'HTML',
+                            content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Example</title>
+    <style>
+        .btn {
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Simple Button -->
+    <button class="btn">Click Me</button>
+    
+    <!-- Button with different styles -->
+    <button class="btn" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
+        Gradient Button
+    </button>
+</body>
+</html>`
+                        };
+                    }
+                    
+                    if (queryLower.includes('navbar') || queryLower.includes('navigation')) {
+                        return {
+                            language: 'HTML',
+                            content: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, #1a2a6c, #b21f1f);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #ff7e5f;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">MyWebsite</a>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+</body>
+</html>`
+                        };
+                    }
+                }
+                
+                if (language === 'css') {
+                    if (queryLower.includes('grid') || queryLower.includes('layout')) {
+                        return {
+                            language: 'CSS',
+                            content: `/* CSS Grid Layout Example */
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1a2a6c;
+}
+
+.card-content {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px;
+    }
+}
+
+/* Centering with Flexbox */
+.center-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Centering with Grid */
+.center-grid {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}`
+                        };
+                    }
+                }
+                
+                if (language === 'javascript') {
+                    if (queryLower.includes('calculator') || queryLower.includes('calculate')) {
+                        return {
+                            language: 'JavaScript',
+                            content: `// Simple Calculator Class
+class Calculator {
+    constructor() {
+        this.result = 0;
+    }
+    
+    add(number) {
+        this.result += number;
+        return this;
+    }
+    
+    subtract(number) {
+        this.result -= number;
+        return this;
+    }
+    
+    multiply(number) {
+        this.result *= number;
+        return this;
+    }
+    
+    divide(number) {
+        if (number === 0) {
+            throw new Error('Division by zero is not allowed');
+        }
+        this.result /= number;
+        return this;
+    }
+    
+    getResult() {
+        return this.result;
+    }
+    
+    reset() {
+        this.result = 0;
+        return this;
+    }
+}
+
+// Usage examples
+const calc = new Calculator();
+
+// Chain operations
+const result1 = calc.add(5).multiply(3).subtract(10).getResult();
+console.log(result1); // 5
+
+// Reset and new calculation
+const result2 = calc.reset().add(10).divide(2).getResult();
+console.log(result2); // 5
+
+// DOM Calculator Implementation
+function createCalculator() {
+    let display = document.getElementById('display');
+    let currentInput = '';
+    let operator = '';
+    let previousInput = '';
+    
+    function updateDisplay() {
+        display.value = currentInput || '0';
+    }
+    
+    function inputNumber(num) {
+        currentInput = currentInput === '0' ? num : currentInput + num;
+        updateDisplay();
+    }
+    
+    function inputOperator(op) {
+        if (currentInput) {
+            previousInput = currentInput;
+            currentInput = '';
+            operator = op;
+        }
+    }
+    
+    function calculate() {
+        if (previousInput && currentInput && operator) {
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            
+            switch(operator) {
+                case '+':
+                    currentInput = (prev + current).toString();
+                    break;
+                case '-':
+                    currentInput = (prev - current).toString();
+                    break;
+                case '*':
+                    currentInput = (prev * current).toString();
+                    break;
+                case '/':
+                    currentInput = (prev / current).toString();
+                    break;
+            }
+            
+            operator = '';
+            previousInput = '';
+            updateDisplay();
+        }
+    }
+    
+    function clearCalculator() {
+        currentInput = '';
+        previousInput = '';
+        operator = '';
+        updateDisplay();
+    }
+    
+    return {
+        inputNumber,
+        inputOperator,
+        calculate,
+        clearCalculator
+    };
+}`
+                        };
+                    }
+                }
+                
+                if (language === 'python') {
+                    if (queryLower.includes('sort') || queryLower.includes('list')) {
+                        return {
+                            language: 'Python',
+                            content: `# Python Sorting Algorithms and List Operations
+
+# Built-in sorting
+numbers = [5, 2, 8, 1, 9, 3]
+sorted_numbers = sorted(numbers)  # Returns new sorted list
+numbers.sort()  # Sorts the list in-place
+
+# Custom sorting with key
+words = ['apple', 'banana', 'cherry', 'date']
+sorted_words = sorted(words, key=len)  # Sort by length
+
+# Sorting dictionaries
+students = [
+    {'name': 'Alice', 'grade': 85},
+    {'name': 'Bob', 'grade': 92},
+    {'name': 'Charlie', 'grade': 78}
+]
+
+# Sort by grade
+sorted_students = sorted(students, key=lambda x: x['grade'], reverse=True)
+
+# Custom sorting algorithms
+def bubble_sort(arr):
+    """
+    Bubble Sort Algorithm
+    Time Complexity: O(n^2)
+    """
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+
+def quick_sort(arr):
+    """
+    Quick Sort Algorithm
+    Time Complexity: O(n log n) average, O(n^2) worst case
+    """
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quick_sort(left) + middle + quick_sort(right)
+
+# List comprehension examples
+squares = [x**2 for x in range(10)]  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+even_numbers = [x for x in range(20) if x % 2 == 0]  # [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+
+# Matrix operations with list comprehension
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+transpose = [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+
+print("Original matrix:", matrix)
+print("Transposed matrix:", transpose)`
+                        };
+                    }
+                }
+                
+                if (language === 'java') {
+                    return {
+                        language: 'Java',
+                        content: `// Java Hello World Program
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+
+// Java Calculator Class
+public class Calculator {
+    private double result;
+    
+    public Calculator() {
+        this.result = 0;
+    }
+    
+    public Calculator add(double number) {
+        this.result += number;
+        return this;
+    }
+    
+    public Calculator subtract(double number) {
+        this.result -= number;
+        return this;
+    }
+    
+    public Calculator multiply(double number) {
+        this.result *= number;
+        return this;
+    }
+    
+    public Calculator divide(double number) {
+        if (number == 0) {
+            throw new ArithmeticException("Division by zero is not allowed");
+        }
+        this.result /= number;
+        return this;
+    }
+    
+    public double getResult() {
+        return this.result;
+    }
+    
+    public Calculator reset() {
+        this.result = 0;
+        return this;
+    }
+    
+    // Usage example
+    public static void main(String[] args) {
+        Calculator calc = new Calculator();
+        double result = calc.add(5).multiply(3).subtract(10).getResult();
+        System.out.println("Result: " + result); // Result: 5.0
+    }
+}
+
+// Java ArrayList Example
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class StudentManager {
+    private ArrayList<Student> students;
+    
+    public StudentManager() {
+        this.students = new ArrayList<>();
+    }
+    
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+    
+    public void sortStudentsByGrade() {
+        Collections.sort(students, new Comparator<Student>() {
+            @Override
+            public int compare(Student s1, Student s2) {
+                return Double.compare(s2.getGrade(), s1.getGrade()); // Descending order
+            }
+        });
+    }
+    
+    // Using lambda expression (Java 8+)
+    public void sortStudentsByName() {
+        students.sort((s1, s2) -> s1.getName().compareTo(s2.getName()));
+    }
+}
+
+class Student {
+    private String name;
+    private double grade;
+    
+    public Student(String name, double grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+    
+    // Getters and setters
+    public String getName() { return name; }
+    public double getGrade() { return grade; }
+}`
+                    };
+                }
+                
+                return {
+                    language: language.toUpperCase(),
+                    content: `// ${language.toUpperCase()} code for: ${query}\n// This is a template. Please provide more specific details about what you want to create.\n\nfunction example() {\n    // Your code here\n    console.log("Hello, World!");\n}`
+                };
+            }
+            
+            // ====== SEARCH AND SUMMARIZE ======
+            async function searchAndSummarize(query) {
+                try {
+                    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+
+                    if (data.AbstractText) {
+                        return summarizeText(data.AbstractText, query);
+                    }
+
+                    if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                        let results = [];
+                        for (let i = 0; i < Math.min(5, data.RelatedTopics.length); i++) {
+                            const topic = data.RelatedTopics[i];
+                            if (topic.Text && topic.FirstURL) {
+                                results.push({ title: topic.Text, link: topic.FirstURL });
+                            }
+                        }
+                        if (results.length > 0) {
+                            const summary = summarizeResults(results, query);
+                            let linksHTML = "<br><b>🔗 Useful Links:</b><ul>";
+                            results.forEach(r => {
+                                linksHTML += `<li><a href="${r.link}" target="_blank">${r.title}</a></li>`;
+                            });
+                            linksHTML += "</ul>";
+                            return summary + linksHTML;
+                        }
+                    }
+
+                    return "Sorry, I couldn't find anything useful for that.";
+                } catch (err) {
+                    console.error(err);
+                    return "⚠️ There was a problem searching the web.";
+                }
+            }
+
+            function summarizeText(text, query) {
+                const sentences = text.split(/[.!?]/).filter(s => s.trim().length > 0);
+                const summary = sentences.slice(0, 2).join('. ') + '.';
+                return `<b>🧠 Blaze:</b> Here's what I found about <b>${query}</b>:<br><br>${summary}`;
+            }
+
+            function summarizeResults(results, query) {
+                let summary = `Here's what I found about <b>${query}</b>: It seems to be related to `;
+                summary += results
+                    .map(r => r.title.split(' ')[0].toLowerCase())
+                    .slice(0, 3)
+                    .join(', ');
+                summary += `. You can read more from the sources below.`;
+                return `<b>🧠 Blaze:</b> ${summary}`;
+            }
+            
+            // Function to simulate bot response
+            async function getBotResponse(userMessage) {
+                const queryLower = userMessage.toLowerCase();
+                
+                if (queryLower.includes('hello') || queryLower.includes('hi') || queryLower.includes('hey')) {
+                    return {
+                        message: `<b>🧠 Blaze:</b> Hello! I'm Blaze AI, your advanced AI assistant. I can help with coding, questions, calculations, time information, and much more. What would you like to know today?`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                } else if (queryLower.includes('how are you')) {
+                    return {
+                        message: `<b>🧠 Blaze:</b> I'm just a bot, but I'm functioning perfectly! I'm ready to help you with any coding tasks, questions, calculations, or anything else you need. What can I assist you with today?`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                } else if (queryLower.includes('who are you') || queryLower.includes('what are you')) {
+                    return {
+                        message: `<b>🧠 Blaze:</b> I'm Blaze AI, your friendly AI assistant! I'm designed to help with a wide range of tasks from coding assistance to answering simple questions, performing calculations, and providing time information.`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                } else if (queryLower.includes('who made you') || queryLower.includes('who created you') || 
+                          queryLower.includes('who developed you') || queryLower.includes('who built you') ||
+                          queryLower.includes('who made blaze')) {
+                    return {
+                        message: `<b>🧠 Blaze:</b> I was created by <b>Richard Aveen</b> and <b>Aayush</b>! They're the brilliant developers behind this AI assistant.`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                } else if (queryLower.includes('thank')) {
+                    return {
+                        message: `<b>🧠 Blaze:</b> You're welcome! I'm glad I could help. Is there anything else you'd like to know or any other way I can assist you?`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                } else if (queryLower.includes('joke')) {
+                    const jokes = [
+                        "Why don't scientists trust atoms? Because they make up everything!",
+                        "Why did the scarecrow win an award? He was outstanding in his field!",
+                        "Why don't skeletons fight each other? They don't have the guts!",
+                        "What do you call a fake noodle? An impasta!",
+                        "Why did the math book look so sad? Because it had too many problems!"
+                    ];
+                    return {
+                        message: `<b>🧠 Blaze:</b> ${jokes[Math.floor(Math.random() * jokes.length)]}`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                }
+                
+                if (queryLower.includes('time') && 
+                   (queryLower.includes('what') || queryLower.includes('current') || 
+                    queryLower.includes('now'))) {
+                    const detailedTime = getDetailedTime();
+                    return {
+                        message: `<b>🧠 Blaze:</b> The current time is:<br><br><b>${detailedTime}</b>`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                }
+
+                const calculationMatch = userMessage.match(/(?:calculate|compute|what is|solve)\s+(.+)/i) || 
+                                       userMessage.match(/(\d+[\s\d+\-*/().×÷]+)/);
+                
+                if (calculationMatch) {
+                    const expression = calculationMatch[1] || calculationMatch[0];
+                    const calculation = calculateExpression(expression);
+                    
+                    if (calculation.success) {
+                        return {
+                            message: `<b>🧠 Blaze:</b> Here's your calculation result:`,
+                            links: null,
+                            calculation: calculation,
+                            code: null
+                        };
+                    } else {
+                        return {
+                            message: `<b>🧠 Blaze:</b> I couldn't calculate that expression. Please make sure it's a valid mathematical expression.`,
+                            links: generateLinks('math'),
+                            calculation: null,
+                            code: null
+                        };
+                    }
+                }
+                
+                if (queryLower.includes('code') || queryLower.includes('create') || 
+                    queryLower.includes('make') || queryLower.includes('build') ||
+                    queryLower.includes('html') || queryLower.includes('css') ||
+                    queryLower.includes('javascript') || queryLower.includes('python') ||
+                    queryLower.includes('java')) {
+                    
+                    let detectedLanguage = 'javascript';
+                    if (queryLower.includes('html')) detectedLanguage = 'html';
+                    else if (queryLower.includes('css')) detectedLanguage = 'css';
+                    else if (queryLower.includes('python')) detectedLanguage = 'python';
+                    else if (queryLower.includes('java') && !queryLower.includes('javascript')) detectedLanguage = 'java';
+                    
+                    const code = generateCode(userMessage, detectedLanguage);
+                    return {
+                        message: `<b>🧠 Blaze:</b> Here's the ${detectedLanguage.toUpperCase()} code you requested:`,
+                        links: generateLinks(userMessage),
+                        calculation: null,
+                        code: code
+                    };
+                }
+                
+                const webResponse = await searchAndSummarize(userMessage);
+                if (webResponse && !webResponse.includes("Sorry, I couldn't find anything")) {
+                    return {
+                        message: webResponse,
+                        links: generateLinks(userMessage),
+                        calculation: null,
+                        code: null
+                    };
+                }
+                
+                const defaultResponses = [
+                    `<b>🧠 Blaze:</b> I understand you're asking about '${userMessage}'. While I don't have specific information about that topic in my current knowledge base, I'd be happy to help with coding, general information, calculations, time queries, or point you to resources where you can learn more.`,
+                    `<b>🧠 Blaze:</b> That's an interesting question about '${userMessage}'. I'm still learning about various topics, but I can provide general guidance, help with coding, perform calculations, tell you the time, or suggest resources that might have the information you're looking for.`,
+                    `<b>🧠 Blaze:</b> I appreciate your question about '${userMessage}'. While I don't have a detailed answer prepared, I can offer some general insights, help with coding tasks, provide time information, or direct you to authoritative sources on this subject.`
+                ];
+               
+                return {
+                    message: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
+                    links: generateLinks(userMessage),
+                    calculation: null,
+                    code: null
+                };
+            }
+            
+            // Text-to-Speech using browser's built-in API
+            function speakResponse(text) {
+                if (!audioEnabled) return;
+                
+                const plainText = text.replace(/<[^>]*>/g, '');
+                
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    
+                    const utterance = new SpeechSynthesisUtterance(plainText);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1;
+                    utterance.volume = speechVolume;
+                    
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.log("Text-to-speech not supported in this browser");
+                }
+            }
+           
+            // Function to handle sending a message
+            async function sendMessage() {
+                const message = messageInput.value.trim();
+                if (message === '') return;
+               
+                addMessage(message, true);
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+               
+                typingIndicator.classList.add('active');
+               
+                try {
+                    const botResponse = await getBotResponse(message);
+                    typingIndicator.classList.remove('active');
+                    addMessage(botResponse.message, false, botResponse.links, botResponse.calculation, botResponse.code);
+                    
+                    // Save to chat history
+                    saveChatHistory(message, botResponse);
+                    
+                    speakResponse(botResponse.message);
+                } catch (error) {
+                    typingIndicator.classList.remove('active');
+                    addMessage("Sorry, I encountered an error while processing your request. Please try again.", false);
+                    console.error(error);
+                }
+            }
+            
+            // Function to handle code generation
+            function handleCodeGeneration() {
+                const description = codeInput.value.trim();
+                if (description === '') return;
+                
+                addMessage(`I want to generate ${selectedLanguage.toUpperCase()} code for: ${description}`, true);
+                codeInput.value = '';
+                
+                typingIndicator.classList.add('active');
+                
+                setTimeout(() => {
+                    const code = generateCode(description, selectedLanguage);
+                    typingIndicator.classList.remove('active');
+                    addMessage(
+                        `<b>🧠 Blaze:</b> Here's the ${selectedLanguage.toUpperCase()} code you requested:`,
+                        false, 
+                        generateLinks(description),
+                        null,
+                        code
+                    );
+                    
+                    // Save to chat history
+                    saveChatHistory(`Generate ${selectedLanguage} code for: ${description}`, {
+                        message: `<b>🧠 Blaze:</b> Here's the ${selectedLanguage.toUpperCase()} code you requested:`,
+                        links: generateLinks(description),
+                        calculation: null,
+                        code: code
+                    });
+                }, 1500);
+            }
+            
+            // Voice recognition
+            function toggleListening() {
+                if (recognizing) {
+                    stopListening();
+                } else {
+                    startListening();
+                }
+            }
+            
+            function startListening() {
+                if (!('webkitSpeechRecognition' in window)) {
+                    alert("Your browser doesn't support voice recognition. Try Chrome or Edge.");
+                    return;
+                }
+                
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onstart = () => {
+                    recognizing = true;
+                    voiceButton.innerHTML = '<i class="fas fa-circle"></i>';
+                    voiceButton.classList.add('listening');
+                };
+                
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    messageInput.value = transcript;
+                    sendMessage();
+                };
+                
+                recognition.onerror = (e) => {
+                    console.error(e);
+                    recognizing = false;
+                    voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                    voiceButton.classList.remove('listening');
+                    
+                    if (e.error === 'not-allowed') {
+                        addMessage("Microphone access denied. Please allow microphone permissions.", false);
+                    }
+                };
+                
+                recognition.onend = () => {
+                    recognizing = false;
+                    voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                    voiceButton.classList.remove('listening');
+                };
+                
+                recognition.start();
+            }
+            
+            function stopListening() {
+                if (recognition) {
+                    recognition.stop();
+                }
+            }
+
+            // Toggle audio response
+            function toggleAudio() {
+                audioEnabled = !audioEnabled;
+                if (audioEnabled) {
+                    audioToggleBtn.classList.add('active');
+                    audioToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                    addMessage("Audio responses enabled. I'll now speak my responses.", false);
+                } else {
+                    audioToggleBtn.classList.remove('active');
+                    audioToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    addMessage("Audio responses disabled.", false);
+                }
+            }
+
+            // Toggle settings dropdown
+            function toggleSettingsDropdown() {
+                settingsDropdown.classList.toggle('show');
+            }
+
+            // Change theme
+            function changeTheme(theme) {
+                currentTheme = theme;
+                chatContainer.className = `chat-container ${theme}-theme`;
+                
+                themeOptions.forEach(option => {
+                    option.classList.remove('active');
+                    if (option.getAttribute('data-theme') === theme) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                // Save theme preference
+                localStorage.setItem('blazeTheme', theme);
+            }
+
+            // Toggle chat history
+            function toggleChatHistory() {
+                chatHistory.classList.toggle('active');
+            }
+
+            // Clear chat history
+            function clearChatHistory() {
+                if (confirm("Are you sure you want to clear all chat history? This action cannot be undone.")) {
+                    chatHistoryData = [];
+                    localStorage.removeItem('blazeChatHistory');
+                    updateHistoryDisplay();
+                    addMessage("Chat history has been cleared.", false);
+                }
+            }
+
+            // Load saved theme preference
+            const savedTheme = localStorage.getItem('blazeTheme') || 'device';
+            changeTheme(savedTheme);
+
+            // Set saved volume
+            const savedVolume = localStorage.getItem('blazeVolume');
+            if (savedVolume) {
+                speechVolume = parseFloat(savedVolume);
+                volumeSlider.value = speechVolume;
+            }
+           
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+           
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            voiceButton.addEventListener('click', toggleListening);
+            audioToggleBtn.addEventListener('click', toggleAudio);
+            generateCodeBtn.addEventListener('click', handleCodeGeneration);
+            settingsBtn.addEventListener('click', toggleSettingsDropdown);
+            historyToggle.addEventListener('click', toggleChatHistory);
+            closeHistory.addEventListener('click', toggleChatHistory);
+            clearHistoryBtn.addEventListener('click', clearChatHistory);
+           
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            codeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleCodeGeneration();
+                }
+            });
+           
+            // Code language selection
+            codeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    codeOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedLanguage = this.getAttribute('data-lang');
+                });
+            });
+           
+            // Theme selection
+            themeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    changeTheme(theme);
+                });
+            });
+           
+            // Volume slider
+            volumeSlider.addEventListener('input', function() {
+                speechVolume = parseFloat(this.value);
+                localStorage.setItem('blazeVolume', speechVolume);
+            });
+           
+            // New chat button
+            newChatBtn.addEventListener('click', function() {
+                const messages = chatArea.querySelectorAll('.message');
+                messages.forEach(msg => {
+                    if (msg !== messages[0]) {
+                        msg.remove();
+                    }
+                });
+               
+                // Generate new chat ID
+                currentChatId = Date.now().toString();
+                
+                // Update history display
+                updateHistoryDisplay();
+               
+                addMessage("Hello! I'm Blaze AI. How can I help you with coding today?", false);
+            });
+           
+            // Suggestion chips
+            document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    messageInput.value = this.textContent;
+                    sendMessage();
+                });
+            });
+           
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!settingsBtn.contains(event.target) && !settingsDropdown.contains(event.target)) {
+                    settingsDropdown.classList.remove('show');
+                }
+            });
+
+            // Initial history display
+            updateHistoryDisplay();
+           
+            // Focus on input when page loads
+            setTimeout(() => {
+                messageInput.focus();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

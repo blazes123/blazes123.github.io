@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-orange: #ff5500;
+            --secondary-orange: #ff9966;
+            --dark-orange: #ff3300;
+            --light-orange: #ffcc99;
+            --dark-bg: #000;
+            --medium-bg: #0a0a0a;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            padding: 2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .scene.active {
+            opacity: 1;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* Scene 1 - The Void */
+        .scene-1 {
+            background: radial-gradient(circle at center, var(--medium-bg) 0%, var(--dark-bg) 70%);
+        }
+
+        .scene-1 .logo {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            color: #333;
+            letter-spacing: 8px;
+            transition: all 2s ease;
+        }
+
+        .scene-1.active .logo {
+            color: var(--primary-orange);
+            text-shadow: 0 0 30px var(--dark-orange), 0 0 60px var(--primary-orange);
+        }
+
+        .scene-1 .tagline {
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.5s ease 1s;
+            color: #666;
+        }
+
+        .scene-1.active .tagline {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--secondary-orange);
+        }
+
+        /* Scene 2 - The Spark */
+        .scene-2 {
+            background: radial-gradient(circle at 30% 50%, #1a0a00 0%, var(--dark-bg) 70%);
+        }
+
+        .spark-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--secondary-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px var(--primary-orange);
+            animation: sparkFloat 4s infinite;
+        }
+
+        .central-spark {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 30px 10px var(--dark-orange);
+            animation: centralPulse 3s infinite;
+        }
+
+        .scene-2 .message {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-orange);
+            text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+            max-width: 800px;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.5s ease;
+        }
+
+        .scene-2.active .message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scene 3 - The Flame */
+        .scene-3 {
+            background: radial-gradient(circle at 70% 30%, #2a0f00 0%, var(--dark-bg) 70%);
+        }
+
+        .flame-container {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+
+        .flame {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 200px;
+            background: linear-gradient(to top, #ff7b00, #ff3c00, #ff0000);
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: 0 0 50px 20px rgba(255, 60, 0, 0.7);
+            animation: flameFlicker 1.5s infinite alternate;
+            filter: blur(2px);
+        }
+
+        .flame::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(to top, #ffaa00, #ff5500);
+            border-radius: 50% 50% 40% 40%;
+            filter: blur(5px);
+            opacity: 0.7;
+        }
+
+        .scene-3 .message {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-orange);
+            text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .embers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .ember {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px var(--dark-orange);
+            animation: emberFloat 8s infinite;
+        }
+
+        /* Scene 4 - The Blaze */
+        .scene-4 {
+            background: radial-gradient(circle at center, #4a1f00 0%, var(--dark-bg) 70%);
+        }
+
+        .fire-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255, 120, 0, 0.3) 0%, rgba(255, 60, 0, 0.1) 40%, transparent 70%);
+            animation: firePulse 4s infinite alternate;
+            z-index: -1;
+        }
+
+        .scene-4 .logo {
+            font-size: 6rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #ff7b00, #ff3c00, #ff0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(255, 60, 0, 0.8);
+            letter-spacing: 5px;
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        .scene-4 .message {
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: var(--light-orange);
+            text-shadow: 0 0 15px rgba(255, 100, 0, 0.7);
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        .loading-bar-container {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #ff7b00, #ff3c00, #ff0000);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 15px rgba(255, 60, 0, 0.7);
+        }
+
+        .percentage {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-orange);
+            text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+        }
+
+        .skip-button {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 100, 0, 0.3);
+            color: var(--secondary-orange);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .skip-button:hover {
+            background: rgba(255, 100, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Progress indicator */
+        .scene-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .indicator-dot.active {
+            background: var(--primary-orange);
+            box-shadow: 0 0 10px var(--dark-orange);
+        }
+
+        /* Website Styles */
+        .website-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            background-image: url("homepage bg.png"); /* Assuming this background image is correct */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            text-align: center;
+        }
+
+        .website-content.active {
+            display: flex;
+        }
+
+        .scrolling-text {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .scrolling-text h1 {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrolling 15s linear infinite;
+            font-size: 2.5rem;
+            color: var(--secondary-orange);
+            text-shadow: 0 0 10px rgba(255, 100, 0, 0.7);
+        }
+
+        .button-container {
+            margin-top: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: nowrap; /* Prevent wrapping to new line */
+            overflow-x: auto; /* Allow horizontal scrolling if needed */
+            padding: 10px;
+            max-width: 95vw; /* Ensure it fits within viewport */
+        }
+
+        .button {
+            background: linear-gradient(to bottom, var(--primary-orange), var(--dark-orange));
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 100, 0, 0.4);
+            min-width: 160px; /* Consistent width */
+            white-space: nowrap; /* Prevent text wrapping */
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 100, 0, 0.6);
+            background: linear-gradient(to bottom, #ff6600, #ff3300);
+        }
+
+        .website-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #ff7b00, #ff3c00, #ff0000);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(255, 60, 0, 0.8);
+            letter-spacing: 5px;
+        }
+
+        /* Animations */
+        @keyframes sparkFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, -100px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes centralPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px 10px var(--dark-orange);
+            }
+            50% {
+                transform: scale(1.5);
+                box-shadow: 0 0 50px 15px var(--primary-orange);
+            }
+        }
+
+        @keyframes flameFlicker {
+            0%, 100% {
+                height: 200px;
+                border-radius: 50% 50% 40% 40%;
+            }
+            50% {
+                height: 220px;
+                border-radius: 45% 45% 35% 35%;
+            }
+        }
+
+        @keyframes emberFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(200px, -500px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes firePulse {
+            0% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes logoPulse {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 40px rgba(255, 60, 0, 0.8);
+            }
+            100% {
+                transform: scale(1.05);
+                text-shadow: 0 0 60px rgba(255, 60, 0, 1);
+            }
+        }
+
+        @keyframes scrolling {
+            0% { transform: translate(0); }
+            100% { transform: translate(-100%); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .button {
+                min-width: 140px;
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+       
+        @media (max-width: 1000px) {
+            .button {
+                min-width: 130px;
+                padding: 12px 18px;
+                font-size: 15px;
+            }
+        }
+       
+        @media (max-width: 900px) {
+            .button {
+                min-width: 120px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+       
+        @media (max-width: 768px) {
+            .scene-1 .logo, .scene-4 .logo {
+                font-size: 3rem;
+            }
+           
+            .scene-2 .message, .scene-3 .message, .scene-4 .message {
+                font-size: 1.5rem;
+            }
+           
+            .loading-bar-container {
+                width: 300px;
+            }
+           
+            .flame-container {
+                transform: scale(0.8);
+            }
+           
+            .website-title {
+                font-size: 2.5rem;
+            }
+           
+            .button {
+                min-width: 110px;
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+           
+            .scrolling-text h1 {
+                font-size: 1.8rem;
+            }
+           
+            .button-container {
+                gap: 15px;
+            }
+        }
+       
+        @media (max-width: 650px) {
+            .button {
+                min-width: 100px;
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+           
+            .button-container {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<img src="Blaze logo.png" alt="Blaze Logo" style="position: absolute; top: 15px; left: 15px; height: 65px; z-index: 10000;">
+    <div class="loading-screen" id="loadingScreen">
+        <div class="scene scene-1 active">
+            <h1 class="logo"><i>BLAZE</i></h1>
+            <p class="tagline"><i>A spark is about to ignite...</i></p>
+        </div>
+
+        <div class="scene scene-2">
+            <div class="spark-container" id="sparkContainer"></div>
+            <div class="central-spark"></div>
+            <p class="message"><i>In the darkness, a single spark emerges. A promise of what's to come.</i></p>
+        </div>
+
+        <div class="scene scene-3">
+            <div class="embers" id="embersContainer"></div>
+            <div class="flame-container">
+                <div class="flame"></div>
+            </div>
+            <p class="message"><i>The spark grows into a flame. Energy begins to flow.</i></p>
+        </div>
+
+        <div class="scene scene-4">
+            <div class="fire-background"></div>
+            <h1 class="logo">BLAZE</h1>
+            <p class="message"><i>The flame has become a blaze. Your experience is ready.</i></p>
+           
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loadingBar"></div>
+            </div>
+            <div class="percentage" id="percentage">0%</div>
+        </div>
+
+        <div class="scene-indicator">
+            <div class="indicator-dot active" data-scene="1"></div>
+            <div class="indicator-dot" data-scene="2"></div>
+            <div class="indicator-dot" data-scene="3"></div>
+            <div class="indicator-dot" data-scene="4"></div>
+        </div>
+
+        <button class="skip-button" id="skipButton">
+            <i class="fas fa-forward"></i> Skip Intro
+        </button>
+    </div>
+
+    <div class="website-content" id="websiteContent">
+        <header class="scrolling-text">
+            <h1><i>Welcome to Blaze website - From spark to success</i></h1>
+        </header>
+
+       
+       
+        <nav class="button-container">
+           
+            <a href="game.html" class="button" target="_blank"><i>BlazeGames</i></a>
+            <a href="music.html" class="button" target="_blank"><i>BlazeMusic</i></a>
+			<a href="ask chatgpt.html" class="button" target="_blank"><i>Blazebot</i></a>
+			<a href="cook.html" class="button" target="_blank"><i>Blaze Kitchen</i></a>
+			<a href="connect.html" class="button" target="_blank"><i>Blaze AI Talk</i></a>
+        </nav>
+    </div>
+
+    <script>
+        // Scene management
+        const scenes = document.querySelectorAll('.scene');
+        const dots = document.querySelectorAll('.indicator-dot');
+        const skipButton = document.getElementById('skipButton');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const websiteContent = document.getElementById('websiteContent');
+        let currentScene = 1;
+        let autoAdvance = true;
+
+        // Function to advance to next scene
+        function nextScene() {
+            if (currentScene >= scenes.length) return;
+           
+            // Deactivate current scene
+            scenes[currentScene - 1].classList.remove('active');
+            dots[currentScene - 1].classList.remove('active');
+           
+            // Activate next scene
+            currentScene++;
+            scenes[currentScene - 1].classList.add('active');
+            dots[currentScene - 1].classList.add('active');
+           
+            // Setup scene-specific elements
+            setupScene(currentScene);
+           
+            // Auto-advance if enabled
+            if (autoAdvance && currentScene < scenes.length) {
+                setTimeout(nextScene, 4000);
+            }
+        }
+
+        // Setup scene-specific elements
+        function setupScene(sceneNumber) {
+            switch(sceneNumber) {
+                case 2:
+                    createSparks();
+                    break;
+                case 3:
+                    createEmbers();
+                    break;
+                case 4:
+                    startLoading();
+                    break;
+            }
+        }
+
+        // Create sparks for scene 2
+        function createSparks() {
+            const container = document.getElementById('sparkContainer');
+            container.innerHTML = '';
+           
+            for (let i = 0; i < 50; i++) {
+                const spark = document.createElement('div');
+                spark.classList.add('spark');
+               
+                // Random position
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+               
+                spark.style.left = `${x}px`;
+                spark.style.top = `${y}px`;
+               
+                // Random animation delay and duration
+                spark.style.animationDelay = `${Math.random() * 4}s`;
+                spark.style.animationDuration = `${3 + Math.random() * 3}s`;
+               
+                container.appendChild(spark);
+            }
+        }
+
+        // Create embers for scene 3
+        function createEmbers() {
+            const container = document.getElementById('embersContainer');
+            container.innerHTML = '';
+           
+            for (let i = 0; i < 30; i++) {
+                const ember = document.createElement('div');
+                ember.classList.add('ember');
+               
+                // Random position at bottom
+                const x = Math.random() * window.innerWidth;
+               
+                ember.style.left = `${x}px`;
+                ember.style.bottom = '0';
+               
+                // Random animation delay and duration
+                ember.style.animationDelay = `${Math.random() * 8}s`;
+                ember.style.animationDuration = `${5 + Math.random() * 5}s`;
+               
+                container.appendChild(ember);
+            }
+        }
+
+        // Start loading progress for scene 4
+        function startLoading() {
+            let progress = 0;
+            const loadingBar = document.getElementById('loadingBar');
+            const percentage = document.getElementById('percentage');
+           
+            const interval = setInterval(() => {
+                progress += Math.random() * 5;
+                if (progress > 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                   
+                    // Loading complete
+                    setTimeout(() => {
+                        document.querySelector('.scene-4 .message').textContent = "Welcome to Blaze! Your experience is ready.";
+                       
+                        // Transition to website
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            websiteContent.classList.add('active');
+                        }, 1500);
+                    }, 1000);
+                }
+               
+                loadingBar.style.width = `${progress}%`;
+                percentage.textContent = `${Math.floor(progress)}%`;
+            }, 200);
+        }
+
+        // Skip button functionality
+        skipButton.addEventListener('click', () => {
+            autoAdvance = false;
+           
+            // Jump to final scene
+            scenes.forEach(scene => scene.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+           
+            scenes[3].classList.add('active');
+            dots[3].classList.add('active');
+           
+            currentScene = 4;
+            setupScene(4);
+        });
+
+        // Start the cinematic experience
+        setTimeout(nextScene, 3000);
+    </script>
+</body>
+</html>

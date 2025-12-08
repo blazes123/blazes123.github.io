@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Playable Chess — Stockfish AI</title>
+  <style>
+    :root{--light:#f0d9b5;--dark:#b58863;--board-size:min(86vmin,720px);font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial}
+    *{box-sizing:border-box}
+    body{display:flex;gap:24px;align-items:flex-start;justify-content:center;padding:28px;background:#f7fafc;color:#0f172a}
+    .container{display:flex;gap:20px;align-items:flex-start}
+    .board-wrap{width:var(--board-size)}
+    .board{width:100%;aspect-ratio:1/1;display:grid;grid-template-columns:repeat(8,1fr);border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,0.12)}
+    .square{display:flex;align-items:center;justify-content:center;font-size:calc(var(--board-size) / 12);user-select:none;position:relative}
+    .square.light{background:var(--light)}
+    .square.dark{background:var(--dark)}
+    .square .piece{cursor:pointer}
+    .square.highlight{outline:4px solid rgba(59,130,246,0.22);outline-offset:-4px}
+    .square.capture{outline:4px solid rgba(220,38,38,0.22);outline-offset:-4px}
+    .coord{position:absolute;font-size:12px;bottom:6px;right:6px;color:rgba(0,0,0,0.25)}
+
+    .panel{width:380px;max-width:40vw;background:white;border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
+    h2{margin:0 0 8px 0;font-size:18px}
+    .controls{display:flex;gap:8px;margin-bottom:12px}
+    button, select{padding:8px 10px;border-radius:8px;border:1px solid rgba(15,23,42,0.06);background:#fff;cursor:pointer}
+    .moves{height:340px;overflow:auto;padding:8px;border-radius:8px;background:#f8fafc;border:1px solid rgba(2,6,23,0.03);margin-top:8px}
+    .status{margin:8px 0;font-weight:600}
+    .fen{font-family:monospace;background:#0f172a;color:white;padding:8px;border-radius:8px;overflow:auto}
+    .small{font-size:13px;color:#475569}
+    .toprow{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .engine-status{font-size:13px;color:#334155;margin-top:8px}
+    @media (max-width:900px){body{flex-direction:column;align-items:center;padding:16px}.container{flex-direction:column-reverse}.panel{width:100%;max-width:920px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="panel">
+      <div class="toprow">
+        <div>
+          <h2>Playable Chess — Stockfish AI</h2>
+          <div class="small">Now supports Stockfish (runs in your browser via a web worker). Choose mode and engine strength.</div>
+        </div>
+        <div>
+          <button id="restartBtn">Restart</button>
+          <button id="flipBtn">Flip Board</button>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+        <label for="mode">Mode:</label>
+        <select id="mode">
+          <option value="human-human">Local 2-Player</option>
+          <option value="human-white">Play as White (Engine black)</option>
+          <option value="human-black">Play as Black (Engine white)</option>
+        </select>
+        <label for="skill">Engine strength:</label>
+        <select id="skill">
+          <option value="1">Level 1 (fast)</option>
+          <option value="5" selected>Level 5</option>
+          <option value="10">Level 10</option>
+          <option value="20">Level 20 (stronger)</option>
+        </select>
+        <button id="startEngineBtn">Start Engine</button>
+      </div>
+
+      <div class="status" id="status">White to move</div>
+
+      <div class="controls">
+        <button id="undoBtn">Undo</button>
+        <button id="saveFenBtn">Copy FEN</button>
+        <button id="exportPgnBtn">Copy PGN</button>
+      </div>
+
+      <div class="engine-status" id="engineStatus">Engine: not started</div>
+      <div class="moves" id="moves"></div>
+
+      <h3 style="margin-top:12px">Current FEN</h3>
+      <div class="fen" id="fen">--</div>
+    </div>
+
+    <div class="board-wrap">
+      <div id="board" class="board" aria-label="Chessboard"></div>
+    </div>
+  </div>
+
+<script>
+/*
+  STOCKFISH INTEGRATION NOTES
+  - This page loads Stockfish as a Web Worker from a CDN (requires internet).
+  - The engine runs in a worker, you send UCI commands and receive info lines.
+  - We provide an option to set search 'movetime' in ms derived from selected skill level.
+  - If the engine fails to start, the page falls back to the built-in simple AI.
+*/
+
+const UNICODE = { r:'♜', n:'♞', b:'♝', q:'♛', k:'♚', p:'♟', R:'♖', N:'♘', B:'♗', Q:'♕', K:'♔', P:'♙' };
+let state = null;
+let flipped = false;
+let history = [];
+let legalMovesCache = [];
+let selected = null;
+let engine = null; // WebWorker
+let engineAvailable = false;
+let engineThinking = false;
+let engineId = 0;
+let mode = 'human-human'; // or human-white/human-black
+
+function createInitialState(){
+  return {
+    board:[
+      ['r','n','b','q','k','b','n','r'],
+      ['p','p','p','p','p','p','p','p'],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['','','','','','','',''],
+      ['P','P','P','P','P','P','P','P'],
+      ['R','N','B','Q','K','B','N','R']
+    ],
+    whiteToMove:true,
+    castling:{K:true,Q:true,k:true,q:true},
+    enPassant:null,
+    halfmoveClock:0,
+    fullmove:1,
+    moveList:[]
+  };
+}
+function cloneState(s){ return JSON.parse(JSON.stringify(s)); }
+function inBounds(r,c){return r>=0 && r<8 && c>=0 && c<8}
+function pieceColor(p){if(!p) return null; return p===p.toUpperCase() ? 'w' : 'b'}
+function opponent(color){return color==='w' ? 'b' : 'w'}
+function algebraic(r,c){return 'abcdefgh'[c] + (8-r)}
+
+// ----- move generation (same as previous file) -----
+function generateMoves(s){
+  const moves = [];
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const p=s.board[r][c]; if(!p) continue;
+    const color = pieceColor(p);
+    if((color==='w') !== s.whiteToMove) continue;
+    const piece = p.toLowerCase();
+    if(piece==='p') moves.push(...pawnMoves(s,r,c));
+    if(piece==='n') moves.push(...knightMoves(s,r,c));
+    if(piece==='b') moves.push(...bishopMoves(s,r,c));
+    if(piece==='r') moves.push(...rookMoves(s,r,c));
+    if(piece==='q') moves.push(...queenMoves(s,r,c));
+    if(piece==='k') moves.push(...kingMoves(s,r,c));
+  }
+  return moves.filter(m=>{ const ns=cloneState(s); makeMoveOnState(ns,m,false); return !isKingInCheck(ns, s.whiteToMove ? 'w' : 'b'); });
+}
+function pawnMoves(s,r,c){
+  const res=[]; const p=s.board[r][c]; const color=pieceColor(p); const dir = color==='w' ? -1 : 1; const startRow = color==='w' ? 6 : 1; const enemy=opponent(color);
+  if(inBounds(r+dir,c) && !s.board[r+dir][c]){ if((r+dir===0)||(r+dir===7)) res.push({from:{r,c},to:{r:r+dir,c},piece:p,promotion:'Q'}); else res.push({from:{r,c},to:{r:r+dir,c},piece:p}); if(r===startRow && !s.board[r+2*dir][c]) res.push({from:{r,c},to:{r:r+2*dir,c},piece:p,doublePawn:true}); }
+  for(const dc of [-1,1]){ const nr=r+dir, nc=c+dc; if(!inBounds(nr,nc)) continue; if(s.board[nr][nc] && pieceColor(s.board[nr][nc])===enemy){ if(nr===0||nr===7) res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:true,promotion:'Q'}); else res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:true}); } if(s.enPassant && s.enPassant.r===nr && s.enPassant.c===nc) res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:true,enPassant:true}); }
+  return res;
+}
+function knightMoves(s,r,c){ const res=[]; const p=s.board[r][c]; const color=pieceColor(p); const enemy=opponent(color); const deltas=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]]; for(const [dr,dc] of deltas){const nr=r+dr,nc=c+dc; if(!inBounds(nr,nc)) continue; if(!s.board[nr][nc]||pieceColor(s.board[nr][nc])===enemy) res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:!!s.board[nr][nc]}); } return res }
+function sliding(s,r,c,deltas){ const res=[]; const p=s.board[r][c]; const color=pieceColor(p); const enemy=opponent(color); for(const [dr,dc] of deltas){ let nr=r+dr,nc=c+dc; while(inBounds(nr,nc)){ if(!s.board[nr][nc]) res.push({from:{r,c},to:{r:nr,c:nc},piece:p}); else{ if(pieceColor(s.board[nr][nc])===enemy) res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:true}); break } nr+=dr; nc+=dc; } } return res }
+function bishopMoves(s,r,c){return sliding(s,r,c,[[1,1],[1,-1],[-1,1],[-1,-1]])}
+function rookMoves(s,r,c){return sliding(s,r,c,[[1,0],[-1,0],[0,1],[0,-1]])}
+function queenMoves(s,r,c){return sliding(s,r,c,[[1,1],[1,-1],[-1,1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]])}
+function kingMoves(s,r,c){ const res=[]; const p=s.board[r][c]; const color=pieceColor(p); const enemy=opponent(color); for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){ if(dr===0&&dc===0) continue; const nr=r+dr,nc=c+dc; if(!inBounds(nr,nc)) continue; if(!s.board[nr][nc]||pieceColor(s.board[nr][nc])===enemy) res.push({from:{r,c},to:{r:nr,c:nc},piece:p,capture:!!s.board[nr][nc]}); }
+  if(color==='w' && r===7 && c===4){ if(state.castling.K && !s.board[7][5] && !s.board[7][6]) res.push({from:{r,c},to:{r:7,c:6},castle:'K'}); if(state.castling.Q && !s.board[7][3] && !s.board[7][2] && !s.board[7][1]) res.push({from:{r,c},to:{r:7,c:2},castle:'Q'});} 
+  if(color==='b' && r===0 && c===4){ if(state.castling.k && !s.board[0][5] && !s.board[0][6]) res.push({from:{r,c},to:{r:0,c:6},castle:'k'}); if(state.castling.q && !s.board[0][3] && !s.board[0][2] && !s.board[0][1]) res.push({from:{r,c},to:{r:0,c:2},castle:'q'});} 
+  return res; }
+
+function isSquareAttacked(s, r, c, byColor){ const pawnDir = byColor==='w' ? -1 : 1; for(const dc of [-1,1]){const pr=r+pawnDir, pc=c+dc; if(inBounds(pr,pc) && s.board[pr][pc] && s.board[pr][pc].toLowerCase()==='p' && pieceColor(s.board[pr][pc])===byColor) return true}
+  const nd=[[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]]; for(const [dr,dc] of nd){const nr=r+dr,nc=c+dc; if(inBounds(nr,nc) && s.board[nr][nc] && s.board[nr][nc].toLowerCase()==='n' && pieceColor(s.board[nr][nc])===byColor) return true}
+  const rooks=[[1,0],[-1,0],[0,1],[0,-1]]; for(const [dr,dc] of rooks){let nr=r+dr,nc=c+dc; while(inBounds(nr,nc)){ if(s.board[nr][nc]){ const ch=s.board[nr][nc].toLowerCase(); if(pieceColor(s.board[nr][nc])===byColor && (ch==='r' || ch==='q')) return true; else break } nr+=dr; nc+=dc; }}
+  const bis=[[1,1],[1,-1],[-1,1],[-1,-1]]; for(const [dr,dc] of bis){let nr=r+dr,nc=c+dc; while(inBounds(nr,nc)){ if(s.board[nr][nc]){ const ch=s.board[nr][nc].toLowerCase(); if(pieceColor(s.board[nr][nc])===byColor && (ch==='b' || ch==='q')) return true; else break } nr+=dr; nc+=dc; }}
+  for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){ if(dr===0&&dc===0) continue; const nr=r+dr,nc=c+dc; if(inBounds(nr,nc) && s.board[nr][nc] && s.board[nr][nc].toLowerCase()==='k' && pieceColor(s.board[nr][nc])===byColor) return true}
+  return false; }
+function findKing(s, color){for(let r=0;r<8;r++) for(let c=0;c<8;c++){ if(s.board[r][c] && s.board[r][c].toLowerCase()==='k' && pieceColor(s.board[r][c])===color) return {r,c} } return null }
+function isKingInCheck(s, color){ const k=findKing(s,color); if(!k) return false; return isSquareAttacked(s,k.r,k.c, opponent(color)); }
+
+function makeMoveOnState(s, move, record=true){
+  const fr=move.from.r, fc=move.from.c, tr=move.to.r, tc=move.to.c; const p = s.board[fr][fc];
+  if(move.enPassant){ const dir = pieceColor(p)==='w' ? 1 : -1; s.board[tr+dir][tc] = ''; }
+  if(move.castle){ if(move.castle.toLowerCase().includes('k')){ if(pieceColor(p)==='w'){ s.board[7][5]=s.board[7][7]; s.board[7][7]=''; } else{ s.board[0][5]=s.board[0][7]; s.board[0][7]=''; } } else { if(pieceColor(p)==='w'){ s.board[7][3]=s.board[7][0]; s.board[7][0]=''; } else{ s.board[0][3]=s.board[0][0]; s.board[0][0]=''; } } }
+  s.board[tr][tc] = s.board[fr][fc]; s.board[fr][fc]='';
+  if(move.promotion){ const prom = (pieceColor(p)=='w') ? move.promotion.toUpperCase() : move.promotion.toLowerCase(); s.board[tr][tc]=prom; }
+  if(p.toLowerCase()==='k'){ if(pieceColor(p)=='w'){ s.castling.K=false; s.castling.Q=false } else { s.castling.k=false; s.castling.q=false } }
+  if(p.toLowerCase()==='r'){ if(fr===7 && fc===0) s.castling.Q=false; if(fr===7 && fc===7) s.castling.K=false; if(fr===0 && fc===0) s.castling.q=false; if(fr===0 && fc===7) s.castling.k=false }
+  if(move.capture){ const capr=move.to.r, capc=move.to.c; const cp = move.enPassant ? (pieceColor(p)=='w' ? 'p' : 'P') : s.board[capr][capc]; if(cp){ if(capr===7 && capc===0) s.castling.Q=false; if(capr===7 && capc===7) s.castling.K=false; if(capr===0 && capc===0) s.castling.q=false; if(capr===0 && capc===7) s.castling.k=false } }
+  if(move.doublePawn) s.enPassant = {r: (fr+tr)/2, c:fc}; else s.enPassant = null;
+  if(p.toLowerCase()==='p' || move.capture) s.halfmoveClock=0; else s.halfmoveClock++;
+  if(!s.whiteToMove) s.fullmove++;
+  s.whiteToMove = !s.whiteToMove;
+  if(record){ s.moveList.push(moveToAlgebraic(move, s)); }
+}
+function moveToAlgebraic(move, s){ const p = move.piece; const piece = p.toLowerCase(); if(piece==='p'){ if(move.capture) return algebraic(move.from.r,move.from.c)+'x'+algebraic(move.to.r,move.to.c); return algebraic(move.from.r,move.from.c)+'-'+algebraic(move.to.r,move.to.c); } let prefix = p.toUpperCase(); if(prefix==='P') prefix=''; if(move.castle){ if(move.to.c===6) return 'O-O'; else return 'O-O-O'; } const capture = move.capture ? 'x' : '-'; return prefix+algebraic(move.from.r,move.from.c)+capture+algebraic(move.to.r,move.to.c); }
+
+// ----- UI rendering -----
+const boardEl = document.getElementById('board'); const statusEl = document.getElementById('status'); const fenEl = document.getElementById('fen'); const movesEl = document.getElementById('moves'); const engineStatusEl = document.getElementById('engineStatus');
+
+function renderBoard(){ boardEl.innerHTML=''; const s=state; for(let rr=0;rr<8;rr++){ for(let cc=0;cc<8;cc++){ const i = flipped ? (7-rr)*8 + (7-cc) : rr*8 + cc; const r = Math.floor(i/8), c = i%8; const sq=document.createElement('div'); sq.className='square '+(((r+c)%2===0)?'light':'dark'); sq.dataset.r=r; sq.dataset.c=c; const coord=document.createElement('div'); coord.className='coord'; coord.textContent=algebraic(r,c); if(state.board[r][c]){ const pieceSpan=document.createElement('div'); pieceSpan.className='piece'; pieceSpan.textContent = UNICODE[state.board[r][c]] || state.board[r][c]; pieceSpan.dataset.r=r; pieceSpan.dataset.c=c; sq.appendChild(pieceSpan); } sq.appendChild(coord); boardEl.appendChild(sq); sq.addEventListener('click', onSquareClick); } } updateHighlights(); fenEl.textContent = generateFEN(state); renderMoves(); }
+function updateHighlights(){ document.querySelectorAll('.square').forEach(el=>{ el.classList.remove('highlight'); el.classList.remove('capture'); }); if(selected){ const moves = legalMovesCache.filter(m=>m.from.r===selected.r && m.from.c===selected.c); moves.forEach(m=>{ const idx = flipped ? (7-m.to.r)*8 + (7-m.to.c) : m.to.r*8 + m.to.c; const square = boardEl.children[idx]; if(m.capture) square.classList.add('capture'); else square.classList.add('highlight'); }); }
+  const colorInCheck = isKingInCheck(state, state.whiteToMove? 'w':'b'); statusEl.textContent = (state.whiteToMove ? 'White' : 'Black') + (colorInCheck? ' — CHECK' : '') + ' to move'; if(isCheckmate()) statusEl.textContent = (state.whiteToMove ? 'White' : 'Black') + ' is checkmated'; }
+
+function onSquareClick(e){ const el=e.currentTarget; const r=parseInt(el.dataset.r), c=parseInt(el.dataset.c); const s=state; const p=s.board[r][c]; if(selected){ const move = legalMovesCache.find(m=>m.from.r===selected.r && m.from.c===selected.c && m.to.r===r && m.to.c===c); if(move){ performMove(move); selected=null; legalMovesCache = generateMoves(state); renderBoard(); maybeEngineMove(); return; } if(p && pieceColor(p) === (s.whiteToMove? 'w':'b')){ selected={r,c}; legalMovesCache = generateMoves(state); updateHighlights(); return; } selected=null; updateHighlights(); return; } else { if(p && pieceColor(p) === (s.whiteToMove? 'w':'b')){ selected={r,c}; legalMovesCache = generateMoves(state); updateHighlights(); } } }
+
+function performMove(move){ if(move.promotion){ const choice = prompt('Promote to (Q/R/B/N) — default Q','Q') || 'Q'; move.promotion = choice.toUpperCase().charAt(0); } history.push(cloneState(state)); makeMoveOnState(state, move, true); legalMovesCache = generateMoves(state); renderBoard(); }
+
+function renderMoves(){ movesEl.innerHTML=''; const ml = state.moveList; for(let i=0;i<ml.length;i++){ const div=document.createElement('div'); div.textContent = (i+1)+'. '+ml[i]; movesEl.appendChild(div);} }
+function generateFEN(s){ let rows=[]; for(let r=0;r<8;r++){ let empty=0; let row=''; for(let c=0;c<8;c++){ const p=s.board[r][c]; if(!p){ empty++; } else { if(empty){ row+=empty; empty=0 } row+=p; }} if(empty) row+=empty; rows.push(row);} const piecePlacement = rows.join('/'); const active = s.whiteToMove? 'w':'b'; let cast=''; if(s.castling.K) cast+='K'; if(s.castling.Q) cast+='Q'; if(s.castling.k) cast+='k'; if(s.castling.q) cast+='q'; if(!cast) cast='-'; const ep = s.enPassant ? algebraic(s.enPassant.r,s.enPassant.c) : '-'; return `${piecePlacement} ${active} ${cast} ${ep} ${s.halfmoveClock} ${s.fullmove}`; }
+function isCheckmate(){ const moves = generateMoves(state); return moves.length===0 && isKingInCheck(state, state.whiteToMove? 'w':'b'); }
+
+// ----- Stockfish integration -----
+function startEngine(){
+  stopEngine();
+  engineAvailable = false; engineThinking = false; engineId++;
+  engineStatusEl.textContent = 'Engine: starting...';
+  try {
+    // Load Stockfish from CDN as a worker. This requires internet access.
+    // If this URL fails for you, replace it with a local copy of stockfish.js or another CDN.
+    const workerUrl = 'https://cdn.jsdelivr.net/npm/stockfish@15.1.0/stockfish.js';
+    engine = new Worker(workerUrl);
+    engine.onmessage = onEngineMessage;
+    engine.postMessage('uci');
+    engine.postMessage('isready');
+    engineAvailable = true;
+    engineStatusEl.textContent = 'Engine: ready';
+  } catch(err){
+    console.error('Engine start failed', err);
+    engineStatusEl.textContent = 'Engine: failed to start — will use simple fallback AI';
+    engine = null; engineAvailable = false;
+  }
+}
+function stopEngine(){ if(engine){ try{ engine.terminate(); }catch(e){} engine=null; engineAvailable=false; engineThinking=false; engineStatusEl.textContent='Engine: stopped'; }}
+
+function onEngineMessage(e){ const line = (typeof e.data === 'string')? e.data : e.data.toString(); // messages are strings
+  // console.log('engine>', line);
+  if(line.startsWith('bestmove')){
+    engineThinking = false; engineStatusEl.textContent = 'Engine: idle';
+    const parts = line.split(' '); const best = parts[1]; if(best && best!=='(none)'){ applyUciMove(best); }
+  } else if(line.startsWith('info')){
+    engineStatusEl.textContent = 'Engine: thinking...';
+  }
+}
+
+function applyUciMove(uci){ // uci like e2e4 or e7e8q
+  const from = fromAlgebraic(uci.slice(0,2)); const to = fromAlgebraic(uci.slice(2,4)); const prom = uci.length>4 ? uci[4].toUpperCase() : undefined;
+  // find matching legal move
+  legalMovesCache = generateMoves(state);
+  const move = legalMovesCache.find(m=>m.from.r===from.r && m.from.c===from.c && m.to.r===to.r && m.to.c===to.c && (!m.promotion || (m.promotion && m.promotion[0]=== (prom||'Q'))));
+  if(move){ if(move.promotion && prom) move.promotion = prom; performMove(move); maybeEngineMove(); }
+}
+
+function engineThink(movetimeMs){ if(!engineAvailable || engineThinking) return; engineThinking=true; engineStatusEl.textContent='Engine: thinking...'; const fen = generateFEN(state); engine.postMessage('position fen '+fen); engine.postMessage('go movetime '+Math.max(20, movetimeMs)); }
+
+// ----- fallback simple AI (if engine not available) -----
+function simpleAIMove(){ // 1-ply material eval
+  const moves = generateMoves(state); if(moves.length===0) return; let bestScore = -Infinity; let bestMoves=[]; for(const m of moves){ const ns = cloneState(state); makeMoveOnState(ns,m,false); const score = evaluateMaterial(ns); if(score>bestScore){ bestScore=score; bestMoves=[m]; } else if(score===bestScore) bestMoves.push(m); } const chosen = bestMoves[Math.floor(Math.random()*bestMoves.length)]; performMove(chosen); }
+function evaluateMaterial(s){ const vals={p:1,n:3,b:3,r:5,q:9,k:0}; let sum=0; for(let r=0;r<8;r++) for(let c=0;c<8;c++){ const p=s.board[r][c]; if(!p) continue; const v = vals[p.toLowerCase()]||0; sum += (pieceColor(p)==='w')? v : -v; } return pieceColorTurnAdjust(sum, s.whiteToMove); }
+function pieceColorTurnAdjust(score, whiteToMove){ return whiteToMove? score : -score; }
+
+// ----- helpers -----
+function fromAlgebraic(s){ const c='abcdefgh'.indexOf(s[0]); const r=8-parseInt(s[1]); return {r,c}; }
+
+// ----- flow control for engine moves -----
+function maybeEngineMove(){ // called after a human move or on startup
+  const modeSel = document.getElementById('mode').value; mode = modeSel;
+  const skill = parseInt(document.getElementById('skill').value,10);
+  const engineSide = (mode==='human-white') ? 'b' : (mode==='human-black' ? 'w' : null);
+  if(!engineSide) return;
+  const sideToMove = state.whiteToMove ? 'w' : 'b'; if(sideToMove !== engineSide) return;
+  if(engineAvailable){ const movetime = Math.max(50, skill * 80); engineThink(movetime); } else { setTimeout(simpleAIMove, 150); }
+}
+
+// ----- buttons and UI wiring -----
+document.getElementById('restartBtn').addEventListener('click', ()=>{ state=createInitialState(); history=[]; legalMovesCache=generateMoves(state); renderBoard(); });
+document.getElementById('flipBtn').addEventListener('click', ()=>{ flipped=!flipped; renderBoard(); });
+document.getElementById('undoBtn').addEventListener('click', ()=>{ if(history.length>0){ state = history.pop(); legalMovesCache = generateMoves(state); renderBoard(); } });
+document.getElementById('saveFenBtn').addEventListener('click', ()=>{ navigator.clipboard.writeText(generateFEN(state)).then(()=> alert('FEN copied to clipboard')); });
+document.getElementById('exportPgnBtn').addEventListener('click', ()=>{ const pgn = exportSimplePGN(); navigator.clipboard.writeText(pgn).then(()=> alert('PGN copied to clipboard')) });
+
+document.getElementById('startEngineBtn').addEventListener('click', ()=>{ startEngine(); });
+
+document.getElementById('mode').addEventListener('change', ()=>{ maybeEngineMove(); });
+
+document.getElementById('skill').addEventListener('change', ()=>{ /* nothing */ });
+
+function exportSimplePGN(){ const moves = state.moveList.slice(); let out=''; for(let i=0;i<moves.length;i+=2){ const num=(i/2)+1; out += num + '. ' + moves[i] + (moves[i+1]?(' '+moves[i+1]):'') + ' '; } return out.trim(); }
+
+// initialize
+state = createInitialState(); legalMovesCache = generateMoves(state); renderBoard();
+
+</script>
+</body>
+</html>
