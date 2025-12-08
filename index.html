@@ -30,6 +30,13 @@
             position: relative;
         }
 
+        /* Hide scrollbars but keep functionality */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
+        }
+
         /* Loading Screen Styles */
         .loading-screen {
             position: fixed;
@@ -67,23 +74,74 @@
             pointer-events: auto;
         }
 
+        /* Circular Logo Styles */
+        .logo-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 2s ease;
+        }
+
+        .logo-circle-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            z-index: 2;
+        }
+
+        .logo-circle-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
         /* Scene 1 - The Void */
         .scene-1 {
             background: radial-gradient(circle at center, var(--medium-bg) 0%, var(--dark-bg) 70%);
         }
 
-        .scene-1 .logo {
-            font-size: 5rem;
-            font-weight: 900;
-            margin-bottom: 2rem;
-            color: #333;
-            letter-spacing: 8px;
-            transition: all 2s ease;
+        .scene-1 .logo-circle {
+            border: 2px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        .scene-1.active .logo {
+        .scene-1 .logo-circle-inner {
+            color: #333;
+            background: transparent;
+        }
+
+        .scene-1 .logo-circle-glow {
+            background: transparent;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .scene-1.active .logo-circle {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 40px var(--dark-orange), 0 0 80px rgba(255, 85, 0, 0.3);
+        }
+
+        .scene-1.active .logo-circle-inner {
             color: var(--primary-orange);
-            text-shadow: 0 0 30px var(--dark-orange), 0 0 60px var(--primary-orange);
+            text-shadow: 0 0 20px var(--dark-orange);
+        }
+
+        .scene-1.active .logo-circle-glow {
+            background: radial-gradient(circle, rgba(255,85,0,0.2) 0%, transparent 70%);
+            box-shadow: inset 0 0 40px rgba(255, 85, 0, 0.3), 0 0 60px rgba(255, 85, 0, 0.2);
         }
 
         .scene-1 .tagline {
@@ -228,17 +286,22 @@
             z-index: -1;
         }
 
-        .scene-4 .logo {
-            font-size: 6rem;
-            font-weight: 900;
-            margin-bottom: 2rem;
-            background: linear-gradient(to right, #ff7b00, #ff3c00, #ff0000);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 40px rgba(255, 60, 0, 0.8);
-            letter-spacing: 5px;
-            animation: logoPulse 2s infinite alternate;
+        .scene-4 .logo-circle {
+            width: 220px;
+            height: 220px;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, #ff7b00, #ff3c00, #ff0000);
+            box-shadow: 0 0 60px rgba(255, 60, 0, 0.8), 0 0 100px rgba(255, 85, 0, 0.4);
+            animation: logoCirclePulse 2s infinite alternate;
+        }
+
+        .scene-4 .logo-circle-inner {
+            width: 190px;
+            height: 190px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #ff9966;
+            font-size: 3.2rem;
+            text-shadow: 0 0 20px rgba(255, 60, 0, 0.9);
         }
 
         .scene-4 .message {
@@ -327,7 +390,6 @@
             justify-content: center;
             align-items: center;
             background-color: #000;
-            background-image: url("homepage bg.png"); /* Assuming this background image is correct */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -337,6 +399,31 @@
 
         .website-content.active {
             display: flex;
+        }
+
+        .website-logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+        }
+
+        .website-logo-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff7b00, #ff3c00, #ff0000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(255, 60, 0, 0.7);
+        }
+
+        .website-logo-text {
+            color: white;
+            font-weight: 900;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
         }
 
         .scrolling-text {
@@ -363,10 +450,10 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
-            flex-wrap: nowrap; /* Prevent wrapping to new line */
-            overflow-x: auto; /* Allow horizontal scrolling if needed */
+            flex-wrap: nowrap;
+            overflow-x: auto;
             padding: 10px;
-            max-width: 95vw; /* Ensure it fits within viewport */
+            max-width: 95vw;
         }
 
         .button {
@@ -382,9 +469,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 100, 0, 0.4);
-            min-width: 160px; /* Consistent width */
-            white-space: nowrap; /* Prevent text wrapping */
-            flex-shrink: 0; /* Prevent buttons from shrinking */
+            min-width: 160px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .button:hover {
@@ -465,14 +552,14 @@
             }
         }
 
-        @keyframes logoPulse {
+        @keyframes logoCirclePulse {
             0% {
                 transform: scale(1);
-                text-shadow: 0 0 40px rgba(255, 60, 0, 0.8);
+                box-shadow: 0 0 60px rgba(255, 60, 0, 0.8), 0 0 100px rgba(255, 85, 0, 0.4);
             }
             100% {
                 transform: scale(1.05);
-                text-shadow: 0 0 60px rgba(255, 60, 0, 1);
+                box-shadow: 0 0 80px rgba(255, 60, 0, 1), 0 0 120px rgba(255, 85, 0, 0.6);
             }
         }
 
@@ -507,8 +594,26 @@
         }
        
         @media (max-width: 768px) {
-            .scene-1 .logo, .scene-4 .logo {
-                font-size: 3rem;
+            .logo-circle {
+                width: 140px;
+                height: 140px;
+            }
+           
+            .logo-circle-inner {
+                width: 120px;
+                height: 120px;
+                font-size: 2.2rem;
+            }
+           
+            .scene-4 .logo-circle {
+                width: 180px;
+                height: 180px;
+            }
+           
+            .scene-4 .logo-circle-inner {
+                width: 150px;
+                height: 150px;
+                font-size: 2.6rem;
             }
            
             .scene-2 .message, .scene-3 .message, .scene-4 .message {
@@ -543,6 +648,28 @@
         }
        
         @media (max-width: 650px) {
+            .logo-circle {
+                width: 120px;
+                height: 120px;
+            }
+           
+            .logo-circle-inner {
+                width: 100px;
+                height: 100px;
+                font-size: 1.8rem;
+            }
+           
+            .scene-4 .logo-circle {
+                width: 150px;
+                height: 150px;
+            }
+           
+            .scene-4 .logo-circle-inner {
+                width: 125px;
+                height: 125px;
+                font-size: 2.2rem;
+            }
+           
             .button {
                 min-width: 100px;
                 padding: 8px 10px;
@@ -556,19 +683,24 @@
     </style>
 </head>
 <body>
-<img src="Blaze logo.png" alt="Blaze Logo" style="position: absolute; top: 15px; left: 15px; height: 65px; z-index: 10000;">
     <div class="loading-screen" id="loadingScreen">
+        <!-- Scene 1 - The Void -->
         <div class="scene scene-1 active">
-            <h1 class="logo"><i>BLAZE</i></h1>
+            <div class="logo-circle">
+                <div class="logo-circle-inner">BLAZE</div>
+                <div class="logo-circle-glow"></div>
+            </div>
             <p class="tagline"><i>A spark is about to ignite...</i></p>
         </div>
 
+        <!-- Scene 2 - The Spark -->
         <div class="scene scene-2">
             <div class="spark-container" id="sparkContainer"></div>
             <div class="central-spark"></div>
             <p class="message"><i>In the darkness, a single spark emerges. A promise of what's to come.</i></p>
         </div>
 
+        <!-- Scene 3 - The Flame -->
         <div class="scene scene-3">
             <div class="embers" id="embersContainer"></div>
             <div class="flame-container">
@@ -577,9 +709,12 @@
             <p class="message"><i>The spark grows into a flame. Energy begins to flow.</i></p>
         </div>
 
+        <!-- Scene 4 - The Blaze -->
         <div class="scene scene-4">
             <div class="fire-background"></div>
-            <h1 class="logo">BLAZE</h1>
+            <div class="logo-circle">
+                <div class="logo-circle-inner">BLAZE</div>
+            </div>
             <p class="message"><i>The flame has become a blaze. Your experience is ready.</i></p>
            
             <div class="loading-bar-container">
@@ -601,19 +736,23 @@
     </div>
 
     <div class="website-content" id="websiteContent">
+        <!-- Circular logo in website -->
+        <div class="website-logo">
+            <div class="website-logo-circle">
+                <div class="website-logo-text">BLAZE</div>
+            </div>
+        </div>
+
         <header class="scrolling-text">
             <h1><i>Welcome to Blaze website - From spark to success</i></h1>
         </header>
 
-       
-       
         <nav class="button-container">
-           
             <a href="game.html" class="button" target="_blank"><i>BlazeGames</i></a>
             <a href="music.html" class="button" target="_blank"><i>BlazeMusic</i></a>
-			<a href="ask chatgpt.html" class="button" target="_blank"><i>Blazebot</i></a>
-			<a href="cook.html" class="button" target="_blank"><i>Blaze Kitchen</i></a>
-			<a href="connect.html" class="button" target="_blank"><i>Blaze AI Talk</i></a>
+            <a href="ask chatgpt.html" class="button" target="_blank"><i>Blazebot</i></a>
+            <a href="cook.html" class="button" target="_blank"><i>Blaze Kitchen</i></a>
+            <a href="connect.html" class="button" target="_blank"><i>Blaze AI Talk</i></a>
         </nav>
     </div>
 
