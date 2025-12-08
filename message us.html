@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us - Message Blazemakers</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            max-width: 500px; 
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold;
+            color: #333;
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 5px; 
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 15px 30px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .notification { 
+            display: none; 
+            background: #4CAF50; 
+            color: white; 
+            padding: 15px; 
+            margin-top: 15px; 
+            border-radius: 8px;
+            text-align: center;
+        }
+        .notification.error {
+            background: #f44336;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>📧 Send Message</h2>
+        
+        <form id="messageForm">
+            <div class="form-group">
+                <label>Your Email:</label>
+                <input type="email" name="from_email" id="email" placeholder="your.email@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Your Message:</label>
+                <textarea name="message" id="message" placeholder="Type your message here..." required></textarea>
+            </div>
+            
+            <button type="submit">Send Message</button>
+        </form>
+        
+        <div id="notification" class="notification">
+            Your message has been sent successfully!
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Homepage</a>
+        </div>
+    </div>
+
+    <script>
+        emailjs.init("7kDarsUu-S-9Nscpw");
+        
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const button = this.querySelector('button');
+            const notification = document.getElementById('notification');
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            button.textContent = 'Sending...';
+            button.disabled = true;
+            notification.style.display = 'none';
+            
+            try {
+                await emailjs.send(
+                    "service_9qsd96o",
+                    "template_624fotm",
+                    {
+                        from_email: email,
+                        message: message
+                    }
+                );
+                
+                notification.textContent = '✅ Message sent successfully!';
+                notification.className = 'notification';
+                notification.style.display = 'block';
+                
+                document.getElementById('email').value = '';
+                document.getElementById('message').value = '';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                notification.textContent = '❌ Error sending message. Please try again.';
+                notification.className = 'notification error';
+                notification.style.display = 'block';
+            } finally {
+                button.textContent = 'Send Message';
+                button.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
