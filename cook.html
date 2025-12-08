@@ -1,7 +1,3 @@
-Gmail	aayush balakrishnan <aayushbkmala@gmail.com>
-(no subject)
-Richard <richu.linto.2015@gmail.com>	Wed, Dec 3, 2025 at 7:59 PM
-To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -130,20 +126,6 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-
-        .random-header-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-        }
-
-        .random-header-image:hover {
-            transform: scale(1.1);
         }
 
         .auth-btn {
@@ -477,6 +459,11 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
 
         .action-btn.active {
             color: #ff6b35;
+        }
+
+        .action-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .view-recipe-btn {
@@ -1125,10 +1112,6 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 width: 100%;
                 justify-content: center;
             }
-           
-            .random-header-image {
-                display: none;
-            }
         }
     </style>
 </head>
@@ -1159,13 +1142,10 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 </div>
             </div>
             <div class="user-actions">
-                <!-- Random Header Image -->
-                <img id="random-header-image" class="random-header-image" alt="Random cooking image">
-               
                 <div id="auth-buttons">
                     <button class="auth-btn" id="login-btn">Log In</button>
                     <button class="auth-btn" id="signup-btn">Sign Up</button>
-                    <button class="auth-btn" id="message-btn" onclick="openMessagePage()">Message Us</button>
+                    <button class="auth-btn" id="message-btn" onclick="window.location.href='message-us.html'">Message Us</button>
                 </div>
                 <div id="user-info" style="display: none;">
                     <div class="user-dropdown">
@@ -1242,12 +1222,12 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <span>🍽️ <span id="modal-servings">4 servings</span></span>
                 </div>
             </div>
-           
+            
             <!-- Warning Banner -->
             <div class="recipe-warning-banner">
                 <h3>⚠️ READ THE RECIPE BEFORE COOKING ⚠️</h3>
             </div>
-           
+            
             <div class="ingredients-section">
                 <h3 class="section-title">Ingredients</h3>
                 <ul class="ingredients-list" id="modal-ingredients">
@@ -1283,7 +1263,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
     <div class="add-recipe-modal" id="add-recipe-modal">
         <div class="add-recipe-content">
             <button class="close-modal" onclick="closeAddRecipeModal()">×</button>
-           
+            
             <!-- Step 1: Recipe Name -->
             <div class="add-recipe-step active" id="step1">
                 <h2 class="step-title">Recipe Name</h2>
@@ -1296,7 +1276,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="nextStep(2)">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 2: Category -->
             <div class="add-recipe-step" id="step2">
                 <h2 class="step-title">Select Category</h2>
@@ -1311,7 +1291,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="nextStep(3)">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 3: Ingredients -->
             <div class="add-recipe-step" id="step3">
                 <h2 class="step-title">Add Ingredients</h2>
@@ -1330,7 +1310,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="nextStep(4)">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 4: Instructions -->
             <div class="add-recipe-step" id="step4">
                 <h2 class="step-title">Add Instructions</h2>
@@ -1343,7 +1323,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="processInstructions()">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 5: Review Instructions -->
             <div class="add-recipe-step" id="step5">
                 <h2 class="step-title">Review Instructions</h2>
@@ -1355,7 +1335,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="nextStep(6)">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 6: Final Details -->
             <div class="add-recipe-step" id="step6">
                 <h2 class="step-title">Final Details</h2>
@@ -1391,7 +1371,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <button class="nav-btn-step" onclick="nextStep(7)">Next</button>
                 </div>
             </div>
-           
+            
             <!-- Step 7: Upload Image -->
             <div class="add-recipe-step" id="step7">
                 <h2 class="step-title">Upload Recipe Image</h2>
@@ -1422,7 +1402,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 <div class="auth-tab active" onclick="showAuthForm('login')">Log In</div>
                 <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
             </div>
-           
+            
             <div class="auth-form active" id="login-form">
                 <div class="input-group">
                     <label>Username or Email:</label>
@@ -1440,7 +1420,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     Don't have an account? <a onclick="showAuthForm('signup')">Sign up here</a>
                 </div>
             </div>
-           
+            
             <div class="auth-form" id="signup-form">
                 <div class="input-group">
                     <label>Username:</label>
@@ -1455,13 +1435,6 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     <div class="password-container">
                         <input type="password" id="signup-password">
                         <button type="button" class="password-toggle" onclick="togglePassword('signup-password')">👁️</button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Confirm Password:</label>
-                    <div class="password-container">
-                        <input type="password" id="signup-confirm">
-                        <button type="button" class="password-toggle" onclick="togglePassword('signup-confirm')">👁️</button>
                     </div>
                 </div>
                 <button class="nav-btn-step" style="width: 100%;" onclick="signup()">Sign Up</button>
@@ -1522,13 +1495,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
     </footer>
 
     <script>
-        // Recipe Data with 30 recipes
+        // Recipe Data with 30 recipes with REAL food photos
         const recipes = {
             "American Classics": [
                 {
                     id: "recipe1",
                     name: "Blazin' Burger Supreme",
-                    image: "burger.jpg",
+                    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1lb prime beef blend", "4 brioche buns", "4 slices pepper jack cheese", "8 strips applewood bacon", "1 red onion", "2 tomatoes", "Blaze sauce", "Jalapeños", "Lettuce"],
                     instructions: [
                         "Form beef into 4 thick patties and season with Blaze rub",
@@ -1545,13 +1518,14 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 124,
                     dislikes: 5,
+                    userReactions: {}, // Store user reactions like {userId: 'like'/'dislike'}
                     comments: [],
                     favorites: []
                 },
                 {
                     id: "recipe2",
                     name: "Inferno Mac & Cheese",
-                    image: "macncheese.jpg",
+                    image: "https://images.unsplash.com/photo-1543364195-bfe6e4932397?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1lb elbow pasta", "2 cups sharp cheddar", "1 cup pepper jack", "2 cups heavy cream", "1/2 cup Blaze butter", "1/4 cup flour", "1 cup panko breadcrumbs", "1 tsp cayenne pepper"],
                     instructions: [
                         "Cook pasta al dente according to package directions",
@@ -1569,6 +1543,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 89,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1577,7 +1552,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe3",
                     name: "Chocolate Lava Cake",
-                    image: "lava-cake.jpg",
+                    image: "https://images.unsplash.com/photo-1624353365286-3f8d62dadadf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["4oz dark chocolate", "1/2 cup butter", "2 eggs", "2 egg yolks", "1/4 cup sugar", "2 tbsp flour", "Pinch of salt", "Powdered sugar for dusting"],
                     instructions: [
                         "Preheat oven to 425°F and butter 4 ramekins",
@@ -1595,13 +1570,14 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 156,
                     dislikes: 1,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 },
                 {
                     id: "recipe4",
                     name: "Classic Chocolate Chip Cookies",
-                    image: "cookies.jpg",
+                    image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 1/4 cups flour", "1 tsp baking soda", "1 tsp salt", "1 cup butter", "3/4 cup sugar", "3/4 cup brown sugar", "2 eggs", "2 tsp vanilla", "2 cups chocolate chips"],
                     instructions: [
                         "Preheat oven to 375°F and line baking sheets",
@@ -1619,6 +1595,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 203,
                     dislikes: 3,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1627,7 +1604,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe5",
                     name: "Caramel Monster Shake",
-                    image: "milkshake.jpg",
+                    image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["3 scoops vanilla ice cream", "1/4 cup caramel sauce", "1 cup milk", "Whipped cream", "Caramel drizzle", "Chocolate chips", "Cookie crumbs"],
                     instructions: [
                         "Blend ice cream, caramel sauce and milk until smooth",
@@ -1645,6 +1622,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 78,
                     dislikes: 0,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1653,7 +1631,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe6",
                     name: "Creamy Tomato Soup",
-                    image: "tomato-soup.jpg",
+                    image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 tbsp olive oil", "1 onion diced", "2 cloves garlic minced", "2 cans crushed tomatoes", "2 cups vegetable broth", "1/2 cup heavy cream", "Fresh basil", "Salt and pepper to taste"],
                     instructions: [
                         "Sauté onion and garlic in olive oil until soft and fragrant",
@@ -1670,6 +1648,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 95,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1678,7 +1657,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe7",
                     name: "Blazing Butter Chicken",
-                    image: "butter-chicken.jpg",
+                    image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2lbs chicken thighs", "1 cup yogurt", "2 cups tomato puree", "1/2 cup butter", "1 cup heavy cream", "2 tbsp garam masala", "1 inch ginger", "4 cloves garlic", "2 tsp Kashmiri chili", "Fresh cilantro"],
                     instructions: [
                         "Marinate chicken in yogurt and spices for 4 hours minimum",
@@ -1696,6 +1675,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 167,
                     dislikes: 4,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1704,7 +1684,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe8",
                     name: "Fluffy Pancakes",
-                    image: "pancakes.jpg",
+                    image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 cups flour", "2 tbsp sugar", "2 tsp baking powder", "1 tsp salt", "2 eggs", "1 3/4 cups milk", "1/4 cup melted butter", "Maple syrup", "Fresh berries"],
                     instructions: [
                         "Mix dry ingredients in large bowl",
@@ -1721,6 +1701,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 142,
                     dislikes: 1,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1729,7 +1710,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe9",
                     name: "Honey BBQ Ribs",
-                    image: "bbq-ribs.jpg",
+                    image: "https://images.unsplash.com/photo-1529551739587-e242c564f727?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 racks pork ribs", "1 cup BBQ sauce", "1/4 cup honey", "2 tbsp apple cider vinegar", "1 tbsp smoked paprika", "1 tsp garlic powder", "Salt and pepper"],
                     instructions: [
                         "Season ribs with dry rub and refrigerate overnight",
@@ -1746,6 +1727,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 89,
                     dislikes: 3,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1754,7 +1736,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe10",
                     name: "Spicy Arrabbiata Pasta",
-                    image: "arrabbiata.jpg",
+                    image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["400g spaghetti", "4 cloves garlic", "2 red chilies", "800g canned tomatoes", "1/4 cup olive oil", "Fresh parsley", "Parmesan cheese", "Salt to taste"],
                     instructions: [
                         "Cook spaghetti according to package directions",
@@ -1772,6 +1754,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 112,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1780,7 +1763,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe11",
                     name: "Spicy Chicken Tacos",
-                    image: "tacos.jpg",
+                    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1lb chicken breast", "8 corn tortillas", "1 onion", "2 tomatoes", "1 avocado", "1 lime", "Cilantro", "Sour cream", "Taco seasoning"],
                     instructions: [
                         "Season chicken with taco seasoning and grill until cooked",
@@ -1798,6 +1781,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 98,
                     dislikes: 1,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1806,7 +1790,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe12",
                     name: "Quinoa Salad Bowl",
-                    image: "quinoa.jpg",
+                    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1 cup quinoa", "2 cups water", "1 cucumber", "1 bell pepper", "1/2 red onion", "1/4 cup olive oil", "1 lemon", "Fresh mint", "Salt and pepper"],
                     instructions: [
                         "Rinse quinoa thoroughly under cold water",
@@ -1824,6 +1808,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 76,
                     dislikes: 0,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1832,7 +1817,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe13",
                     name: "Ultimate Grilled Cheese",
-                    image: "grilled-cheese.jpg",
+                    image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["8 slices bread", "4 slices cheddar", "4 slices mozzarella", "4 tbsp butter", "2 tbsp mayonnaise", "1 tsp garlic powder"],
                     instructions: [
                         "Spread butter on one side of each bread slice",
@@ -1849,6 +1834,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 145,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1857,7 +1843,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe14",
                     name: "Black Bean Burgers",
-                    image: "vegan-burger.jpg",
+                    image: "https://images.unsplash.com/photo-1525059696034-4967a8e1d901?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 cans black beans", "1 onion", "2 cloves garlic", "1/2 cup breadcrumbs", "2 tbsp flaxseed meal", "1 tsp cumin", "1 tsp paprika", "4 burger buns"],
                     instructions: [
                         "Mash black beans in large bowl",
@@ -1875,6 +1861,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 67,
                     dislikes: 1,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1883,7 +1870,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe15",
                     name: "Spiced Thanksgiving Turkey",
-                    image: "turkey.jpg",
+                    image: "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["12lb turkey", "1 cup butter softened", "2 onions quartered", "4 celery stalks", "Fresh herbs", "Orange zest", "2 cups chicken broth", "Salt and pepper"],
                     instructions: [
                         "Preheat oven to 325°F and prepare roasting pan",
@@ -1901,6 +1888,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 56,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1909,7 +1897,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe16",
                     name: "Christmas Gingerbread Cookies",
-                    image: "gingerbread.jpg",
+                    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["3 cups flour", "1 cup molasses", "3/4 cup brown sugar", "1 egg", "2 tsp ginger", "1 tsp cinnamon", "1/2 tsp cloves", "Royal icing", "Sprinkles"],
                     instructions: [
                         "Mix dry ingredients in large bowl and set aside",
@@ -1928,6 +1916,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 134,
                     dislikes: 1,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1936,7 +1925,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe17",
                     name: "Spicy Tuna Roll",
-                    image: "sushi.jpg",
+                    image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["2 cups sushi rice", "4 nori sheets", "8oz fresh tuna", "2 tbsp mayonnaise", "1 tsp sriracha", "1 cucumber", "1 avocado", "Soy sauce", "Wasabi"],
                     instructions: [
                         "Prepare sushi rice according to package directions",
@@ -1954,6 +1943,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 89,
                     dislikes: 3,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1962,7 +1952,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe18",
                     name: "Spicy Thai Curry",
-                    image: "thai-curry.jpg",
+                    image: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1 can coconut milk", "2 tbsp red curry paste", "1lb chicken breast", "2 bell peppers", "1 onion", "Thai basil", "Fish sauce", "1 lime", "Jasmine rice"],
                     instructions: [
                         "Sauté curry paste in oil until fragrant",
@@ -1980,6 +1970,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 103,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -1988,7 +1979,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe19",
                     name: "Kung Pao Chicken",
-                    image: "kung-pao.jpg",
+                    image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1lb chicken breast", "1/2 cup peanuts", "4 dried chilies", "2 cloves garlic", "1 inch ginger", "2 tbsp soy sauce", "1 tbsp rice vinegar", "1 tsp sugar", "Green onions"],
                     instructions: [
                         "Dice chicken into bite-sized pieces",
@@ -2006,6 +1997,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 121,
                     dislikes: 3,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -2014,7 +2006,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 {
                     id: "recipe20",
                     name: "Coq au Vin",
-                    image: "coq-au-vin.jpg",
+                    image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
                     ingredients: ["1 whole chicken", "4oz bacon", "1 onion", "2 carrots", "8oz mushrooms", "2 cups red wine", "2 cups chicken broth", "Fresh thyme", "Butter"],
                     instructions: [
                         "Brown chicken pieces in Dutch oven",
@@ -2032,6 +2024,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     publisher: "Blaze",
                     likes: 78,
                     dislikes: 2,
+                    userReactions: {},
                     comments: [],
                     favorites: []
                 }
@@ -2044,22 +2037,12 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         let currentRecipe = null;
         let userFavorites = [];
         let selectedCategory = "";
-
-        // Random header images
-        const headerImages = [
-            "blaze kitchen 1.jpg",
-            "blaze kitchen 2.jpg",
-            "blaze kitchen 3.jpg",
-            "blaze kitchen 4.jpg",
-            "blaze kitchen 5.jpg",
-            "blaze kitchen 6.jpg",
-            "blaze kitchen 7.jpg"
-        ];
+        let userReactions = {}; // Store user reactions globally
 
         // Categories
         const categories = [
-            "American Classics", "Indian Spices", "Japanese Artistry",
-            "Italian Passion", "Mexican Fiesta", "Chinese Delights",
+            "American Classics", "Indian Spices", "Japanese Artistry", 
+            "Italian Passion", "Mexican Fiesta", "Chinese Delights", 
             "Thai Temptations", "French Cuisine", "Mediterranean Magic",
             "BBQ & Grilling", "Comfort Food", "Healthy & Light",
             "Desserts & Sweets", "Vegan & Vegetarian", "Breakfast & Brunch",
@@ -2069,9 +2052,6 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            // Set random header image
-            setRandomHeaderImage();
-           
             // Show loading screen for 3 seconds
             setTimeout(() => {
                 document.getElementById('loading-screen').style.opacity = '0';
@@ -2079,32 +2059,27 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     document.getElementById('loading-screen').style.display = 'none';
                 }, 500);
             }, 3000);
-           
+            
             populateAddRecipeCategories();
             displayRecipes('all');
-           
+            
             // Add event listeners
             document.getElementById('add-recipe-btn').addEventListener('click', handleAddRecipeClick);
             document.getElementById('login-btn').addEventListener('click', openAuthModal);
             document.getElementById('signup-btn').addEventListener('click', openAuthModal);
-           
+            
             // Check if user is logged in
             checkLoginStatus();
+            
+            // Load user reactions
+            loadUserReactions();
         });
-
-        // Set random header image
-        function setRandomHeaderImage() {
-            const randomIndex = Math.floor(Math.random() * headerImages.length);
-            const imgElement = document.getElementById('random-header-image');
-            imgElement.src = headerImages[randomIndex];
-            imgElement.alt = "Blaze Kitchen Image " + (randomIndex + 1);
-        }
 
         // Toggle password visibility
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             const toggle = input.parentNode.querySelector('.password-toggle');
-           
+            
             if (input.type === 'password') {
                 input.type = 'text';
                 toggle.textContent = '🙈';
@@ -2121,13 +2096,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 currentUser = JSON.parse(savedUser);
                 isLoggedIn = true;
                 updateUserInterface();
-               
+                
                 // Load user favorites
                 const savedFavorites = localStorage.getItem(`blazeKitchenFavorites_${currentUser.username}`);
                 if (savedFavorites) {
                     userFavorites = JSON.parse(savedFavorites);
                 }
-               
+                
                 // Load user profile data
                 const savedProfile = localStorage.getItem(`blazeKitchenProfile_${currentUser.username}`);
                 if (savedProfile) {
@@ -2141,12 +2116,31 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             }
         }
 
+        // Load user reactions
+        function loadUserReactions() {
+            const savedUser = localStorage.getItem('blazeKitchenUser');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                const savedReactions = localStorage.getItem(`blazeKitchenReactions_${user.username}`);
+                if (savedReactions) {
+                    userReactions = JSON.parse(savedReactions);
+                }
+            }
+        }
+
+        // Save user reactions
+        function saveUserReactions() {
+            if (currentUser) {
+                localStorage.setItem(`blazeKitchenReactions_${currentUser.username}`, JSON.stringify(userReactions));
+            }
+        }
+
         // Update UI based on login status
         function updateUserInterface() {
             const authButtons = document.getElementById('auth-buttons');
             const userInfo = document.getElementById('user-info');
             const userName = document.getElementById('user-name');
-           
+            
             if (isLoggedIn) {
                 authButtons.style.display = 'none';
                 userInfo.style.display = 'block';
@@ -2164,17 +2158,18 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 btn.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
-           
+            
             // Clear search info
             document.getElementById('search-info').textContent = '';
-           
+            
             // Show search section if search is clicked
             if (section === 'search') {
                 document.getElementById('search-section').style.display = 'block';
+                document.getElementById('search-input').focus();
             } else {
                 document.getElementById('search-section').style.display = 'none';
             }
-           
+            
             displayRecipes(section);
         }
 
@@ -2182,7 +2177,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function populateAddRecipeCategories() {
             const categoryGrid = document.getElementById('category-grid');
             categoryGrid.innerHTML = '';
-           
+            
             categories.forEach(category => {
                 const option = document.createElement('div');
                 option.className = 'category-option';
@@ -2198,7 +2193,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.querySelectorAll('.category-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
-           
+            
             // Select clicked category
             element.classList.add('selected');
             selectedCategory = category;
@@ -2223,7 +2218,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             let filteredRecipes = allRecipes;
            
             if (filter === 'favorites') {
-                filteredRecipes = allRecipes.filter(recipe =>
+                filteredRecipes = allRecipes.filter(recipe => 
                     userFavorites.includes(recipe.id)
                 );
             } else if (filter !== 'all') {
@@ -2243,42 +2238,12 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
            
             filteredRecipes.forEach(recipe => {
                 const isFavorited = userFavorites.includes(recipe.id);
+                const userReaction = userReactions[recipe.id] || null;
                 const card = document.createElement('div');
                 card.className = 'recipe-card';
-               
-                // Use placeholder emojis for images
-                const placeholderEmojis = {
-                    "burger.jpg": "🍔",
-                    "macncheese.jpg": "🧀",
-                    "steak.jpg": "🥩",
-                    "lava-cake.jpg": "🍫",
-                    "cookies.jpg": "🍪",
-                    "milkshake.jpg": "🥤",
-                    "strawberry-shake.jpg": "🍓",
-                    "tomato-soup.jpg": "🍅",
-                    "carrot-halwa.jpg": "🥕",
-                    "turkey.jpg": "🦃",
-                    "gingerbread.jpg": "🍪",
-                    "spider-pizza.jpg": "🍕",
-                    "butter-chicken.jpg": "🍗",
-                    "pancakes.jpg": "🥞",
-                    "bbq-ribs.jpg": "🍖",
-                    "arrabbiata.jpg": "🍝",
-                    "tacos.jpg": "🌮",
-                    "quinoa.jpg": "🥗",
-                    "grilled-cheese.jpg": "🧀",
-                    "vegan-burger.jpg": "🍔",
-                    "sushi.jpg": "🍣",
-                    "thai-curry.jpg": "🍛",
-                    "kung-pao.jpg": "🍗",
-                    "coq-au-vin.jpg": "🍗"
-                };
-               
-                const imageEmoji = placeholderEmojis[recipe.image] || "🍳";
-               
+                
                 card.innerHTML = `
-                    <div class="recipe-image" style="background: linear-gradient(135deg, #ff6b35, #f7931e);">
-                        <div style="font-size: 4rem;">${imageEmoji}</div>
+                    <div class="recipe-image" style="background-image: url('${recipe.image}');">
                         <div class="recipe-publisher">
                             <div class="publisher-avatar">${recipe.publisher.charAt(0)}</div>
                             <span>${recipe.publisher}</span>
@@ -2296,8 +2261,8 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                         </div>
                         <p class="recipe-description">A ${recipe.category.toLowerCase()} masterpiece that will ignite your taste buds with flavor and passion.</p>
                         <div class="recipe-actions">
-                            <button class="action-btn" onclick="handleLikeCard('${recipe.id}')">👍 ${recipe.likes}</button>
-                            <button class="action-btn" onclick="handleDislikeCard('${recipe.id}')">👎 ${recipe.dislikes}</button>
+                            <button class="action-btn ${userReaction === 'like' ? 'active' : ''}" onclick="handleLikeCard('${recipe.id}')">👍 ${recipe.likes}</button>
+                            <button class="action-btn ${userReaction === 'dislike' ? 'active' : ''}" onclick="handleDislikeCard('${recipe.id}')">👎 ${recipe.dislikes}</button>
                             <button class="action-btn" onclick="openRecipe('${recipe.id}')">💬 ${recipe.comments.length}</button>
                             <button class="action-btn ${isFavorited ? 'active' : ''}" onclick="toggleFavoriteCard('${recipe.id}')">⭐ ${isFavorited ? 'Favorited' : 'Favorite'}</button>
                         </div>
@@ -2312,7 +2277,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function searchRecipesNatural(searchTerm, allRecipes) {
             const searchLower = searchTerm.toLowerCase();
             const searchWords = searchLower.split(' ');
-           
+            
             // Common food-related keywords mapping
             const keywordMapping = {
                 'burger': ['burger', 'beef', 'bun', 'cheeseburger'],
@@ -2336,13 +2301,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 'drink': ['drink', 'beverage', 'juice', 'smoothie', 'shake'],
                 'soup': ['soup', 'broth', 'stew', 'chowder']
             };
-           
+            
             // Check for recipe not found keywords
             const notFoundKeywords = ['not', 'found', 'doesn\'t exist', "don't have", 'cannot find', 'no recipe'];
             if (notFoundKeywords.some(keyword => searchLower.includes(keyword))) {
                 return [];
             }
-           
+            
             return allRecipes.filter(recipe => {
                 // Basic search in name, ingredients, and category
                 if (recipe.name.toLowerCase().includes(searchLower) ||
@@ -2350,7 +2315,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     recipe.ingredients.some(ing => ing.toLowerCase().includes(searchLower))) {
                     return true;
                 }
-               
+                
                 // Check for keyword matches
                 for (const [keyword, relatedWords] of Object.entries(keywordMapping)) {
                     if (searchWords.some(word => relatedWords.includes(word))) {
@@ -2361,19 +2326,19 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                         }
                     }
                 }
-               
+                
                 // Check for heat level
                 if (searchLower.includes('mild') && recipe.heat === '🔥') return true;
                 if (searchLower.includes('medium') && recipe.heat === '🔥🔥') return true;
                 if (searchLower.includes('hot') && recipe.heat === '🔥🔥🔥') return true;
                 if (searchLower.includes('spicy') && recipe.heat.includes('🔥')) return true;
-               
+                
                 // Check for difficulty
                 if (searchLower.includes('easy') && recipe.difficulty === 'Easy') return true;
                 if (searchLower.includes('medium') && recipe.difficulty === 'Medium') return true;
                 if (searchLower.includes('hard') && recipe.difficulty === 'Hard') return true;
                 if (searchLower.includes('expert') && recipe.difficulty === 'Expert') return true;
-               
+                
                 return false;
             });
         }
@@ -2390,13 +2355,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             const searchInput = document.getElementById('search-input');
             const searchTerm = searchInput.value.trim();
             const searchInfo = document.getElementById('search-info');
-           
+            
             if (searchTerm === '') {
                 searchInfo.textContent = '';
                 displayRecipes('all');
                 return;
             }
-           
+            
             let allRecipes = [];
             for (const category in recipes) {
                 recipes[category].forEach(recipe => {
@@ -2404,17 +2369,17 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     allRecipes.push(recipe);
                 });
             }
-           
+            
             const filteredRecipes = searchRecipesNatural(searchTerm, allRecipes);
-           
+            
             if (filteredRecipes.length === 0) {
-                searchInfo.textContent = `No recipes found for "${searchTerm}". Try searching for: burger, pizza, pasta, chicken, or dessert.`;
+                searchInfo.textContent = `Recipe not found for "${searchTerm}". Try searching for: burger, pizza, pasta, chicken, or dessert.`;
                 searchInfo.className = 'search-info error';
             } else {
                 searchInfo.textContent = `Found ${filteredRecipes.length} recipe(s) for "${searchTerm}"`;
                 searchInfo.className = 'search-info';
             }
-           
+            
             displayRecipes('all', searchTerm);
         }
 
@@ -2429,11 +2394,11 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     break;
                 }
             }
-           
+            
             if (!recipe) return;
-           
+            
             currentRecipe = recipe;
-           
+            
             // Update modal content
             document.getElementById('modal-title').textContent = recipe.name;
             document.getElementById('modal-heat').textContent = recipe.heat;
@@ -2443,12 +2408,17 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.getElementById('like-count').textContent = recipe.likes;
             document.getElementById('dislike-count').textContent = recipe.dislikes;
             document.getElementById('comment-count').textContent = recipe.comments.length;
-           
+            
             // Update favorite button
             const isFavorited = userFavorites.includes(recipe.id);
             document.getElementById('favorite-text').textContent = isFavorited ? 'Remove from Favorites' : 'Add to Favorites';
             document.getElementById('favorite-btn').className = isFavorited ? 'action-btn active' : 'action-btn';
-           
+            
+            // Update like/dislike buttons based on user reaction
+            const userReaction = userReactions[recipe.id] || null;
+            document.getElementById('like-btn').className = userReaction === 'like' ? 'action-btn active' : 'action-btn';
+            document.getElementById('dislike-btn').className = userReaction === 'dislike' ? 'action-btn active' : 'action-btn';
+            
             // Populate ingredients
             const ingredientsList = document.getElementById('modal-ingredients');
             ingredientsList.innerHTML = '';
@@ -2457,7 +2427,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 li.textContent = ingredient;
                 ingredientsList.appendChild(li);
             });
-           
+            
             // Populate instructions
             const instructionsList = document.getElementById('modal-instructions');
             instructionsList.innerHTML = '';
@@ -2466,7 +2436,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 li.textContent = instruction;
                 instructionsList.appendChild(li);
             });
-           
+            
             // Populate comments
             const commentsList = document.getElementById('comments-list');
             commentsList.innerHTML = '';
@@ -2485,7 +2455,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 `;
                 commentsList.appendChild(li);
             });
-           
+            
             // Show modal
             document.getElementById('recipe-modal').style.display = 'block';
         }
@@ -2495,27 +2465,87 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.getElementById('recipe-modal').style.display = 'none';
         }
 
-        // Handle like
+        // Handle like (YouTube style - one like or dislike per user)
         function handleLike() {
-            if (!currentRecipe) return;
-            currentRecipe.likes++;
-            document.getElementById('like-count').textContent = currentRecipe.likes;
+            if (!currentRecipe || !isLoggedIn) {
+                showNotification('Please login to like recipes');
+                return;
+            }
+            
+            const currentReaction = userReactions[currentRecipe.id];
+            
+            if (currentReaction === 'like') {
+                // User is removing their like
+                currentRecipe.likes--;
+                delete userReactions[currentRecipe.id];
+                document.getElementById('like-btn').classList.remove('active');
+                document.getElementById('like-count').textContent = currentRecipe.likes;
+            } else {
+                // User is adding a like
+                if (currentReaction === 'dislike') {
+                    // Remove previous dislike
+                    currentRecipe.dislikes--;
+                    document.getElementById('dislike-btn').classList.remove('active');
+                    document.getElementById('dislike-count').textContent = currentRecipe.dislikes;
+                }
+                
+                currentRecipe.likes++;
+                userReactions[currentRecipe.id] = 'like';
+                document.getElementById('like-btn').classList.add('active');
+                document.getElementById('dislike-btn').classList.remove('active');
+                document.getElementById('like-count').textContent = currentRecipe.likes;
+            }
+            
             saveRecipes();
-            showNotification('Recipe liked!');
+            saveUserReactions();
+            showNotification(currentReaction === 'like' ? 'Like removed' : 'Recipe liked!');
         }
 
-        // Handle dislike
+        // Handle dislike (YouTube style - one like or dislike per user)
         function handleDislike() {
-            if (!currentRecipe) return;
-            currentRecipe.dislikes++;
-            document.getElementById('dislike-count').textContent = currentRecipe.dislikes;
+            if (!currentRecipe || !isLoggedIn) {
+                showNotification('Please login to dislike recipes');
+                return;
+            }
+            
+            const currentReaction = userReactions[currentRecipe.id];
+            
+            if (currentReaction === 'dislike') {
+                // User is removing their dislike
+                currentRecipe.dislikes--;
+                delete userReactions[currentRecipe.id];
+                document.getElementById('dislike-btn').classList.remove('active');
+                document.getElementById('dislike-count').textContent = currentRecipe.dislikes;
+            } else {
+                // User is adding a dislike
+                if (currentReaction === 'like') {
+                    // Remove previous like
+                    currentRecipe.likes--;
+                    document.getElementById('like-btn').classList.remove('active');
+                    document.getElementById('like-count').textContent = currentRecipe.likes;
+                }
+                
+                currentRecipe.dislikes++;
+                userReactions[currentRecipe.id] = 'dislike';
+                document.getElementById('dislike-btn').classList.add('active');
+                document.getElementById('like-btn').classList.remove('active');
+                document.getElementById('dislike-count').textContent = currentRecipe.dislikes;
+            }
+            
             saveRecipes();
-            showNotification('Recipe disliked');
+            saveUserReactions();
+            showNotification(currentReaction === 'dislike' ? 'Dislike removed' : 'Recipe disliked');
         }
 
         // Handle like from card
         function handleLikeCard(recipeId) {
             event.stopPropagation();
+            
+            if (!isLoggedIn) {
+                showNotification('Please login to like recipes');
+                return;
+            }
+            
             let recipe = null;
             for (const category in recipes) {
                 const found = recipes[category].find(r => r.id === recipeId);
@@ -2524,17 +2554,42 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     break;
                 }
             }
-            if (recipe) {
+            
+            if (!recipe) return;
+            
+            const currentReaction = userReactions[recipeId];
+            
+            if (currentReaction === 'like') {
+                // Remove like
+                recipe.likes--;
+                delete userReactions[recipeId];
+                showNotification('Like removed');
+            } else {
+                // Add like
+                if (currentReaction === 'dislike') {
+                    // Remove previous dislike
+                    recipe.dislikes--;
+                }
+                
                 recipe.likes++;
-                saveRecipes();
-                displayRecipes('all');
+                userReactions[recipeId] = 'like';
                 showNotification('Recipe liked!');
             }
+            
+            saveRecipes();
+            saveUserReactions();
+            displayRecipes('all');
         }
 
         // Handle dislike from card
         function handleDislikeCard(recipeId) {
             event.stopPropagation();
+            
+            if (!isLoggedIn) {
+                showNotification('Please login to dislike recipes');
+                return;
+            }
+            
             let recipe = null;
             for (const category in recipes) {
                 const found = recipes[category].find(r => r.id === recipeId);
@@ -2543,18 +2598,40 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     break;
                 }
             }
-            if (recipe) {
+            
+            if (!recipe) return;
+            
+            const currentReaction = userReactions[recipeId];
+            
+            if (currentReaction === 'dislike') {
+                // Remove dislike
+                recipe.dislikes--;
+                delete userReactions[recipeId];
+                showNotification('Dislike removed');
+            } else {
+                // Add dislike
+                if (currentReaction === 'like') {
+                    // Remove previous like
+                    recipe.likes--;
+                }
+                
                 recipe.dislikes++;
-                saveRecipes();
-                displayRecipes('all');
+                userReactions[recipeId] = 'dislike';
                 showNotification('Recipe disliked');
             }
+            
+            saveRecipes();
+            saveUserReactions();
+            displayRecipes('all');
         }
 
         // Toggle favorite
         function toggleFavorite() {
-            if (!currentRecipe) return;
-           
+            if (!currentRecipe || !isLoggedIn) {
+                showNotification('Please login to add favorites');
+                return;
+            }
+            
             const index = userFavorites.indexOf(currentRecipe.id);
             if (index === -1) {
                 userFavorites.push(currentRecipe.id);
@@ -2567,7 +2644,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 document.getElementById('favorite-btn').className = 'action-btn';
                 showNotification('Removed from favorites');
             }
-           
+            
             // Save favorites to localStorage
             if (currentUser) {
                 localStorage.setItem(`blazeKitchenFavorites_${currentUser.username}`, JSON.stringify(userFavorites));
@@ -2577,13 +2654,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         // Toggle favorite from card
         function toggleFavoriteCard(recipeId) {
             event.stopPropagation();
-           
+            
             if (!isLoggedIn) {
                 showNotification('Please login to add favorites');
                 openAuthModal();
                 return;
             }
-           
+            
             const index = userFavorites.indexOf(recipeId);
             if (index === -1) {
                 userFavorites.push(recipeId);
@@ -2592,12 +2669,12 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 userFavorites.splice(index, 1);
                 showNotification('Removed from favorites');
             }
-           
+            
             // Save favorites to localStorage
             if (currentUser) {
                 localStorage.setItem(`blazeKitchenFavorites_${currentUser.username}`, JSON.stringify(userFavorites));
             }
-           
+            
             displayRecipes('all');
         }
 
@@ -2614,30 +2691,30 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         // Add comment
         function addComment() {
             if (!currentRecipe) return;
-           
+            
             const commentInput = document.getElementById('comment-input');
             const commentText = commentInput.value.trim();
-           
+            
             if (commentText === '') {
                 showNotification('Please enter a comment');
                 return;
             }
-           
+            
             if (!isLoggedIn) {
                 showNotification('Please login to comment');
                 openAuthModal();
                 return;
             }
-           
+            
             const newComment = {
                 author: currentUser.username,
-                date: new Date().toLocaleDateString(),
+                date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                 text: commentText
             };
-           
+            
             currentRecipe.comments.push(newComment);
             document.getElementById('comment-count').textContent = currentRecipe.comments.length;
-           
+            
             // Add to comments list
             const commentsList = document.getElementById('comments-list');
             const li = document.createElement('li');
@@ -2653,10 +2730,10 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 <div class="comment-text">${newComment.text}</div>
             `;
             commentsList.appendChild(li);
-           
+            
             // Clear input
             commentInput.value = '';
-           
+            
             // Save recipes
             saveRecipes();
             showNotification('Comment added!');
@@ -2669,12 +2746,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 openAuthModal();
                 return;
             }
-           
+            
             // Update nav buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-           
+            event.currentTarget.classList.add('active');
+            
             displayRecipes('favorites');
         }
 
@@ -2684,9 +2762,9 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             for (const category in recipes) {
                 allRecipes = allRecipes.concat(recipes[category]);
             }
-           
+            
             if (allRecipes.length === 0) return;
-           
+            
             const randomIndex = Math.floor(Math.random() * allRecipes.length);
             openRecipe(allRecipes[randomIndex].id);
         }
@@ -2698,7 +2776,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 openAuthModal();
                 return;
             }
-           
+            
             // Reset form
             document.getElementById('recipe-name-input').value = '';
             document.querySelectorAll('.category-option').forEach(opt => {
@@ -2718,13 +2796,13 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.getElementById('heat-input').value = 'None';
             document.getElementById('image-preview').style.display = 'none';
             document.getElementById('image-preview').src = '';
-           
+            
             // Show first step
             document.querySelectorAll('.add-recipe-step').forEach(step => {
                 step.classList.remove('active');
             });
             document.getElementById('step1').classList.add('active');
-           
+            
             // Show modal
             document.getElementById('add-recipe-modal').style.display = 'block';
         }
@@ -2752,12 +2830,12 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                     return;
                 }
             }
-           
+            
             // Hide all steps
             document.querySelectorAll('.add-recipe-step').forEach(step => {
                 step.classList.remove('active');
             });
-           
+            
             // Show target step
             document.getElementById(`step${stepNumber}`).classList.add('active');
         }
@@ -2768,7 +2846,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.querySelectorAll('.add-recipe-step').forEach(step => {
                 step.classList.remove('active');
             });
-           
+            
             // Show target step
             document.getElementById(`step${stepNumber}`).classList.add('active');
         }
@@ -2797,23 +2875,23 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function processInstructions() {
             const instructionsInput = document.getElementById('instructions-input').value;
             const instructions = instructionsInput.split('\n').filter(line => line.trim() !== '');
-           
+            
             if (instructions.length === 0) {
                 showNotification('Please add at least one instruction');
                 return;
             }
-           
+            
             // Display instructions for review
             const reviewContainer = document.getElementById('instructions-review');
             reviewContainer.innerHTML = '<h3>Instructions Preview:</h3>';
-           
+            
             instructions.forEach((instruction, index) => {
                 const div = document.createElement('div');
                 div.className = 'instruction-box';
                 div.innerHTML = `<strong>Step ${index + 1}:</strong> ${instruction}`;
                 reviewContainer.appendChild(div);
             });
-           
+            
             // Go to next step
             nextStep(5);
         }
@@ -2822,7 +2900,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function previewImage(event) {
             const input = event.target;
             const preview = document.getElementById('image-preview');
-           
+            
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -2833,7 +2911,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             }
         }
 
-        // Publish recipe
+        // Publish recipe - FIXED
         function publishRecipe() {
             // Get all values
             const recipeName = document.getElementById('recipe-name-input').value.trim();
@@ -2847,7 +2925,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             const difficulty = document.getElementById('difficulty-input').value;
             const servings = document.getElementById('servings-input').value.trim();
             const heat = document.getElementById('heat-input').value;
-           
+            
             // Validation
             if (recipeName === '') {
                 showNotification('Please enter a recipe name');
@@ -2873,12 +2951,20 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 showNotification('Please enter servings');
                 return;
             }
-           
+            
+            // Get image (use default if none uploaded)
+            let recipeImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"; // Default food image
+            
+            const imagePreview = document.getElementById('image-preview');
+            if (imagePreview.src && imagePreview.style.display !== 'none') {
+                recipeImage = imagePreview.src; // Use uploaded image
+            }
+            
             // Create new recipe
             const newRecipe = {
                 id: 'recipe' + Date.now(),
                 name: recipeName,
-                image: 'new-recipe.jpg',
+                image: recipeImage,
                 ingredients: ingredients,
                 instructions: instructions,
                 time: cookingTime,
@@ -2889,25 +2975,26 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 publisher: currentUser.username,
                 likes: 0,
                 dislikes: 0,
+                userReactions: {},
                 comments: [],
                 favorites: []
             };
-           
+            
             // Add to recipes
             if (!recipes[selectedCategory]) {
                 recipes[selectedCategory] = [];
             }
             recipes[selectedCategory].push(newRecipe);
-           
+            
             // Save recipes
             saveRecipes();
-           
+            
             // Close modal
             closeAddRecipeModal();
-           
+            
             // Show notification
             showNotification('Recipe published successfully!');
-           
+            
             // Refresh display
             displayRecipes('all');
         }
@@ -2937,7 +3024,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             document.querySelectorAll('.auth-form').forEach(form => {
                 form.classList.remove('active');
             });
-           
+            
             // Show selected form
             if (formType === 'login') {
                 document.querySelector('.auth-tab:nth-child(1)').classList.add('active');
@@ -2952,38 +3039,41 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function login() {
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value;
-           
+            
             if (username === '' || password === '') {
                 showNotification('Please fill in all fields');
                 return;
             }
-           
+            
             // For demo purposes, accept any login
             currentUser = {
                 username: username,
                 email: username.includes('@') ? username : username + '@example.com'
             };
-           
+            
             isLoggedIn = true;
-           
+            
             // Save to localStorage
             localStorage.setItem('blazeKitchenUser', JSON.stringify(currentUser));
-           
+            
             // Update UI
             updateUserInterface();
-           
+            
             // Close modal
             closeAuthModal();
-           
+            
             // Show welcome notification
             showNotification(`Welcome back, ${username}!`);
-           
+            
             // Load user favorites
             const savedFavorites = localStorage.getItem(`blazeKitchenFavorites_${currentUser.username}`);
             if (savedFavorites) {
                 userFavorites = JSON.parse(savedFavorites);
             }
-           
+            
+            // Load user reactions
+            loadUserReactions();
+            
             // Load user profile if exists
             const savedProfile = localStorage.getItem(`blazeKitchenProfile_${currentUser.username}`);
             if (savedProfile) {
@@ -2996,56 +3086,51 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             }
         }
 
-        // Signup
+        // Signup (without confirm password)
         function signup() {
             const username = document.getElementById('signup-username').value.trim();
             const email = document.getElementById('signup-email').value.trim();
             const password = document.getElementById('signup-password').value;
-            const confirmPassword = document.getElementById('signup-confirm').value;
-           
-            if (username === '' || email === '' || password === '' || confirmPassword === '') {
+            
+            if (username === '' || email === '' || password === '') {
                 showNotification('Please fill in all fields');
                 return;
             }
-           
-            if (password !== confirmPassword) {
-                showNotification('Passwords do not match');
-                return;
-            }
-           
+            
             if (password.length < 6) {
                 showNotification('Password must be at least 6 characters');
                 return;
             }
-           
+            
             // For demo purposes, accept any signup
             currentUser = {
                 username: username,
                 email: email
             };
-           
+            
             isLoggedIn = true;
-           
+            
             // Save to localStorage
             localStorage.setItem('blazeKitchenUser', JSON.stringify(currentUser));
-           
+            
             // Update UI
             updateUserInterface();
-           
+            
             // Close modal
             closeAuthModal();
-           
+            
             // Show welcome notification
             showNotification(`Welcome to Blaze Kitchen, ${username}!`);
-           
+            
             // Clear favorites for new user
             userFavorites = [];
+            userReactions = {};
         }
 
         // Open profile modal
         function openProfileModal() {
             if (!isLoggedIn) return;
-           
+            
             // Load profile data
             const savedProfile = localStorage.getItem(`blazeKitchenProfile_${currentUser.username}`);
             if (savedProfile) {
@@ -3062,7 +3147,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 document.getElementById('profile-bio').value = '';
                 document.getElementById('profile-cuisine').value = '';
             }
-           
+            
             document.getElementById('profile-modal').style.display = 'block';
         }
 
@@ -3083,7 +3168,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         // Save profile
         function saveProfile() {
             if (!isLoggedIn) return;
-           
+            
             const profile = {
                 avatar: document.getElementById('profile-avatar').textContent,
                 username: document.getElementById('profile-username').value.trim(),
@@ -3091,21 +3176,21 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
                 bio: document.getElementById('profile-bio').value.trim(),
                 cuisine: document.getElementById('profile-cuisine').value
             };
-           
+            
             // Update current user
             currentUser.username = profile.username;
             currentUser.email = profile.email;
-           
+            
             // Save to localStorage
             localStorage.setItem('blazeKitchenUser', JSON.stringify(currentUser));
             localStorage.setItem(`blazeKitchenProfile_${currentUser.username}`, JSON.stringify(profile));
-           
+            
             // Update UI
             document.getElementById('user-name').textContent = profile.username;
-           
+            
             // Close modal
             closeProfileModal();
-           
+            
             // Show notification
             showNotification('Profile updated successfully!');
         }
@@ -3115,20 +3200,16 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             currentUser = null;
             isLoggedIn = false;
             userFavorites = [];
-           
+            userReactions = {};
+            
             // Clear localStorage for demo (keep recipes)
             localStorage.removeItem('blazeKitchenUser');
-           
+            
             // Update UI
             updateUserInterface();
-           
+            
             // Show notification
             showNotification('Logged out successfully');
-        }
-
-        // Open message page (demo function)
-        function openMessagePage() {
-            showNotification('Message feature coming soon!');
         }
 
         // Show notification
@@ -3136,7 +3217,7 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.classList.add('show');
-           
+            
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
@@ -3151,7 +3232,19 @@ To: "aayushbkmala@gmail.com" <aayushbkmala@gmail.com>
         function loadRecipes() {
             const savedRecipes = localStorage.getItem('blazeKitchenRecipes');
             if (savedRecipes) {
-                Object.assign(recipes, JSON.parse(savedRecipes));
+                // Merge with existing recipes
+                const loadedRecipes = JSON.parse(savedRecipes);
+                for (const category in loadedRecipes) {
+                    if (!recipes[category]) {
+                        recipes[category] = [];
+                    }
+                    // Add only new recipes to avoid duplicates
+                    loadedRecipes[category].forEach(loadedRecipe => {
+                        if (!recipes[category].some(r => r.id === loadedRecipe.id)) {
+                            recipes[category].push(loadedRecipe);
+                        }
+                    });
+                }
             }
         }
 
