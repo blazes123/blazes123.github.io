@@ -1,538 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blaze Music Online</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  /* Loading Screen Styles */
-  #loadingScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #111, #003);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease-out;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Music Online</title>
+    <style>
+        body {
+            background: #111;
+            color: #0ff;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-  .logo {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 30px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 30px #ff6600;
-    background-image: url('https://mail.google.com/mail/u/0?ui=2&ik=dcbc090c5d&attid=0.1&permmsgid=msg-f:1850144189643048734&th=19ad085686ed471e&view=att&disp=safe&realattid=f_mil8qjnr0&zw');
-    background-size: cover;
-    background-position: center;
-  }
+        .player {
+            background: rgba(20, 20, 20, 0.85);
+            padding: 20px;
+            border-radius: 15px;
+            width: 450px;
+            text-align: center;
+            box-shadow: 0 0 20px #0ff5;
+        }
 
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 102, 0, 0.3);
-    border-top: 4px solid #ff6600;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-  }
+        h2, p {
+            margin: 5px;
+        }
 
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+        iframe {
+            width: 100%;
+            height: 80px;
+            border: none;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
 
-  .loading-text {
-    color: #ff6600;
-    font-size: 18px;
-    margin-top: 20px;
-  }
+        button {
+            background: none;
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 8px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
 
-  /* Main Player Styles */
-  body {
-    background-image: url('https://i.pinimg.com/736x/bc/4c/2d/bc4c2d927f1e0c7f9d64e1230c236e19.jpg');
-	background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: #ff6600;
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 100px;
-    opacity: 0;
-    animation: fadeIn 0.5s ease-in 0.5s forwards;
-  }
+        button:hover {
+            background: #0ff;
+            color: #111;
+        }
 
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
+        .playlist {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 1px solid #0ff3;
+            padding-top: 10px;
+        }
 
-  .player {
-    background: rgba(20, 20, 20, 0.9);
-    padding: 25px;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-    box-shadow: 0 0 30px #ff66004d;
-    border: 1px solid #ff66004d;
-    position: relative;
-  }
+        .song {
+            cursor: pointer;
+            margin: 5px 0;
+            color: #0ff9;
+            transition: 0.2s;
+            padding: 5px;
+            border-radius: 5px;
+        }
 
-  .player-logo {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: url('Blaze music.png');
-    background-size: cover;
-    background-position: center;
-    box-shadow: 0 0 10px #ff6600;
-  }
+        .song:hover {
+            background: rgba(0, 255, 255, 0.1);
+            color: #0ff;
+        }
 
-  h2, p { margin: 5px; }
-
-  h2 {
-    font-size: 22px;
-    font-weight: 600;
-    color: #ff6600;
-    text-shadow: 0 0 10px #ff66004d;
-    margin-top: 10px;
-  }
-
-  p {
-    color: #ff6600cc;
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-
-  .album-art {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px;
-    border-radius: 10px;
-    background: linear-gradient(45deg, #ff66004d, #cc5200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 50px;
-    box-shadow: 0 0 20px #ff66004d;
-    color: #ff6600;
-  }
-
-  .progress-container {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 102, 0, 0.2);
-    border-radius: 10px;
-    margin: 15px 0;
-    cursor: pointer;
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    background: #ff6600;
-    border-radius: 10px;
-    transition: width 0.1s linear;
-    box-shadow: 0 0 10px #ff6600;
-  }
-
-  .time-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #ff6600cc;
-    margin-bottom: 15px;
-  }
-
-  .controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-  }
-
-  button {
-    background: none;
-    border: 2px solid #ff6600;
-    color: #ff6600;
-    padding: 10px 20px;
-    margin: 0 8px;
-    cursor: pointer;
-    border-radius: 50px;
-    font-size: 16px;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  button:hover {
-    background: #ff6600;
-    color: #111;
-    box-shadow: 0 0 15px #ff6600;
-  }
-
-  .play-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 20px;
-    padding: 0;
-  }
-
-  .volume-container {
-    display: flex;
-    align-items: center;
-    margin: 15px 0;
-  }
-
-  .volume-icon {
-    margin-right: 10px;
-    font-size: 18px;
-    color: #ff6600;
-  }
-
-  .volume-slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 5px;
-    background: rgba(255, 102, 0, 0.2);
-    border-radius: 5px;
-    outline: none;
-  }
-
-  .volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #ff6600;
-    cursor: pointer;
-    box-shadow: 0 0 5px #ff6600;
-  }
-
-  .playlist {
-    margin-top: 20px;
-    max-height: 200px;
-    overflow-y: auto;
-    border-top: 1px solid #ff66004d;
-    padding-top: 15px;
-  }
-
-  .playlist::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .playlist::-webkit-scrollbar-track {
-    background: rgba(255, 102, 0, 0.1);
-    border-radius: 10px;
-  }
-
-  .playlist::-webkit-scrollbar-thumb {
-    background: #ff6600;
-    border-radius: 10px;
-  }
-
-  .song {
-    cursor: pointer;
-    margin: 8px 0;
-    padding: 8px 12px;
-    border-radius: 8px;
-    color: #ff6600cc;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-  }
-
-  .song:hover {
-    background: rgba(255, 102, 0, 0.1);
-    color: #ff6600;
-  }
-
-  .song.active {
-    background: rgba(255, 102, 0, 0.2);
-    font-weight: bold;
-    color: #fff;
-    box-shadow: 0 0 10px #ff66004d;
-  }
-
-  .song-number {
-    margin-right: 10px;
-    font-size: 14px;
-    color: #ff6600b3;
-  }
-
-  .song-info {
-    text-align: left;
-    flex: 1;
-  }
-
-  .song-title {
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-
-  .song-artist {
-    font-size: 12px;
-    color: #ff6600cc;
-  }
-
-  @media (max-width: 500px) {
-    .player {
-      padding: 15px;
-    }
-    
-    .album-art {
-      width: 150px;
-      height: 150px;
-      font-size: 40px;
-    }
-    
-    button {
-      padding: 8px 15px;
-      font-size: 14px;
-    }
-    
-    .play-btn {
-      width: 45px;
-      height: 45px;
-    }
-  }
-</style>
+        .song.active {
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
+    <div class="player">
+        <h2 id="songTitle">Song Title</h2>
+        <p id="artist">Artist</p>
 
-<!-- Loading Screen -->
-<div id="loadingScreen">
-  <div class="logo"></div>
-  <div class="spinner"></div>
-  <div class="loading-text">Loading Blaze Music...</div>
-</div>
+        <iframe id="music" src="" allow="autoplay; encrypted-media"></iframe>
 
-<!-- Main Player -->
-<div class="player">
-  <div class="player-logo"></div>
-  
-  <h2 id="songTitle">Song Title</h2>
-  <p id="artist">Artist</p>
-  
-  <div class="album-art">
-    <span>♪</span>
-  </div>
+        <div>
+            <button onclick="prevSong()">⏮️ Prev</button>
+            <button onclick="nextSong()">⏭️ Next</button>
+        </div>
 
-  <div class="progress-container" id="progressContainer">
-    <div class="progress-bar" id="progressBar"></div>
-  </div>
-  
-  <div class="time-info">
-    <span id="currentTime">0:00</span>
-    <span id="duration">0:00</span>
-  </div>
+        <div class="playlist" id="playlist"></div>
+    </div>
 
-  <div class="controls">
-    <button onclick="prevSong()">⏮️</button>
-    <button class="play-btn" onclick="togglePlay()" id="playBtn">▶️</button>
-    <button onclick="nextSong()">⏭️</button>
-  </div>
+    <script>
+        let songs = [
+            {title: "Agar Tum Saath Ho", artist: "Arijit Singh & Alka Yagnik", src: "hindi/Agar tum sath ho.mp3"},
+            {title: "Aaradhike", artist: "Madhuvanthi Narayan & Sooraj Santhosh", src: "hindi/Aaradhike.mp3"},
+            {title: "Aaro Nenjil", artist: "Gowry Lekshmi & Shaan Rahman", src: "hindi/Aaro Nenjil.mp3"},
+            {title: "Aasa Kooda", artist: "Sai Abhyankar", src: "hindi/Aasa Kooda.mp3"},
+            {title: "Aattuthottil", artist: "Jayachandran", src: "hindi/Aattuthottil.mp3"},
+            {title: "Ae Dil He Mushkil", artist: "Arijit Singh", src: "hindi/Ae Dil Hai Mushkil.mp3"},
+            {title: "Athimanoharam", artist: "Hatsmyth", src: "hindi/Athimanoharam.mp3"},
+            {title: "Badri Ki Dulhania", artist: "Neha Kakkar & Monali Thakur", src: "hindi/Badri ki dulhania.mp3"},
+            {title: "Badtameez Dil", artist: "Pritam", src: "hindi/Badtameez Dil.mp3"},
+            {title: "Bole Chudiyan", artist: "Amit Kumar, Alka Yagnik, Sonu Nigam", src: "hindi/Bole Chudiyan.mp3"},
+            {title: "Bolna", artist: "Arijit Singh", src: "hindi/Bolna.mp3"},
+            {title: "Chahun Main Ya Na", artist: "Arijit Singh", src: "hindi/Chahun main ya na.mp3"},
+            {title: "Chaiyya Chaiyya", artist: "A.R Rahman", src: "hindi/Chaiyya chaiyya.mp3"},
+            {title: "Chammak Chalo", artist: "Akon & Hamsika Iyer", src: "hindi/Chammak Challo.mp3"},
+            {title: "Chand Sifarish", artist: "Shaan & Kailash Kher", src: "hindi/Chand Sifarish.mp3"},
+            {title: "Channa Mereya", artist: "Arijit Singh", src: "hindi/Channa mereya.mp3"},
+            {title: "Daru Desi", artist: "Benny Dayal & Shalmali Kholgade", src: "hindi/Daru Desi.mp3"},
+            {title: "Dekha Tenu", artist: "Mahbub Islam", src: "hindi/Dekha tenu.mp3"},
+            {title: "Desi Girl", artist: "Shankar Mahadevan & Sunidhi Chauhan", src: "hindi/Desi girl.mp3"},
+            {title: "Dheema Dheema", artist: "Anirudh Ravichander", src: "hindi/Dheema.mp3"},
+            {title: "Dil Diya Gallan", artist: "Atif Aslam", src: "hindi/Dil Diya Gallan.mp3"},
+            {title: "Dildara", artist: "Shafqat Amanat Ali, Vishal–Shekhar", src: "hindi/Dildara Song.mp3"}
+        ];
 
-  <div class="volume-container">
-    <span class="volume-icon">🔊</span>
-    <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider">
-  </div>
+        let currentSong = 0;
+        const music = document.getElementById("music");
+        const playlistDiv = document.getElementById("playlist");
 
-  <div class="playlist" id="playlist"></div>
-</div>
+        function loadSong(index) {
+            const song = songs[index];
+            document.getElementById("songTitle").innerText = song.title;
+            document.getElementById("artist").innerText = song.artist;
+            music.src = song.src;
+            
+            // Update active song in playlist
+            document.querySelectorAll('.song').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        }
 
-<script>
-let songs = [
-  {title: "Agar Tum Saath Ho", artist: "Arijit Singh & Alka Yagnik", src: "hindi/Agar tum sath ho.mp3"},
-  {title: "Aaradhike", artist: "Madhuvanthi Narayan & Sooraj Santhosh", src: "hindi/Aaradhike.mp3"},
-  {title: "Aaro Nenjil", artist: "Gowry Lekshmi & Shaan Rahman", src: "hindi/Aaro Nenjil.mp3"},
-  {title: "Aasa Kooda", artist: "Sai Abhyankar", src: "hindi/Aasa Kooda.mp3"},
-  {title: "Aattuthottil", artist: "Jayachandran", src: "hindi/Aattuthottil.mp3"},
-  {title: "Ae Dil He Mushkil", artist: "Arijit Singh", src: "hindi/Ae Dil Hai Mushkil.mp3"},
-  {title: "Athimanoharam", artist: "Hatsmyth", src: "hindi/Athimanoharam.mp3"},
-  {title: "Badri Ki Dulhania", artist: "Neha Kakkar & Monali Thakur", src: "hindi/Badri ki dulhania.mp3"},
-  {title: "Badtameez Dil", artist: "Pritam", src: "hindi/Badtameez Dil.mp3"},
-  {title: "Bole Chudiyan", artist: "Amit Kumar, Alka Yagnik, Sonu Nigam", src: "hindi/Bole Chudiyan.mp3"},
-  {title: "Bolna", artist: "Arijit Singh", src: "hindi/Bolna.mp3"},
-  {title: "Chahun Main Ya Na", artist: "Arijit Singh", src: "hindi/Chahun main ya na.mp3"},
-  {title: "Chaiyya Chaiyya", artist: "A.R Rahman", src:"hindi/Chaiyya chaiyya.mp3"},
-  {title: "Chammak Chalo", artist: "Akon & Hamsika Iyer", src:"hindi/Chammak Challo.mp3"},
-  {title: "Chand Sifarish", artist: "Shaan & Kailash Kher", src:"hindi/Chand Sifarish.mp3"},
-  {title: "Channa Mereya", artist: "Arijit Singh", src:"hindi/Channa mereya.mp3"},
-  {title: "Daru Desi", artist: "Benny Dayal & Shalmali Kholgade", src:"hindi/Daru Desi.mp3"},
-  {title: "Dekha Tenu", artist: "Mahbub Islam", src:"hindi/Dekha tenu.mp3"},
-  {title: "Desi Girl", artist: "Shankar Mahadevan & Sunidhi Chauhan", src:"hindi/Desi girl.mp3"},
-  {title: "Dheema Dheema", artist: "Anirudh Ravichander", src:"hindi/Dheema.mp3"},
-  {title: "Dil Diya Gallan", artist: "Atif Aslam", src: "hindi/Dil Diya Gallan.mp3" },
-  {title: "Dildara", artist: "Shafqat Amanat Ali, Vishal–Shekhar", src:"hindi/Dildara Song.mp3"},
-];
+        function nextSong() {
+            currentSong = (currentSong + 1) % songs.length;
+            loadSong(currentSong);
+        }
 
-let currentSong = 0;
-let isPlaying = false;
-const audio = new Audio();
-const playBtn = document.getElementById("playBtn");
-const progressBar = document.getElementById("progressBar");
-const progressContainer = document.getElementById("progressContainer");
-const currentTimeEl = document.getElementById("currentTime");
-const durationEl = document.getElementById("duration");
-const volumeSlider = document.getElementById("volumeSlider");
-const playlistDiv = document.getElementById("playlist");
-const loadingScreen = document.getElementById("loadingScreen");
+        function prevSong() {
+            currentSong = (currentSong - 1 + songs.length) % songs.length;
+            loadSong(currentSong);
+        }
 
-// Format time in minutes:seconds
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
+        // Build playlist dynamically
+        songs.forEach((song, index) => {
+            const div = document.createElement('div');
+            div.className = 'song';
+            div.innerText = `${song.title} — ${song.artist}`;
+            div.onclick = () => {
+                currentSong = index;
+                loadSong(index);
+            };
+            playlistDiv.appendChild(div);
+        });
 
-// Update progress bar
-function updateProgress(e) {
-  const { duration, currentTime } = e.srcElement;
-  const progressPercent = (currentTime / duration) * 100;
-  progressBar.style.width = `${progressPercent}%`;
-  currentTimeEl.textContent = formatTime(currentTime);
-}
-
-// Set progress bar on click
-function setProgress(e) {
-  const width = this.clientWidth;
-  const clickX = e.offsetX;
-  const duration = audio.duration;
-  
-  audio.currentTime = (clickX / width) * duration;
-}
-
-// Toggle play/pause
-function togglePlay() {
-  if (isPlaying) {
-    audio.pause();
-    playBtn.innerHTML = '▶️';
-  } else {
-    audio.play();
-    playBtn.innerHTML = '⏸️';
-  }
-  isPlaying = !isPlaying;
-}
-
-// Next song
-function nextSong() {
-  currentSong = (currentSong + 1) % songs.length;
-  loadSong(currentSong);
-  if (isPlaying) {
-    audio.play();
-  }
-}
-
-// Previous song
-function prevSong() {
-  currentSong = (currentSong - 1 + songs.length) % songs.length;
-  loadSong(currentSong);
-  if (isPlaying) {
-    audio.play();
-  }
-}
-
-// Load song
-function loadSong(index) {
-  const song = songs[index];
-  document.getElementById("songTitle").innerText = song.title;
-  document.getElementById("artist").innerText = song.artist;
-  audio.src = song.src;
-  
-  // Reset progress bar
-  progressBar.style.width = '0%';
-  currentTimeEl.textContent = '0:00';
-  
-  // Update active song in playlist
-  document.querySelectorAll('.song').forEach((el, i) => {
-    el.classList.toggle('active', i === index);
-  });
-  
-  // Auto-scroll to active song in playlist
-  const activeSong = document.querySelector('.song.active');
-  if (activeSong) {
-    activeSong.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-  
-  // Update duration when metadata is loaded
-  audio.addEventListener('loadedmetadata', () => {
-    durationEl.textContent = formatTime(audio.duration);
-  });
-}
-
-// Build playlist
-function buildPlaylist() {
-  songs.forEach((song, index) => {
-    const div = document.createElement('div');
-    div.className = 'song';
-    div.innerHTML = `
-      <div class="song-number">${index + 1}</div>
-      <div class="song-info">
-        <div class="song-title">${song.title}</div>
-        <div class="song-artist">${song.artist}</div>
-      </div>
-    `;
-    div.onclick = () => {
-      currentSong = index;
-      loadSong(index);
-      if (isPlaying) {
-        audio.play();
-      }
-    };
-    playlistDiv.appendChild(div);
-  });
-}
-
-// Hide loading screen when page is loaded
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    loadingScreen.style.opacity = '0';
-    setTimeout(() => {
-      loadingScreen.style.display = 'none';
-    }, 500);
-  }, 2000); // Show loading screen for 2 seconds
-});
-
-// Event listeners
-audio.addEventListener('timeupdate', updateProgress);
-audio.addEventListener('ended', nextSong);
-progressContainer.addEventListener('click', setProgress);
-volumeSlider.addEventListener('input', () => {
-  audio.volume = volumeSlider.value;
-});
-
-// Initialize player
-buildPlaylist();
-loadSong(currentSong);
-</script>
-<!-- Add this to all your pages -->
-<div id="home-nav" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-    <a href="index.html" style="display: inline-block; padding: 10px 15px; background: #ff8000; color: white; text-decoration: none; border-radius: 5px; font-family: Arial, sans-serif;">
-        Home
-    </a>
-</div>
-
+        // Initial load
+        loadSong(currentSong);
+    </script>
 </body>
 </html>
