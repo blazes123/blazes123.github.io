@@ -370,7 +370,7 @@ let songs = [
   {title: "Aasa Kooda", artist: "Sai Abhyankar", src: "Aasa Kooda.mp3"},
   {title: "Aattuthottil", artist: "Jayachandran", src: "Aattuthottil.mp3"},
   {title: "Ae Dil He Mushkil", artist: "Arijit Singh", src: "Ae Dil Hai Mushkil.mp3"},
-  {title: "Athimanoharam", artist: "Hatsmyth", src: "hindi/Athimanoharam.mp3"},
+  {title: "Athimanoharam", artist: "Hatsmyth", src: "Athimanoharam.mp3"},
   {title: "Badri Ki Dulhania", artist: "Neha Kakkar & Monali Thakur", src: "Badri ki dulhania.mp3"},
   {title: "Badtameez Dil", artist: "Pritam", src: "Badtameez Dil.mp3"},
   {title: "Bole Chudiyan", artist: "Amit Kumar, Alka Yagnik, Sonu Nigam", src: "Bole Chudiyan.mp3"},
@@ -382,7 +382,7 @@ let songs = [
   {title: "Channa Mereya", artist: "Arijit Singh", src:"Channa mereya.mp3"},
   {title: "Daru Desi", artist: "Benny Dayal & Shalmali Kholgade", src:"Daru Desi.mp3"},
   {title: "Dekha Tenu", artist: "Mahbub Islam", src:"Dekha tenu.mp3"},
-  {title: "Desi Girl", artist: "Shankar Mahadevan & Sunidhi Chauhan", src:"hindi/Desi girl.mp3"},
+  {title: "Desi Girl", artist: "Shankar Mahadevan & Sunidhi Chauhan", src:"Desi girl.mp3"},
   {title: "Dheema Dheema", artist: "Anirudh Ravichander", src:"Dheema.mp3"},
   {title: "Dil Diya Gallan", artist: "Atif Aslam", src: "Dil Diya Gallan.mp3" },
   {title: "Dildara", artist: "Shafqat Amanat Ali, Vishal Shekhar", src:"Dildara Song.mp3"},
@@ -457,9 +457,63 @@ function prevSong() {
 // Load song
 function loadSong(index) {
   const song = songs[index];
+  console.log("🚀 Loading song:", song.title);
+  console.log("📁 File path:", song.src);
+  
   document.getElementById("songTitle").innerText = song.title;
   document.getElementById("artist").innerText = song.artist;
   audio.src = song.src;
+  
+  // Reset progress bar
+  progressBar.style.width = '0%';
+  currentTimeEl.textContent = '0:00';
+  
+  // Update active song in playlist
+  document.querySelectorAll('.song').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+  
+  // Auto-scroll to active song
+  const activeSong = document.querySelector('.song.active');
+  if (activeSong) {
+    activeSong.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  
+  // Add error listener for debugging
+  audio.addEventListener('error', function(e) {
+    console.error("❌ Audio error for:", song.title);
+    console.error("📁 Source attempted:", audio.src);
+    console.error("🔧 Error details:", audio.error);
+    
+    if (audio.error) {
+      switch(audio.error.code) {
+        case 1: console.error("MEDIA_ERR_ABORTED: Fetching aborted"); break;
+        case 2: console.error("MEDIA_ERR_NETWORK: Network error"); break;
+        case 3: console.error("MEDIA_ERR_DECODE: Decoding error"); break;
+        case 4: console.error("MEDIA_ERR_SRC_NOT_SUPPORTED: Format not supported"); break;
+        default: console.error("Unknown error");
+      }
+    }
+    
+    // Try to load next song on error
+    setTimeout(() => {
+      console.log("⏭️ Auto-skipping to next song");
+      nextSong();
+    }, 1000);
+  }, { once: true });
+  
+  // When metadata loads successfully
+  audio.addEventListener('loadedmetadata', () => {
+    console.log("✅ Loaded metadata for:", song.title);
+    console.log("⏱️ Duration:", audio.duration, "seconds");
+    durationEl.textContent = formatTime(audio.duration);
+  }, { once: true });
+  
+  // Update duration when metadata is loaded
+  audio.addEventListener('loadedmetadata', () => {
+    durationEl.textContent = formatTime(audio.duration);
+  });
+}
   
   // Reset progress bar
   progressBar.style.width = '0%';
