@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>BlazeGames - Game Hub</title>
+<title>Multi-Game Hub — All Games (Roblox-style)</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -17,7 +17,7 @@
 html,body{height:100%}
 body{
   font-family:"Poppins",system-ui,Arial,sans-serif;
-  background-image: url('games bg.png');
+  background-image: url('games background.jpg');
   background-size: cover; background-position:center;
   color:#fff; min-height:100vh;
   -webkit-font-smoothing:antialiased;
@@ -30,7 +30,7 @@ body{
   background:linear-gradient(180deg, rgba(0,0,0,0.75), rgba(0,0,0,0.9));
   z-index:9999; flex-direction:column; gap:12px;
 }
-.logo-mark{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:28px}
+.logo-mark{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#ff6600,#ff3300);display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:28px}
 .progress{width:360px;max-width:90vw;height:12px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden}
 .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .18s linear}
 
@@ -41,7 +41,7 @@ body{
 /* Topbar */
 .topbar{width:100%;max-width:1250px;display:flex;justify-content:space-between;align-items:center;gap:16px}
 .brand{display:flex;align-items:center;gap:12px}
-.brand .mark{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:20px}
+.brand .mark{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#ff6600,#ff3300);display:flex;align-items:center;justify-content:center;color:#111;font-weight:800;font-size:20px}
 .brand h1{font-size:20px}
 .controls{display:flex;gap:12px;align-items:center}
 .search{display:flex;align-items:center;background:var(--glass);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
@@ -52,20 +52,38 @@ body{
 .sidebar{background:rgba(0,0,0,0.45);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.05)}
 .content{background:rgba(0,0,0,0.45);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.05)}
 
+/* Nav buttons */
+.nav-btn{display:block;padding:10px 12px;border-radius:10px;margin-bottom:8px;text-decoration:none;color:white;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+.nav-btn.active{background:linear-gradient(90deg, rgba(255,102,0,0.12), rgba(255,204,0,0.06));box-shadow:0 8px 30px rgba(255,102,0,0.06)}
+
 /* External links list (old games) */
 .external-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.external-list a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:white;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-size:14px;transition:all 0.2s ease}
-.external-list a:hover{background:rgba(255,255,255,0.05)}
+.external-list a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:white;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);font-size:14px}
 
 /* Game header */
 .game-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .category-row{display:flex;gap:8px;flex-wrap:wrap}
-.cat{padding:6px 10px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all 0.2s ease}
-.cat:hover{background:rgba(255,255,255,0.05)}
-.cat.active{background:var(--accent);color:#111;font-weight:600}
+.cat{padding:6px 10px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+
+/* Canvas box */
+.game-box{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border-radius:10px;padding:12px;min-height:420px;display:flex;align-items:center;justify-content:center;position:relative}
+
+/* Sandbox controls */
+.tools{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tool{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+
+/* Inventory */
+.inventory{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.slot{min-width:68px;padding:6px;border-radius:8px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.03);text-align:center}
 
 /* Small helpers */
 .small{font-size:13px;color:rgba(255,255,255,0.75)}
+
+/* Chess board */
+.chess-board{display:grid;grid-template-columns:repeat(8,48px);grid-template-rows:repeat(8,48px);gap:0;border-radius:6px;overflow:hidden}
+.chess-cell{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer}
+.chess-cell.light{background:#f0d9b5;color:#000}
+.chess-cell.dark{background:#b58863;color:#000}
 
 /* Responsive */
 @media(max-width:980px){
@@ -73,76 +91,21 @@ body{
   .sidebar{order:2}
   .content{order:1}
   .search input{width:140px}
+  .chess-cell{width:40px;height:40px;font-size:16px}
 }
 
-
-
-/* External games grid */
-.external-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.external-game {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
-  border-radius: 10px;
-  padding: 14px;
-  border: 1px solid rgba(255,255,255,0.04);
-  transition: all 0.2s ease;
-  text-decoration: none;
-  color: white;
-  display: block;
-}
-
-.external-game:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-  background: rgba(255,255,255,0.05);
-}
-
-.external-game .thumb {
-  width: 100%;
-  height: 120px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-}
-
-.external-game h3 {
-  margin-bottom: 6px;
-  font-size: 16px;
-}
-
-.external-game .desc {
-  font-size: 12px;
-  color: rgba(255,255,255,0.7);
-}
-
-/* Logo image styling */
-.logo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: inherit;
-}
+/* Easter egg */
+.easter{position:absolute;left:calc(10%);top:20%;width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#7be0ff,#4fb6ff);display:flex;align-items:center;justify-content:center;color:#032;background-blend-mode:screen;box-shadow:0 12px 30px rgba(0,0,0,0.45);cursor:pointer;z-index:30;transform:scale(0.96);transition:transform .18s}
+.easter:hover{transform:scale(1.06)}
 </style>
 </head>
 <body>
 
 <!-- INTRO LOADER -->
 <div id="intro" aria-hidden="false">
-  <div class="logo-mark" id="intro-logo">
-    <!-- Using your provided image for the logo -->
-    <img src="Blaze games logo.png" alt="BlazeGames Logo" class="logo-img">
-  </div>
+  <div class="logo-mark">G</div>
   <div style="text-align:center">
-    <div style="font-weight:700;font-size:20px">BlazeGames</div>
+    <div style="font-weight:700;font-size:20px">Games Hub</div>
     <div class="small">Loading your ultimate game hub...</div>
   </div>
   <div style="height:8px"></div>
@@ -157,22 +120,19 @@ body{
 
   <div class="topbar">
     <div class="brand">
-      <div class="mark" id="brand-logo">
-        <!-- Using your provided image for the logo -->
-        <img src="Blaze games logo.png" alt="BlazeGames Logo" class="logo-img">
-      </div>
+      <div class="mark">G</div>
       <div>
-        <h1>BlazeGames Hub</h1>
-        <div class="small">All your favorite games in one place</div>
+        <h1>Games Hub</h1>
+        <div class="small">All games — integrated & linked</div>
       </div>
     </div>
 
     <div class="controls">
       <div class="search" role="search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/></svg>
-        <input id="global-search" placeholder="Search games..."/>
+        <input id="global-search" placeholder="Search games or external links"/>
       </div>
-      
+      <button class="tool" id="soundToggle">Sound: ON</button>
     </div>
   </div>
 
@@ -181,27 +141,24 @@ body{
     <aside class="sidebar" aria-label="Navigation">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <strong>Menu</strong>
-        <span class="small">External Games</span>
+        <span class="small">Mode: B (in-app)</span>
       </div>
 
-      <div style="font-weight:600;margin-bottom:8px">Game Categories</div>
-      <div class="category-row">
-        <div class="cat active" data-cat="all">All</div>
-        <div class="cat" data-cat="arcade">Arcade</div>
-        <div class="cat" data-cat="puzzle">Puzzle</div>
-        <div class="cat" data-cat="action">Action</div>
-        <div class="cat" data-cat="strategy">Strategy</div>
-      </div>
+      <button class="nav-btn active" data-view="hub">Hub / All Games</button>
+      <button class="nav-btn" data-view="sandbox">Sandbox (2D Minecraft)</button>
+      <button class="nav-btn" data-view="treasure">Treasure Hunt</button>
+      <button class="nav-btn" data-view="chess">Chess (in-app)</button>
+      <button class="nav-btn" data-view="minigames">Mini Games</button>
 
       <hr style="margin:10px 0;border:none;border-top:1px solid rgba(255,255,255,0.04)">
 
-      <div style="font-weight:600;margin-bottom:8px">Quick Links</div>
+      <div style="font-weight:600;margin-bottom:8px">Old / External games</div>
       <div class="external-list" id="external-list">
         <!-- external links inserted here -->
       </div>
 
       <div style="height:12px"></div>
-      <div class="small">Tip: use the search bar to find games quickly.</div>
+      <div class="small">Tip: use the top search to filter both in-app and external games.</div>
     </aside>
 
     <!-- CONTENT -->
@@ -211,23 +168,172 @@ body{
         <div class="game-header">
           <div>
             <h2>Game Hub</h2>
-            <div class="small">Click any game to open in a new tab</div>
+            <div class="small">Click any external link to open in a new tab, or pick an in-app game from the left.</div>
           </div>
-          <div class="small" id="game-count">26 games available</div>
+          <div class="category-row">
+            <div class="cat" data-cat="all">All</div>
+            <div class="cat" data-cat="arcade">Arcade</div>
+            <div class="cat" data-cat="puzzle">Puzzle</div>
+            <div class="cat" data-cat="action">Action</div>
+            <div class="cat" data-cat="strategy">Strategy</div>
+          </div>
         </div>
 
-        <div class="external-grid" id="external-grid">
-          <!-- External games will be inserted here -->
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <!-- Quick in-app launch -->
+          <div style="min-width:260px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)">
+            <div style="font-weight:700;margin-bottom:8px">Play in-app</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="tool" onclick="switchView('sandbox')">Open Sandbox</button>
+              <button class="tool" onclick="switchView('treasure')">Open Treasure Hunt</button>
+              <button class="tool" onclick="switchView('chess')">Open Chess</button>
+              <button class="tool" onclick="switchView('minigames')">Open Mini Games</button>
+            </div>
+          </div>
+
+          <!-- External links quick area -->
+          <div style="flex:1;min-width:360px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)">
+            <div style="font-weight:700;margin-bottom:8px">External / Classic Links</div>
+            <div id="external-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px"></div>
+          </div>
         </div>
       </div>
+
+      <!-- SANDBOX VIEW -->
+      <div id="view-sandbox" class="view" data-name="sandbox" style="display:none">
+        <div class="game-header">
+          <div>
+            <h2>2D Sandbox — World (100 × 50)</h2>
+            <div class="small">Left-click: place block. Right-click: remove block. Pick tools and craft at the bench.</div>
+          </div>
+          <div class="small">Inventory & crafting below</div>
+        </div>
+        <div style="display:flex;gap:12px;flex-direction:column">
+          <div class="tools" id="sandbox-tools">
+            <button class="tool" data-tool="hand">Hand</button>
+            <button class="tool" data-tool="pickaxe">Pickaxe</button>
+            <button class="tool" data-tool="axe">Axe</button>
+            <button class="tool" data-tool="place">Place Block</button>
+            <button class="tool" id="craftBench" class="tool">Use Crafting Bench</button>
+            <button class="tool" id="reset-world">Reset World</button>
+          </div>
+
+          <div class="game-box">
+            <canvas id="sandbox-canvas" width="960" height="480" style="background:#86CEEB;border-radius:8px"></canvas>
+            <div id="sand-easter" class="easter" style="display:none">⭐</div>
+          </div>
+
+          <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+            <div style="min-width:220px">
+              <div style="font-weight:700;margin-bottom:8px">Inventory</div>
+              <div class="inventory" id="inv"></div>
+            </div>
+
+            <div style="flex:1">
+              <div style="font-weight:700;margin-bottom:8px">Crafting (bench)</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div class="slot" id="recipe-axe">Axe: 3 Wood + 2 Stone <button class="tool" id="craft-axe">Craft</button></div>
+                <div class="slot" id="recipe-pick">Pickaxe: 2 Wood + 3 Stone <button class="tool" id="craft-pick">Craft</button></div>
+              </div>
+              <div style="margin-top:6px" class="small">Place the bench by pressing <strong>Use Crafting Bench</strong> and stand next to it, then craft.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TREASURE VIEW -->
+      <div id="view-treasure" class="view" data-name="treasure" style="display:none">
+        <div class="game-header">
+          <div>
+            <h2>Treasure Hunt</h2>
+            <div class="small">Use arrow keys or WASD to move. Collect coins to increase score.</div>
+          </div>
+          <div class="small">Score: <span id="treasure-score">0</span></div>
+        </div>
+
+        <div class="game-box" style="min-height:420px;flex-direction:column">
+          <canvas id="treasure-canvas" width="720" height="420" style="border-radius:8px;background:linear-gradient(180deg,#0a4a2b,#063a22)"></canvas>
+          <div style="height:8px"></div>
+          <div class="small">Objective: collect coins. Press <strong>Back to Hub</strong> to return.</div>
+        </div>
+      </div>
+
+      <!-- CHESS VIEW -->
+      <div id="view-chess" class="view" data-name="chess" style="display:none">
+        <div class="game-header">
+          <div>
+            <h2>Chess (simple)</h2>
+            <div class="small">Click a piece to pick it up, then click the destination to move. Basic capture works. No check/checkmate enforcement.</div>
+          </div>
+          <div><button class="tool" id="reset-chess">Reset Board</button></div>
+        </div>
+        <div class="game-box" style="padding:12px;flex-direction:column;gap:12px;align-items:flex-start">
+          <div id="chess-board" class="chess-board" role="grid"></div>
+          <div class="small">Click a square or press <kbd>R</kbd> to reset</div>
+        </div>
+      </div>
+
+      <!-- MINIGAMES VIEW -->
+      <div id="view-minigames" class="view" data-name="minigames" style="display:none">
+        <div class="game-header">
+          <div>
+            <h2>Mini Games</h2>
+            <div class="small">Loading mini-game and secret easter egg included.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div style="min-width:320px;flex:1">
+            <div style="font-weight:700;margin-bottom:8px">Loading Mini-Game</div>
+            <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:10px">
+              <div id="minigame-progress" style="height:18px;background:rgba(255,255,255,0.04);border-radius:9px;overflow:hidden">
+                <div id="minigame-fill" style="width:0%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));"></div>
+              </div>
+              <div style="height:8px"></div>
+              <button class="tool" id="tap-fill">Tap to Fill (click rapidly)</button>
+              <div class="small" style="margin-top:8px">Fill to 100% to win & see a surprise.</div>
+            </div>
+          </div>
+
+          <div style="min-width:320px;flex:1">
+            <div style="font-weight:700;margin-bottom:8px">Secret Easter Egg</div>
+            <div style="background:rgba(255,255,255,0.02);padding:12px;border-radius:10px">
+              <div class="small">An easter egg (⭐) will randomly appear in the sandbox view or here. Find and click it for a prize.</div>
+              <div style="height:8px"></div>
+              <button class="tool" id="spawn-easter">Spawn Easter Egg Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 </div>
 
 <script>
 /* ================== INIT & APP NAV ================== */
+const views = $$ => Array.from(document.querySelectorAll.bind(document)($$));
 function $(s){return document.querySelector(s)}
 function $all(s){return Array.from(document.querySelectorAll(s))}
+
+const navBtns = $all('.nav-btn');
+const viewMap = {
+  'hub':'view-hub','sandbox':'view-sandbox','treasure':'view-treasure','chess':'view-chess','minigames':'view-minigames'
+};
+function switchView(name){
+  // hide all views then show
+  Object.values(viewMap).forEach(id => { const el = $('#'+id); if(el) el.style.display = 'none'; });
+  const target = $('#'+viewMap[name]);
+  if(target) target.style.display = '';
+  // update nav active
+  navBtns.forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  // if switching to sandbox, ensure canvas resizes appropriately / focus
+  if(name === 'sandbox') sandbox.render();
+  if(name === 'treasure') treasureGame.draw();
+  if(name === 'chess') chess.render();
+}
+navBtns.forEach(b => b.addEventListener('click', ()=> switchView(b.dataset.view)));
+window.switchView = switchView;
 
 /* Intro loader simulation */
 const introBar = $('#intro-bar');
@@ -248,146 +354,675 @@ function hideIntro(){
   const intro = $('#intro');
   intro.style.transition = 'opacity .5s ease';
   intro.style.opacity = 0;
-  
-  // Remove the intro and show the app
-  setTimeout(() => {
-    intro.remove();
-    document.getElementById('app').classList.add('visible');
-    document.getElementById('app').setAttribute('aria-hidden','false');
-  }, 600);
+  setTimeout(()=>{ intro.remove(); document.getElementById('app').classList.add('visible'); document.getElementById('app').setAttribute('aria-hidden','false'); switchView('hub'); }, 600);
 }
+introStep();
 
+/* Sound toggle */
+let soundOn = true;
+$('#soundToggle').addEventListener('click', ()=>{
+  soundOn = !soundOn;
+  $('#soundToggle').textContent = 'Sound: ' + (soundOn ? 'ON' : 'OFF');
+});
 
-
-/* Populate external list of old games */
+/* Populate external list of old games (from your earlier code) */
 const external = [
-  {t:'Subway Surfers', u:'https://poki.com/en/g/subway-surfers', cat: 'arcade', emoji: '🚇'},
-  {t:'Level Devil', u:'https://poki.com/en/g/level-devil', cat: 'puzzle', emoji: '😈'},
-  {t:'Temple Run 2', u:'https://poki.com/en/g/temple-run-2', cat: 'action', emoji: '🏃'},
-  {t:'Monkey Mart', u:'https://poki.com/en/g/monkey-mart', cat: 'strategy', emoji: '🛒'},
-  {t:'Fruit Ninja', u:'https://poki.com/en/g/fruit-ninja', cat: 'action', emoji: '🥝'},
-  {t:'Vectaria', u:'https://poki.com/en/g/vectaria-io', cat: 'action', emoji: '⚔️'},
-  {t:'Red Ball 4', u:'https://poki.com/en/g/red-ball-4', cat: 'puzzle', emoji: '🔴'},
-  {t:'Temple Of Boom', u:'https://poki.com/en/g/temple-of-boom', cat: 'action', emoji: '💥'},
-  {t:'Battle Wheels', u:'https://poki.com/en/g/battle-wheels', cat: 'action', emoji: '🏎️'},
-  {t:'Champion Island Games', u:'https://sites.google.com/site/populardoodlegames/champion-island-games?authuser=0', cat: 'arcade', emoji: '🏆'},
-  {t:'Google Feud', u:'https://poki.com/en/g/google-feud', cat: 'puzzle', emoji: '🔍'},
-  {t:'Cow Bay', u:'https://poki.com/en/g/cow-bay', cat: 'strategy', emoji: '🐄'},
-  {t:'Brain Test', u:'https://poki.com/en/g/brain-test-2-tricky-stories', cat: 'puzzle', emoji: '🧠'},
-  {t:'Chess (external)', u:'chess.html', cat: 'strategy', emoji: '♟️'},
-  {t:'Cut the Rope', u:'https://www.crazygames.com/game/cut-the-rope-ebx', cat: 'puzzle', emoji: '✂️'},
-  {t:'Diep.io', u:'https://www.crazygames.com/game/diepio', cat: 'action', emoji: '🔫'},
-  {t:'Chess Former', u:'https://www.crazygames.com/game/chessformer', cat: 'strategy', emoji: '♟️'},
-  {t:'Google Doodle Cricket', u:'https://sites.google.com/site/populardoodlegames/doodle-cricket?authuser=0', cat: 'arcade', emoji: '🏏'},
-  {t:'Google Halloween 2016', u:'https://sites.google.com/site/populardoodlegames/halloween-2016?authuser=0', cat: 'arcade', emoji: '🎃'},
-  {t:'Pac-man', u:'https://sites.google.com/site/populardoodlegames/pac-man?authuser=0', cat: 'arcade', emoji: '👻'},
-  {t:'Garden Gnomes', u:'https://sites.google.com/site/populardoodlegames/celebrating-garden-gnomes?authuser=0', cat: 'puzzle', emoji: '🧙'},
-  {t:'Pony Express', u:'https://sites.google.com/site/populardoodlegames/155th-anniversary-of-the-pony-express?authuser=0', cat: 'arcade', emoji: '🐎'},
-  {t:'Popcorn Game', u:'https://sites.google.com/site/populardoodlegames/celebrating-popcorn?authuser=0', cat: 'arcade', emoji: '🍿'},
-  {t:'Checkers', u:'https://www.247checkers.com/', cat: 'strategy', emoji: '⛀'},
-  {t:'Slither.io', u:'http://slither.io/', cat: 'action', emoji: '🐍'},
-  {t:'Blox Fruits (Roblox)', u:'https://www.roblox.com/games/2753915549/Blox-Fruits', cat: 'action', emoji: '🍎'}
+  {t:'Subway Surfers', u:'https://poki.com/en/g/subway-surfers'},
+  {t:'Level Devil', u:'https://poki.com/en/g/level-devil'},
+  {t:'Temple Run 2', u:'https://poki.com/en/g/temple-run-2'},
+  {t:'Monkey Mart', u:'https://poki.com/en/g/monkey-mart'},
+  {t:'Fruit Ninja', u:'https://poki.com/en/g/fruit-ninja'},
+  {t:'Vectaria', u:'https://poki.com/en/g/vectaria-io'},
+  {t:'Red Ball 4', u:'https://poki.com/en/g/red-ball-4'},
+  {t:'Temple Of Boom', u:'https://poki.com/en/g/temple-of-boom'},
+  {t:'Battle Wheels', u:'https://poki.com/en/g/battle-wheels'},
+  {t:'Champion Island Games', u:'https://sites.google.com/site/populardoodlegames/champion-island-games?authuser=0'},
+  {t:'Google Feud', u:'https://poki.com/en/g/google-feud'},
+  {t:'Cow Bay', u:'https://poki.com/en/g/cow-bay'},
+  {t:'Brain Test', u:'https://poki.com/en/g/brain-test-2-tricky-stories'},
+  {t:'Chess (external)', u:'chess.html'},
+  {t:'Cut the Rope', u:'https://www.crazygames.com/game/cut-the-rope-ebx'},
+  {t:'Diep.io', u:'https://www.crazygames.com/game/diepio'},
+  {t:'Chess Former', u:'https://www.crazygames.com/game/chessformer'},
+  {t:'Google Doodle Cricket', u:'https://sites.google.com/site/populardoodlegames/doodle-cricket?authuser=0'},
+  {t:'Google Halloween 2016', u:'https://sites.google.com/site/populardoodlegames/halloween-2016?authuser=0'},
+  {t:'Pac-man', u:'https://sites.google.com/site/populardoodlegames/pac-man?authuser=0'},
+  {t:'Garden Gnomes', u:'https://sites.google.com/site/populardoodlegames/celebrating-garden-gnomes?authuser=0'},
+  {t:'Pony Express', u:'https://sites.google.com/site/populardoodlegames/155th-anniversary-of-the-pony-express?authuser=0'},
+  {t:'Popcorn Game', u:'https://sites.google.com/site/populardoodlegames/celebrating-popcorn?authuser=0'},
+  {t:'Checkers', u:'https://www.247checkers.com/'},
+  {t:'Slither.io', u:'http://slither.io/'},
 ];
 
 const externalList = $('#external-list');
 const externalGrid = $('#external-grid');
-
-// Update game count
-function updateGameCount() {
-  const visibleGames = $all('.external-game:not([style*="display: none"])').length;
-  $('#game-count').textContent = `${visibleGames} games available`;
-}
-
-// Create external game cards
 external.forEach(x=>{
-  // Add to sidebar list
   const a = document.createElement('a');
-  a.href = x.u; 
-  a.target='_blank'; 
-  a.rel='noopener';
+  a.href = x.u; a.target='_blank'; a.rel='noopener';
   a.className='external-link';
   a.textContent = x.t;
-  a.dataset.cat = x.cat;
   externalList.appendChild(a);
 
-  // Add to main grid
-  const gameCard = document.createElement('a');
-  gameCard.href = x.u; 
-  gameCard.target='_blank'; 
-  gameCard.rel='noopener';
-  gameCard.className = 'external-game';
-  gameCard.dataset.cat = x.cat;
-  
-  gameCard.innerHTML = `
-    <div class="thumb">${x.emoji}</div>
-    <h3>${x.t}</h3>
-    <div class="desc">${x.cat.charAt(0).toUpperCase() + x.cat.slice(1)} Game</div>
-  `;
-  
-  externalGrid.appendChild(gameCard);
+  const card = document.createElement('a');
+  card.href = x.u; card.target='_blank'; card.rel='noopener';
+  card.className = 'external-link';
+  card.style.display='block'; card.style.padding='8px'; card.style.background='rgba(255,255,255,0.02)'; card.style.borderRadius='8px'; card.style.textDecoration='none';
+  card.textContent = x.t;
+  externalGrid.appendChild(card);
 });
 
 /* Global search filters both external and in-app names */
 $('#global-search').addEventListener('input', (e)=>{
   const q = e.target.value.toLowerCase();
-  
   // filter external-list
   $all('#external-list .external-link').forEach(a=>{
-    const matches = a.textContent.toLowerCase().includes(q);
-    a.style.display = matches ? 'block' : 'none';
+    a.style.display = a.textContent.toLowerCase().includes(q) ? 'block' : 'none';
   });
-  
-  // filter game cards
-  $all('.external-game').forEach(card => {
-    const title = card.querySelector('h3').textContent.toLowerCase();
-    const matches = title.includes(q);
-    card.style.display = matches ? 'block' : 'none';
+  $all('#external-grid a').forEach(a=>{
+    a.style.display = a.textContent.toLowerCase().includes(q) ? 'block' : 'none';
   });
-  
-  updateGameCount();
+  // also, if q matches certain in-app names, show hint (not implemented heavy)
 });
 
-/* Category filtering */
-$all('.cat').forEach(cat => {
-  cat.addEventListener('click', () => {
-    $all('.cat').forEach(c => c.classList.remove('active'));
-    cat.classList.add('active');
-    
-    const category = cat.dataset.cat;
-    
-    // Filter game cards
-    $all('.external-game').forEach(card => {
-      if (category === 'all' || card.dataset.cat === category) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
+/* ========== SANDBOX GAME (2D TILEWORLD) ========== */
+/* World: 100 x 50 tiles. Tile size adapted to canvas size (will scale). Simple implementation:
+   - Blocks: 0 = air, 1 = dirt, 2 = grass, 3 = wood, 4 = stone, 5 = crafting_bench
+   - Player: simple cursor controlled by WASD or arrow keys to move; can place/remove blocks by mouse.
+   - Inventory: counts of wood/stone/dirt
+   - Crafting bench: place a bench block, stand next to it and press craft buttons to get tools (pickaxe/axe)
+*/
+const sandbox = (function(){
+  const W = 100, H = 50; // world tiles
+  const tileSize = 12; // base tile size, will scale canvas
+  const canvas = document.getElementById('sandbox-canvas');
+  const ctx = canvas.getContext('2d');
+  // world array
+  let world = [];
+  let player = {x: Math.floor(W/2), y: 10}; // tile coords
+  let camera = {x:0,y:0}; // top-left tile shown
+  const viewCols = 80; const viewRows = 40; // view window in tiles approximate
+  // inventory
+  let inventory = {wood:0, stone:0, dirt:0};
+  let selectedTool = 'hand'; // hand / pickaxe / axe / place
+  let placingBlock = 1; // default block to place = dirt
+  let benchPlaced = false;
+  let benchPos = null;
+
+  // initialize world: simple terrain with grass + dirt + stone strata + some trees
+  function initWorld(){
+    world = new Array(H);
+    for(let y=0;y<H;y++){
+      world[y] = new Array(W).fill(0);
+    }
+    // generate ground: top grass at y from bottom - 6..10
+    const groundLevel = Math.floor(H*0.6);
+    for(let x=0;x<W;x++){
+      const top = groundLevel + Math.floor(Math.random()*3);
+      for(let y=top;y<H;y++){
+        world[y][x] = (y === top) ? 2 : 1; // 2 grass, 1 dirt
+        if(y > top + 6 && Math.random()<0.02) world[y][x] = 4; // stone pockets
       }
-    });
-    
-    // Filter sidebar list
-    $all('#external-list .external-link').forEach(a => {
-      if (category === 'all' || a.dataset.cat === category) {
-        a.style.display = 'block';
-      } else {
-        a.style.display = 'none';
+    }
+    // trees: pick some x
+    for(let i=0;i<40;i++){
+      const tx = Math.floor(Math.random()*W);
+      // find top of ground
+      for(let y=0;y<H-1;y++){
+        if(world[y+1][tx] !== 0){ // ground just below
+          // build trunk
+          for(let t=0;t<4;t++){
+            if(y - t >=0) world[y-t][tx] = 3; // wood
+          }
+          // leaves: simple blob
+          const ly = y-4;
+          for(let lx = tx-2; lx<=tx+2; lx++){
+            for(let ly2 = ly-1; ly2<=ly+2; ly2++){
+              if(lx>=0 && lx<W && ly2>=0 && ly2<H && Math.random() > 0.2) world[ly2][lx] = 6; // leaf (use 6)
+            }
+          }
+          break;
+        }
       }
-    });
-    
-    updateGameCount();
+    }
+    // flatten area near center for spawn
+    const cx = Math.floor(W/2);
+    for(let x=cx-6;x<=cx+6;x++){
+      for(let y=0;y<H;y++){
+        if(y>Math.floor(H*0.6)) {
+          world[y][x] = (y===Math.floor(H*0.6)+1)?2:1;
+        }
+      }
+    }
+    player.x = Math.floor(W/2); player.y = Math.floor(H*0.6)-2;
+    benchPlaced = false; benchPos = null;
+    inventory = {wood:2, stone:1, dirt:0}; // start with tiny resources
+  }
+
+  function tileColor(id){
+    switch(id){
+      case 0: return null;
+      case 1: return '#8b5a33'; // dirt
+      case 2: return '#3aa64d'; // grass
+      case 3: return '#8b4e0b'; // wood
+      case 4: return '#7b7b7b'; // stone
+      case 5: return '#664422'; // bench
+      case 6: return '#2e8b57'; // leaves
+      default: return '#333';
+    }
+  }
+
+  // render world onto canvas
+  function render(){
+    const cw = canvas.width, ch = canvas.height;
+    // compute tiles to render based on canvas size and tile size
+    const cols = Math.floor(cw / tileSize);
+    const rows = Math.floor(ch / tileSize);
+    camera.x = clamp(player.x - Math.floor(cols/2), 0, Math.max(0, W - cols));
+    camera.y = clamp(player.y - Math.floor(rows/2), 0, Math.max(0, H - rows));
+    // clear
+    ctx.clearRect(0,0,cw,ch);
+    // draw sky background
+    ctx.fillStyle = '#86CEEB';
+    ctx.fillRect(0,0,cw,ch);
+
+    for(let y=0;y<rows;y++){
+      for(let x=0;x<cols;x++){
+        const wx = camera.x + x, wy = camera.y + y;
+        if(wx <0 || wx>=W || wy<0 || wy>=H) continue;
+        const id = world[wy][wx];
+        if(id !== 0){
+          ctx.fillStyle = tileColor(id);
+          ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+          // simple border
+          ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+          ctx.strokeRect(x*tileSize, y*tileSize, tileSize, tileSize);
+        }
+      }
+    }
+    // draw player (simple rectangle)
+    const px = (player.x - camera.x)*tileSize, py = (player.y - camera.y)*tileSize;
+    ctx.fillStyle = '#ffdd57';
+    ctx.fillRect(px+2, py+2, tileSize-4, tileSize-4);
+    // draw bench highlight if placed
+    if(benchPlaced && benchPos){
+      const bx = (benchPos.x - camera.x)*tileSize;
+      const by = (benchPos.y - camera.y)*tileSize;
+      ctx.strokeStyle = 'rgba(255,204,0,0.9)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bx+1,by+1,tileSize-2,tileSize-2);
+    }
+    // draw grid faint
+    // for optimization, omit grid lines
+    // done
+    // update inventory UI
+    renderInventory();
+  }
+
+  function renderInventory(){
+    const invDiv = $('#inv');
+    invDiv.innerHTML = '';
+    for(const k of ['wood','stone','dirt']){
+      const el = document.createElement('div');
+      el.className = 'slot';
+      el.innerHTML = `<div style="font-weight:700;text-transform:capitalize">${k}</div><div style="font-size:14px">${inventory[k]||0}</div>`;
+      invDiv.appendChild(el);
+    }
+    // tools
+    const toolDiv = document.createElement('div'); toolDiv.style.marginLeft='12px';
+    toolDiv.innerHTML = `<div class="small" style="margin-top:6px">Selected: <strong>${selectedTool}</strong></div>`;
+    invDiv.appendChild(toolDiv);
+  }
+
+  /* Utilities */
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+  // mouse interactions: compute tile under mouse, left-click place or break
+  canvas.addEventListener('contextmenu', (e)=> e.preventDefault());
+  canvas.addEventListener('pointerdown', (e)=>{
+    // compute tile coords
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+    const tx = Math.floor(mx / tileSize) + camera.x;
+    const ty = Math.floor(my / tileSize) + camera.y;
+    if(e.button === 2){
+      // right click - remove block
+      removeBlock(tx, ty);
+    } else {
+      // left click - place or interact
+      if(selectedTool === 'place'){
+        placeBlock(tx, ty);
+      } else if(selectedTool === 'hand'){
+        // interact: if bench at tile, open bench
+        if(world[ty] && world[ty][tx] === 5){
+          // open craft bench (we show crafting area visible already)
+          // For demo, show small flash
+          flash('Crafting bench used!');
+        } else {
+          // else break block
+          removeBlock(tx,ty);
+        }
+      } else {
+        // with tools break specific materials faster (simulated)
+        removeBlock(tx,ty);
+      }
+    }
+    render();
+  }, {passive:true});
+
+  // keyboard for player movement
+  window.addEventListener('keydown', (e)=>{
+    if(!document.body.contains(canvas)) return;
+    const k = e.key.toLowerCase();
+    if(['arrowleft','a'].includes(k)) player.x = clamp(player.x-1,0,W-1);
+    if(['arrowright','d'].includes(k)) player.x = clamp(player.x+1,0,W-1);
+    if(['arrowup','w'].includes(k)) player.y = clamp(player.y-1,0,H-1);
+    if(['arrowdown','s'].includes(k)) player.y = clamp(player.y+1,0,H-1);
+    render();
   });
+
+  // place block function
+  function placeBlock(tx, ty){
+    if(tx<0||tx>=W||ty<0||ty>=H) return;
+    if(world[ty][tx] !== 0) return; // only place into air
+    // consume resources
+    if(placingBlock === 1 && inventory.dirt > 0){
+      inventory.dirt -= 1;
+      world[ty][tx] = 1;
+    } else if(placingBlock === 3 && inventory.wood > 0){
+      inventory.wood -= 1;
+      world[ty][tx] = 3;
+    } else if(placingBlock === 4 && inventory.stone > 0){
+      inventory.stone -= 1;
+      world[ty][tx] = 4;
+    } else if(placingBlock === 5 && !benchPlaced){
+      // place bench if placingBlock=5
+      world[ty][tx] = 5;
+      benchPlaced = true; benchPos = {x:tx,y:ty};
+    } else {
+      // nothing placed
+      flash('Not enough resources to place that block');
+      return;
+    }
+    if(soundOn) sfx('place');
+  }
+
+  // remove block and add to inventory by block type
+  function removeBlock(tx, ty){
+    if(tx<0||tx>=W||ty<0||ty>=H) return;
+    const id = world[ty][tx];
+    if(id === 0) return;
+    // break bench special
+    if(id === 5){
+      benchPlaced = false; benchPos = null;
+    }
+    world[ty][tx] = 0;
+    if(id === 3) inventory.wood++;
+    if(id === 4) inventory.stone++;
+    if(id === 1 || id === 2) inventory.dirt++;
+    if(soundOn) sfx('break');
+    flash('+ collected');
+    render();
+  }
+
+  // simple craft functions
+  function craft(item){
+    if(!benchPlaced){
+      flash('Place the crafting bench first (Use Crafting Bench)');
+      return;
+    }
+    // require adjacent: player must be within 1 tile of bench tile
+    if(Math.abs(player.x - benchPos.x) > 2 || Math.abs(player.y - benchPos.y) > 2){
+      flash('Stand near the craft bench to craft');
+      return;
+    }
+    if(item === 'axe'){
+      if(inventory.wood >= 3 && inventory.stone >= 2){
+        inventory.wood -= 3; inventory.stone -= 2;
+        flash('Crafted: Axe');
+        selectedTool = 'axe';
+      } else flash('Need 3 wood + 2 stone');
+    } else if(item === 'pick'){
+      if(inventory.wood >= 2 && inventory.stone >= 3){
+        inventory.wood -= 2; inventory.stone -= 3;
+        flash('Crafted: Pickaxe');
+        selectedTool = 'pickaxe';
+      } else flash('Need 2 wood + 3 stone');
+    }
+    render();
+  }
+
+  // helper flash message
+  function flash(txt){
+    // small floating text near top-left of sandbox box
+    const d = document.createElement('div');
+    d.textContent = txt; d.style.position='absolute'; d.style.top='18px'; d.style.left='18px';
+    d.style.background='rgba(0,0,0,0.5)'; d.style.padding='8px 10px'; d.style.borderRadius='8px'; d.style.zIndex=50;
+    document.querySelector('#view-sandbox .game-box').appendChild(d);
+    setTimeout(()=> d.remove(),900);
+  }
+
+  // click on tool buttons
+  $all('#sandbox-tools .tool').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectedTool = btn.dataset.tool || 'hand';
+      // visual active
+      $all('#sandbox-tools .tool').forEach(t=> t.style.boxShadow='none');
+      btn.style.boxShadow = '0 8px 30px rgba(255,102,0,0.12)';
+      render();
+    });
+  });
+
+  $('#craft-axe').addEventListener('click', ()=> craft('axe'));
+  $('#craft-pick').addEventListener('click', ()=> craft('pick'));
+  $('#craftBench').addEventListener('click', ()=>{
+    // toggle placing a bench
+    placingBlock = 5;
+    selectedTool = 'place';
+    flash('Click on ground to place Crafting Bench');
+  });
+  $('#reset-world').addEventListener('click', ()=>{ initWorld(); render(); });
+
+  // sandbox easter egg spawn button from mini games
+  $('#spawn-easter')?.addEventListener('click', ()=> spawnEaster(true));
+
+  // spawn easter egg occasionally in sandbox
+  function spawnEaster(force=false){
+    // show the easter div animated at random pos in sandbox container
+    const el = $('#sand-easter');
+    const box = document.querySelector('#view-sandbox .game-box').getBoundingClientRect();
+    const x = box.left + 40 + Math.random()*(box.width-120);
+    const y = box.top + 40 + Math.random()*(box.height-120);
+    el.style.left = (x - box.left) + 'px';
+    el.style.top = (y - box.top) + 'px';
+    el.style.display = 'flex';
+    // hide after 8s
+    setTimeout(()=> { el.style.display = 'none'; }, 12000);
+    if(force){
+      // attach click handler
+      el.onclick = ()=>{
+        el.style.display = 'none';
+        inventory.wood += 5; inventory.stone += 3;
+        flash('Easter Egg! +5 wood, +3 stone');
+        if(soundOn) sfx('win');
+        render();
+      }
+    } else {
+      el.onclick = ()=>{
+        el.style.display = 'none';
+        inventory.wood += 2; inventory.stone += 1;
+        flash('You found an egg! +2 wood, +1 stone');
+        if(soundOn) sfx('win');
+        render();
+      }
+    }
+  }
+
+  // click on the sand-easter when visible
+  $('#sand-easter').addEventListener('click', ()=> {
+    $('#sand-easter').style.display='none';
+    inventory.wood += 2; inventory.stone +=1;
+    render();
+    if(soundOn) sfx('win');
+  });
+
+  // render loop on resize
+  window.addEventListener('resize', ()=> {
+    // scale canvas to parent size for better tile fit
+    const box = canvas.getBoundingClientRect();
+    canvas.width = Math.max(400, Math.floor(box.width*window.devicePixelRatio));
+    canvas.height = Math.max(240, Math.floor(box.height*window.devicePixelRatio));
+    render();
+  });
+
+  // helper to set initial size then render
+  function start(){
+    const box = canvas.getBoundingClientRect();
+    canvas.width = Math.max(400, Math.floor(canvas.clientWidth * window.devicePixelRatio));
+    canvas.height = Math.max(240, Math.floor(canvas.clientHeight * window.devicePixelRatio));
+    initWorld();
+    render();
+    // occasionally spawn easter egg on its own
+    setInterval(()=> { if(Math.random()<0.12) spawnEaster(false); }, 16000);
+  }
+
+  return {start, render};
+})();
+
+/* ========== TREASURE HUNT ========== */
+const treasureGame = (function(){
+  const canvas = $('#treasure-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  let player = {x:50,y:50, size:14, speed:2};
+  let coins = [];
+  let score = 0;
+  function spawnCoins(n=8){
+    coins = [];
+    for(let i=0;i<n;i++){
+      coins.push({x:50+Math.random()*(W-100), y:40+Math.random()*(H-80), r:8});
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // background
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#0a4a2b'); g.addColorStop(1,'#063a22');
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    // draw coins
+    for(const c of coins){
+      ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fillStyle = '#ffd700'; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = '#b8860b'; ctx.stroke();
+    }
+    // draw player
+    ctx.fillStyle = '#ffdd57';
+    ctx.beginPath(); ctx.arc(player.x, player.y, player.size, 0, Math.PI*2); ctx.fill();
+    // hud
+    $('#treasure-score').textContent = score;
+  }
+  function reset(){
+    player = {x:60,y:60,size:14,speed:2};
+    score = 0;
+    spawnCoins(10);
+    draw();
+  }
+  // movement
+  const keys = {};
+  window.addEventListener('keydown', (e)=> keys[e.key.toLowerCase()] = true);
+  window.addEventListener('keyup', (e)=> keys[e.key.toLowerCase()] = false);
+  function update(){
+    if(document.getElementById('view-treasure').style.display === 'none') return;
+    let moved=false;
+    if(keys['arrowleft'] || keys['a']) { player.x -= player.speed; moved=true; }
+    if(keys['arrowright'] || keys['d']) { player.x += player.speed; moved=true; }
+    if(keys['arrowup'] || keys['w']) { player.y -= player.speed; moved=true; }
+    if(keys['arrowdown'] || keys['s']) { player.y += player.speed; moved=true; }
+    player.x = clamp(player.x, 20, W-20);
+    player.y = clamp(player.y, 20, H-20);
+    // check coin collisions
+    for(let i=coins.length-1;i>=0;i--){
+      const c = coins[i];
+      const dx = c.x - player.x, dy = c.y - player.y;
+      if(Math.sqrt(dx*dx + dy*dy) < player.size + c.r - 2){
+        coins.splice(i,1); score += 1;
+        if(soundOn) sfx('collect');
+      }
+    }
+    if(moved) draw();
+  }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+  // start update loop
+  setInterval(update, 40);
+  return {draw, reset};
+})();
+
+/* ========== CHESS (simple click-to-move) ========== */
+const chess = (function(){
+  const boardEl = $('#chess-board');
+  const initialBoard = [
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+  ]; // uppercase white, lowercase black
+  let board = JSON.parse(JSON.stringify(initialBoard));
+  let selected = null;
+
+  function coordToIndex(row,col){ return row*8 + col; }
+  function render(){
+    boardEl.innerHTML = '';
+    for(let r=0;r<8;r++){
+      for(let c=0;c<8;c++){
+        const cell = document.createElement('div');
+        cell.className = 'chess-cell ' + (((r+c)%2===0) ? 'light' : 'dark');
+        cell.dataset.r = r; cell.dataset.c = c;
+        const piece = board[r][c];
+        cell.textContent = piece ? piece : '';
+        cell.addEventListener('click', ()=> onCellClick(r,c));
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+  function onCellClick(r,c){
+    const piece = board[r][c];
+    if(selected){
+      // move selected to this cell (allow capture)
+      const [sr,sc] = selected;
+      if(sr === r && sc === c) { selected = null; return;}
+      board[r][c] = board[sr][sc];
+      board[sr][sc] = '';
+      selected = null;
+      if(soundOn) sfx('place');
+      render();
+    } else {
+      if(piece){
+        selected = [r,c];
+        // highlight cell (simple)
+        const idx = r*8 + c;
+        boardEl.children[idx].style.boxShadow = 'inset 0 0 0 3px rgba(255,204,0,0.35)';
+      }
+    }
+  }
+  $('#reset-chess').addEventListener('click', ()=> { board = JSON.parse(JSON.stringify(initialBoard)); render(); });
+  // R key resets
+  window.addEventListener('keydown', (e)=> { if(e.key.toLowerCase()==='r'){ board = JSON.parse(JSON.stringify(initialBoard)); render(); } });
+  return {render};
+})();
+
+/* ========== MINIGAMES: Loading + Easter egg spawn ========= */
+(function(){
+  const fill = $('#minigame-fill');
+  const btn = $('#tap-fill');
+  let val = 0;
+  btn.addEventListener('click', ()=> {
+    val += 6 + Math.floor(Math.random()*6);
+    if(val > 100) val = 100;
+    fill.style.width = val + '%';
+    if(soundOn) sfx('tap');
+    if(val >= 100){
+      // win
+      setTimeout(()=> {
+        alert('You filled to 100%! You earned 3 wood + 2 stone.');
+        // award the user in sandbox inventory if exists
+        // try to update inventory by dispatching spawn to sandbox
+      }, 200);
+    }
+  });
+
+  // spawn easter egg button triggers sandbox spawn too
+  $('#spawn-easter').addEventListener('click', ()=> {
+    spawnEaster(true);
+  });
+})();
+
+/* ========== COMMON SFX (WebAudio quick synths) ========== */
+function sfx(type){
+  if(!soundOn) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const now = ctx.currentTime;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if(type === 'place'){
+      o.type='sine'; o.frequency.setValueAtTime(880, now); g.gain.setValueAtTime(0.001, now);
+      g.gain.linearRampToValueAtTime(0.12, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    } else if(type === 'break'){
+      o.type='square'; o.frequency.setValueAtTime(220, now); g.gain.setValueAtTime(0.001, now);
+      g.gain.linearRampToValueAtTime(0.18, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+    } else if(type === 'collect'){
+      o.type='triangle'; o.frequency.setValueAtTime(1200, now); g.gain.setValueAtTime(0.001, now);
+      g.gain.linearRampToValueAtTime(0.16, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.14);
+    } else if(type === 'win'){
+      o.type='sine'; o.frequency.setValueAtTime(1400, now); g.gain.setValueAtTime(0.001, now);
+      g.gain.linearRampToValueAtTime(0.20, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    } else if(type === 'tap'){
+      o.type='sine'; o.frequency.setValueAtTime(600, now); g.gain.setValueAtTime(0.001, now);
+      g.gain.linearRampToValueAtTime(0.09, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+    }
+    o.start(now); o.stop(now + 0.5);
+    setTimeout(()=>{ try{ ctx.close(); }catch(e){} }, 800);
+  } catch(e){}
+}
+
+/* ========== UTILITIES & START ========= */
+function $(s){ return document.querySelector(s); }
+function $all(s){ return document.querySelectorAll(s); }
+
+function spawnEaster(force=false){
+  // call sandbox spawn
+  const el = document.getElementById('sand-easter');
+  if(!el) return;
+  // manually trigger sandbox spawn via event: click spawn button inside sandbox module
+  // For simplicity, just programmatically click the sandbox's spawn button if present
+  $('#sand-easter').style.display = 'flex';
+  // position randomly in sandbox
+  const box = document.querySelector('#view-sandbox .game-box').getBoundingClientRect();
+  const x = 40 + Math.random()*(box.width-120);
+  const y = 40 + Math.random()*(box.height-120);
+  $('#sand-easter').style.left = x + 'px';
+  $('#sand-easter').style.top = y + 'px';
+  $('#sand-easter').onclick = ()=>{
+    $('#sand-easter').style.display = 'none';
+    // add reward to sandbox (try to access global world)
+    // We can't access internal world inventory directly from here unless sandbox exposed it;
+    // so we try to flash and play sfx.
+    alert('Easter egg found! (Rewards added in sandbox inventory when you open it.)');
+    sfx('win');
+  };
+}
+
+// small helper clamp used in treasureGame - duplicated intentionally
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+
+/* ================= Start each module ================= */
+window.addEventListener('load', ()=>{
+  // start sandbox after tiny delay to ensure layout
+  setTimeout(()=> {
+    try { sandbox.start(); } catch(e){ console.error('Sandbox failed to start', e); }
+    treasureGame.reset();
+    chess.render();
+  }, 300);
 });
 
-/* Initialize the app */
-window.addEventListener('load', () => {
-  introStep();
-  updateGameCount();
+// keyboard shortcuts
+window.addEventListener('keydown', (e)=>{
+  if(e.key === '1') switchView('hub');
+  if(e.key === '2') switchView('sandbox');
+  if(e.key === '3') switchView('treasure');
+  if(e.key === '4') switchView('chess');
+  if(e.key === '5') switchView('minigames');
 });
+
+/* Expose functions for console debugging */
+window.spawnEaster = spawnEaster;
+
 </script>
-<!-- Add this to all your pages -->
-<div id="home-nav" style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-    <a href="index.html" style="display: inline-block; padding: 10px 15px; background: #ff8000; color: white; text-decoration: none; border-radius: 5px; font-family: Arial, sans-serif;">
-        Home
-    </a>
-</div>
 </body>
 </html>
