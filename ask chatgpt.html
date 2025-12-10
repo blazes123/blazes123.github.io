@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 Blaze AI Voice Assistant</title>
+    <title>🔥 Blaze AI with OpenAI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,7 +14,7 @@
         }
 
         body {
-            background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxANDQ0PDw8QDQ4NDQ0NDQ0NDRANDQ0PFREWFhURExMYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OFRAQGi0dFx0tKy0tLSstKy0tLSsrKzctKy0tLS0tLSstLS0tKystLS0rLS0rLTctLSsrLSsrKysrK//AABEIAKoBKQMBIgACEQEDEQH/xAAaAAEAAwEBAQAAAAAAAAAAAAAAAQIDBAUG/8QALRABAQABAwIFBAEDBQAAAAAAAAECAxFREpEEE0FhcSExobHwFFKBBTJiouH/xAAaAQEBAQEBAQEAAAAAAAAAAAAAAgEDBAUG/8QAHxEBAQADAAEFAQAAAAAAAAAAAAECERIDEyExUWFB/9oADAMBAAIRAxEAPwCurNrVN3R4rD1c78PLt++xu4boym/0v1+Ujdtcut4KZfa7fO7ztfwmeHNnMe2OuPmyxdcfLcXzm5u9vW8Hhn95tecfpXBrf6blj/tvXO1enHzY38ejHzY38cOWEv8A5dmWWjfTLvXRnhcfpZZ8xV2mVdpXJlMp99+6vVeb3dquWnL94qZqmbk6rze51Xm92+Xh56Xb8s7oWe/wqZRUyinVeb3Oq83uXGz7yxDVJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90AJ6rze51Xm90DRPVeb3Oq83uthpZX7StP6XPj9puUidx99raO8vq83KbWzh7Ncni9Kffb7vgePP8AlfB8eevauAaZaXDOzZ2ld9gDQABXPCZfebuTV/0/G/b6fDtFY53H4VMrPh42p4DKfa7/AD9Kwz0csfvjf3Hv2KZaU+HbHz3+u2Pnv9fPj2tTw0v3xl/bmz8Hj7x1nmldZ5ZXnK3CX0juy8DxWWXhcouZz7XM59uS6GPvP8qXw/F/DrujlwrcLxey5nftcz/XJdC+yt0cuP07NkK7re647heL2V2dw3tvbhHcjpnE7Hbe3EO3onE7Q8uf2zsdw7jiHdNH/j/1Xmhf7Z+D1Iz1I84kenPD32i00Pdnqxnqx5kwvF7J8rLh6k0cfn/K8xk9Im+ZN8zy8fC5X0a4+AvrZPy9ATfLU3y5OXDwOM+9t/EbYaGOP2xn7rRaYW+lRc7fmoudvzVRtj4e+v0X/pvdzuUR1H1FVzx3li1HyHy3n2bfRFjo8Th693O7y7jvPebUy0p6fRndOz3+G4rqm7HMOi4yqXS4V1G9Mha6dnv8KqUAAIs3SAzulPhS6V+W43qqmVctxvrO8UuE4jtVuMvoqZtmbiulPfui6E5/DsulPhW6PuqeT9V2474f47K3w/w7LpVFwvFV6lVM65PIvE/B5N4n4dI3ut7rm8q8fo8u8fp0h3Tquby7x+jyrx+Y6Q7p05/Kv8qfJvs3DqnVY+R7/hM0Jy2mKZizqs6rGaM/lXmlOO7WQTcqbqswWWmNvovjo3hNqds5E9LeaF9ot/T+/wCE9w6j2Mp9UNNSerN4Y8M91c8d44s8dq72Gvh+f2vC6dMLpyoWsRs6uqBOwM0gsAZpW6c+PhW6Pv3aDd092N06rcbw6BvTd1zDpsVuE4b0bYDbyojyvc6htkNfJ9/wjyvdu43bMaeUeUbgzR0zidmvlJ8r4NjDonCPKnDo8tPl+503bm8mcflPkx0eX7pmnDs6c3k4/wAq3lx0dE4Tszs6c805wtNL2bjOzdYzR+Oy804uM6rEdKRLBAkYPXrGx0ak+rLUnq8sryY1mjObxItbk1MfXuydepjtflzZ47fDrjXfGqgKUbI2SAjYSDNKiw00qLbGwaVFtjYZpUW2Ng0qLbGwaVFtjYNKpTsDdIEgaQJGNQkANgAAABID28puysbKZz1eOV4Ma5rNkNM4zdJXaIzm8YWbuhlqY/X5XKrFy5TZDfPHdg6S7dpdgDWgAAAAAAAAAAAAAAAAAAAAJBCQGgAJk3aeVOU4Y7fKyLUXJ6gDyPCyymzDKbV1ZTdjnN1410xrJGU3iR0dGCmphv8ALbUnqouV0lc+w01MPWf5Zuku3Se6BICBICBICBICBICBICBICBICEgNAAAAAAGunj6o08PXs0TlUZUEyL+WhG3oAPM8gzzx9WgRsrlzijfPFjZs7Su2N2ixjZs2V1MVRUrJnnh6xoKl06S6c41zw9YydJdrl2ADQAAAAAAAAAAAAAAAAABfDDf6+hhh61qm1NoC2OO9QhbTnquCXOu0BwecABFm7DUx7x0K547tl0rG6cgtniq7OzLPHaqtspuxVFyimeG/yuNla57Bvljuyyx2XLt0l2qA1oAAAAAAAAAAAACZNwQ0ww57LY4bfKybki5ACEjbGbRXTx9ey7Km0BPTWJdgDg84AAADPUxc+U2djLVwXjkvHJzqamPq0qHR1jAWzx2VU6AAM8tPhSzZuWbqmSpk5xpdPhS42eitq3EANaAAAAAmTcEDSafK8xkZck3Jnjp8tZNgRbtNuwBjBbDHdEm7aTYtZaAthjv8ACUJwx9WiBFqLW4tUJ5cdoEhybQJDk2gSHJtz6umxd1jl1J9XTGOuGbOzdjZs6FNWfSOkxdJkxFhXK9qiwcm1RYOTalxl9FbpxqN5remPle/4PK92wap2x8r3/CZpxqGqdVSYThKwzms2qLBybVFg5Nqiy+lDllqccdkpSjSOkY47tZE4T6LbIsRclRbY2Zyzb//Z') no-repeat center center fixed;
+            background: url('https://i.pinimg.com/736x/a0/9f/d7/a09fd769b1c973ff30eae88d7a867b57.jpg') no-repeat center center fixed;
             background-size: cover;
             height: 100vh;
             display: flex;
@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* Add overlay for better readability */
         body::before {
             content: '';
             position: absolute;
@@ -36,7 +35,6 @@
             z-index: -1;
         }
 
-        /* Loading Screen */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -109,7 +107,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Chat Container */
         .chat-container {
             width: 100%;
             max-width: 900px;
@@ -131,7 +128,6 @@
             transform: translateY(0);
         }
 
-        /* Theme variations */
         .chat-container.device-theme {
             background-color: rgba(255, 255, 255, 0.95);
         }
@@ -256,7 +252,163 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        /* Settings Dropdown */
+        .api-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .api-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .api-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .api-modal.show .api-modal-content {
+            transform: translateY(0);
+        }
+
+        .api-modal h2 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-modal p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .api-input-group {
+            margin-bottom: 20px;
+        }
+
+        .api-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .api-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .api-input:focus {
+            border-color: #4facfe;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .api-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .api-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .api-btn.primary {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .api-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .api-btn.secondary {
+            background: #f0f2f5;
+            color: #666;
+        }
+
+        .api-btn.secondary:hover {
+            background: #e0e2e5;
+        }
+
+        .api-status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .api-status.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            display: block;
+        }
+
+        .api-status.error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            display: block;
+        }
+
+        .message-us-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .message-us-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
         .settings-dropdown {
             position: absolute;
             top: 45px;
@@ -264,7 +416,7 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            width: 250px;
+            width: 280px;
             padding: 15px;
             z-index: 100;
             display: none;
@@ -681,24 +833,6 @@
             text-decoration: underline;
         }
 
-        .status {
-            padding: 8px 12px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .status.ready {
-            background: rgba(0, 255, 0, 0.1);
-            color: #4cff4c;
-        }
-
-        .status.error {
-            background: rgba(255, 0, 0, 0.1);
-            color: #ff5555;
-        }
-
         .calculator-result {
             background: #f8f9fa;
             border: 1px solid #e0e0e0;
@@ -843,7 +977,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* Chat History Sidebar */
         .chat-history {
             position: absolute;
             left: -300px;
@@ -965,7 +1098,6 @@
             transform: translateY(-2px);
         }
 
-        /* History Toggle Button */
         .history-toggle {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -986,8 +1118,73 @@
             transform: scale(1.1);
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
+        .enhanced-answer {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255, 126, 95, 0.1), rgba(254, 180, 123, 0.1));
+            border-radius: 10px;
+            border-left: 4px solid #ff7e5f;
+        }
+
+        .answer-section {
+            margin-bottom: 15px;
+        }
+
+        .answer-title {
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .answer-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .answer-list li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .answer-list li:before {
+            content: "•";
+            color: #ff7e5f;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .note-box {
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #1a2a6c;
+        }
+
+        .note-box i {
+            color: #4facfe;
+            margin-right: 8px;
+        }
+
+        .knowledge-tag {
+            display: inline-block;
+            background: rgba(255, 126, 95, 0.1);
+            color: #ff7e5f;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin: 3px;
+            border: 1px solid rgba(255, 126, 95, 0.3);
+        }
+
+        @media (max-width: 768px) {
             .chat-container {
                 height: 95vh;
                 border-radius: 15px;
@@ -1018,6 +1215,30 @@
                 width: 200px;
                 right: -50px;
             }
+
+            .message-us-btn span {
+                display: none;
+            }
+            
+            .message-us-btn {
+                padding: 8px;
+                width: 36px;
+                height: 36px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 5px;
+            }
+            
+            .message-us-btn, .header-btn {
+                margin-left: 5px;
+                margin-bottom: 5px;
+            }
         }
     </style>
 </head>
@@ -1025,48 +1246,63 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-logo">
-            <img src="Blazebot logo.png" alt="Blaze AI Logo" id="loadingLogo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s" alt="Blaze AI Logo" id="loadingLogo">
         </div>
-        <div class="loading-text">Blaze AI is starting up...</div>
+        <div class="loading-text">Blaze AI with OpenAI</div>
         <div class="loading-bar">
             <div class="loading-progress" id="loadingProgress"></div>
         </div>
     </div>
 
-    <!-- Chat Container -->
-    <div class="chat-container device-theme" id="chatContainer">
-        <!-- Chat History Sidebar -->
-        <div class="chat-history" id="chatHistory">
-            <div class="history-header">
-                <h3><i class="fas fa-history"></i> Chat History</h3>
-                <button class="close-history" id="closeHistory">
-                    <i class="fas fa-times"></i>
+    <!-- API Key Modal -->
+    <div class="api-modal" id="apiModal">
+        <div class="api-modal-content">
+            <h2><i class="fas fa-key"></i> OpenAI API Key Required</h2>
+            <p>To use Blaze AI with OpenAI's powerful language model, please enter your OpenAI API key.</p>
+            
+            <div class="api-input-group">
+                <label for="apiKeyInput"><i class="fas fa-key"></i> Your OpenAI API Key</label>
+                <input type="password" id="apiKeyInput" class="api-input" placeholder="sk-...">
+            </div>
+            
+            <div class="api-status" id="apiStatus"></div>
+            
+            <div class="api-modal-buttons">
+                <button class="api-btn secondary" id="skipApiBtn">
+                    <i class="fas fa-forward"></i> Use Basic Mode
                 </button>
-            </div>
-            <div class="history-list" id="historyList">
-                <!-- History items will be added dynamically -->
-            </div>
-            <div class="clear-history">
-                <button class="clear-history-btn" id="clearHistoryBtn">
-                    <i class="fas fa-trash"></i> Clear History
+                <button class="api-btn primary" id="saveApiBtn">
+                    <i class="fas fa-save"></i> Save & Continue
                 </button>
             </div>
         </div>
+    </div>
 
+    <!-- Chat Container -->
+    <div class="chat-container device-theme" id="chatContainer">
         <div class="brand-header">
             <div class="brand-left">
                 <button class="history-toggle" id="historyToggle" title="Chat History">
                     <i class="fas fa-history"></i>
                 </button>
                 <div class="brand-logo">
-                    <img src="Blazebot logo.png" alt="Blaze AI Logo" id="headerLogo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s" alt="Blaze AI Logo" id="headerLogo">
                 </div>
                 <div>
                     <div class="brand-name">Blaze AI</div>
-                    <div class="brand-tagline">Voice-Powered Assistant</div>
+                    <div class="brand-tagline">Powered by OpenAI</div>
                 </div>
             </div>
             <div class="header-actions">
+                <button class="message-us-btn" id="messageUsBtn" title="Message Us">
+                    <i class="fas fa-comment-alt"></i>
+                    <span>Message Us</span>
+                </button>
+                
+                <button class="header-btn" title="API Settings" id="apiKeyBtn">
+                    <i class="fas fa-key"></i>
+                </button>
+                
                 <button class="header-btn" title="New Chat" id="newChatBtn">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -1077,7 +1313,6 @@
                     <i class="fas fa-cog"></i>
                 </button>
                 
-                <!-- Settings Dropdown -->
                 <div class="settings-dropdown" id="settingsDropdown">
                     <h3><i class="fas fa-sliders-h"></i> Settings</h3>
                     
@@ -1100,20 +1335,18 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="setting-item">
-                        <label><i class="fas fa-robot"></i> Assistant Settings</label>
-                        <div style="font-size: 12px; color: #888; margin-top: 5px;">
-                            Customize your Blaze AI experience
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
        
         <div class="chat-area" id="chatArea">
             <div class="welcome-message">
-                Welcome to Blaze AI! Your voice-powered assistant ready to help with coding, questions, and more.
+                Welcome to Blaze AI with OpenAI integration!
+                <div style="margin-top: 10px;">
+                    <span class="knowledge-tag" id="modelStatus">Basic Mode</span>
+                    <span class="knowledge-tag">ChatGPT</span>
+                    <span class="knowledge-tag">Code Generation</span>
+                </div>
             </div>
            
             <div class="message bot-message">
@@ -1121,30 +1354,29 @@
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s" alt="Blaze AI Avatar" id="botAvatar">
                 </div>
                 <div class="message-bubble">
-                    <b>🧠 Blaze:</b> Hello! I'm Blaze AI, your coding and voice-powered assistant. I can help you generate code in various languages, answer questions, perform calculations, and much more!
-                   
-                    <div class="code-generator">
-                        <div class="code-generator-title">
-                            <i class="fas fa-code"></i> Code Generator
+                    <b>🧠 Blaze AI:</b> Hello! I'm Blaze AI. 
+                    
+                    <div class="enhanced-answer">
+                        <div class="answer-title">
+                            <i class="fas fa-bolt"></i> Features
                         </div>
-                        <div class="code-options">
-                            <div class="code-option" data-lang="html">HTML</div>
-                            <div class="code-option" data-lang="css">CSS</div>
-                            <div class="code-option" data-lang="javascript">JavaScript</div>
-                            <div class="code-option" data-lang="python">Python</div>
-                            <div class="code-option" data-lang="java">Java</div>
-                        </div>
-                        <textarea class="code-input" id="codeInput" placeholder="Describe what you want to code (e.g., 'Create a responsive navigation bar')"></textarea>
-                        <button class="generate-code-btn" id="generateCodeBtn">
-                            <i class="fas fa-bolt"></i> Generate Code
-                        </button>
+                        <ul class="answer-list">
+                            <li>Ask me anything</li>
+                            <li>Code generation</li>
+                            <li>Voice input</li>
+                            <li>Chat history</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="note-box" id="apiNote">
+                        <i class="fas fa-key"></i>
+                        <strong>OpenAI API:</strong> Click the key icon to enter your API key for intelligent responses.
                     </div>
                    
                     <div class="suggestions">
-                        <div class="suggestion-chip">Create a calculator in JavaScript</div>
-                        <div class="suggestion-chip">Make a responsive navbar</div>
-                        <div class="suggestion-chip">Python function to sort a list</div>
-                        <div class="suggestion-chip">CSS grid layout example</div>
+                        <div class="suggestion-chip">What is artificial intelligence?</div>
+                        <div class="suggestion-chip">Create a Python calculator</div>
+                        <div class="suggestion-chip">Tell me about space</div>
                     </div>
                    
                     <div class="message-time" id="currentTime"></div>
@@ -1164,7 +1396,7 @@
         </div>
        
         <div class="input-area">
-            <textarea class="message-input" id="messageInput" placeholder="Type your question, request code, or click the mic 🎙️" rows="1"></textarea>
+            <textarea class="message-input" id="messageInput" placeholder="Ask me anything!" rows="1"></textarea>
             <button class="send-button" id="sendButton">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -1186,39 +1418,38 @@
             const audioToggleBtn = document.getElementById('audioToggleBtn');
             const typingIndicator = document.getElementById('typingIndicator');
             const newChatBtn = document.getElementById('newChatBtn');
-            const codeInput = document.getElementById('codeInput');
-            const generateCodeBtn = document.getElementById('generateCodeBtn');
-            const codeOptions = document.querySelectorAll('.code-option');
             const settingsBtn = document.getElementById('settingsBtn');
             const settingsDropdown = document.getElementById('settingsDropdown');
             const volumeSlider = document.getElementById('volumeSlider');
             const themeOptions = document.querySelectorAll('.theme-option');
             const historyToggle = document.getElementById('historyToggle');
-            const chatHistory = document.getElementById('chatHistory');
-            const closeHistory = document.getElementById('closeHistory');
-            const historyList = document.getElementById('historyList');
-            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+            const messageUsBtn = document.getElementById('messageUsBtn');
+            const apiKeyBtn = document.getElementById('apiKeyBtn');
+            const apiModal = document.getElementById('apiModal');
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const saveApiBtn = document.getElementById('saveApiBtn');
+            const skipApiBtn = document.getElementById('skipApiBtn');
+            const apiStatus = document.getElementById('apiStatus');
+            const modelStatus = document.getElementById('modelStatus');
+            const apiNote = document.getElementById('apiNote');
            
-            // Initialize chat history from localStorage
             let chatHistoryData = JSON.parse(localStorage.getItem('blazeChatHistory')) || [];
             let currentChatId = Date.now().toString();
             
-            // State variables
             let recognizing = false;
             let recognition;
             let audioEnabled = false;
-            let selectedLanguage = 'html';
             let speechVolume = 0.8;
             let currentTheme = 'device';
+            let openaiApiKey = localStorage.getItem('blazeOpenAIKey') || '';
+            let usingOpenAI = false;
             
-            // Set the logo image
             const logoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTryYMGzMy67w29nF47tPjUC3HCipQOT_CLahwD11UzC9-rc90BdWRQ4RM&s";
             document.getElementById('loadingLogo').src = logoUrl;
             document.getElementById('headerLogo').src = logoUrl;
             document.getElementById('botAvatar').src = logoUrl;
             document.getElementById('typingAvatar').src = logoUrl;
            
-            // Simulate loading progress
             let progress = 0;
             const loadingInterval = setInterval(() => {
                 progress += Math.random() * 15;
@@ -1228,38 +1459,62 @@
                    
                     setTimeout(() => {
                         loadingScreen.classList.add('hidden');
-                        chatContainer.classList.add('visible');
+                        checkAPIKey();
                     }, 500);
                 }
                 loadingProgress.style.width = `${progress}%`;
             }, 200);
            
-            // Set current time for the first message
+            function checkAPIKey() {
+                if (openaiApiKey && openaiApiKey.startsWith('sk-')) {
+                    testOpenAIKey();
+                } else {
+                    setTimeout(() => {
+                        apiModal.classList.add('show');
+                    }, 300);
+                }
+            }
+            
+            async function testOpenAIKey() {
+                if (!openaiApiKey || !openaiApiKey.startsWith('sk-')) {
+                    return false;
+                }
+                
+                try {
+                    const response = await fetch('https://api.openai.com/v1/models', {
+                        headers: {
+                            'Authorization': `Bearer ${openaiApiKey}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        usingOpenAI = true;
+                        modelStatus.textContent = 'OpenAI Active';
+                        modelStatus.style.background = 'rgba(76, 175, 80, 0.1)';
+                        modelStatus.style.color = '#4caf50';
+                        apiNote.style.display = 'none';
+                        messageInput.placeholder = "Ask me anything! I'm powered by OpenAI.";
+                        return true;
+                    } else {
+                        localStorage.removeItem('blazeOpenAIKey');
+                        openaiApiKey = '';
+                        usingOpenAI = false;
+                        return false;
+                    }
+                } catch (error) {
+                    usingOpenAI = false;
+                    return false;
+                }
+            }
+           
             document.getElementById('currentTime').textContent = getCurrentTime();
            
-            // Function to get current time in HH:MM format
             function getCurrentTime() {
                 const now = new Date();
                 return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
             }
 
-            // Function to get detailed time information
-            function getDetailedTime() {
-                const now = new Date();
-                const options = { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZoneName: 'short'
-                };
-                return now.toLocaleDateString('en-US', options);
-            }
-
-            // Function to perform calculations
             function calculateExpression(expression) {
                 try {
                     const cleanExpr = expression
@@ -1291,7 +1546,6 @@
                 }
             }
            
-            // Function to add a message to the chat
             function addMessage(message, isUser, links = null, calculation = null, code = null) {
                 const messageDiv = document.createElement('div');
                 messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
@@ -1365,31 +1619,6 @@
                     bubbleDiv.appendChild(codeDiv);
                 }
                
-                if (links && links.length > 0) {
-                    const linksContainer = document.createElement('div');
-                    linksContainer.className = 'links-container';
-                   
-                    const linksTitle = document.createElement('div');
-                    linksTitle.className = 'links-title';
-                    linksTitle.innerHTML = '<i class="fas fa-link"></i> Further Reading';
-                    linksContainer.appendChild(linksTitle);
-                   
-                    links.forEach(link => {
-                        const linkItem = document.createElement('div');
-                        linkItem.className = 'link-item';
-                       
-                        const linkAnchor = document.createElement('a');
-                        linkAnchor.href = link.url;
-                        linkAnchor.target = '_blank';
-                        linkAnchor.innerHTML = `<i class="fas fa-external-link-alt"></i> ${link.title}`;
-                       
-                        linkItem.appendChild(linkAnchor);
-                        linksContainer.appendChild(linkItem);
-                    });
-                   
-                    bubbleDiv.appendChild(linksContainer);
-                }
-               
                 if (!isUser) {
                     const actionsDiv = document.createElement('div');
                     actionsDiv.className = 'message-actions';
@@ -1415,6 +1644,12 @@
                     const likeBtn = document.createElement('button');
                     likeBtn.className = 'action-btn';
                     likeBtn.innerHTML = '<i class="far fa-thumbs-up"></i> Helpful';
+                    likeBtn.addEventListener('click', function() {
+                        likeBtn.innerHTML = '<i class="fas fa-thumbs-up"></i> Thank you!';
+                        setTimeout(() => {
+                            likeBtn.innerHTML = '<i class="far fa-thumbs-up"></i> Helpful';
+                        }, 2000);
+                    });
                    
                     actionsDiv.appendChild(copyBtn);
                     actionsDiv.appendChild(likeBtn);
@@ -1432,7 +1667,6 @@
                 chatArea.scrollTop = chatArea.scrollHeight;
             }
            
-            // Function to save chat history
             function saveChatHistory(userMessage, botResponse) {
                 const chatItem = {
                     id: currentChatId,
@@ -1442,779 +1676,99 @@
                     timeString: getCurrentTime()
                 };
                 
-                // Find if this chat already exists in history
                 const existingIndex = chatHistoryData.findIndex(item => item.id === currentChatId);
                 
                 if (existingIndex > -1) {
-                    // Update existing chat
                     chatHistoryData[existingIndex] = chatItem;
                 } else {
-                    // Add new chat to history
                     chatHistoryData.push(chatItem);
                 }
                 
-                // Keep only last 50 chats
                 if (chatHistoryData.length > 50) {
                     chatHistoryData.shift();
                 }
                 
-                // Save to localStorage
                 localStorage.setItem('blazeChatHistory', JSON.stringify(chatHistoryData));
-                
-                // Update history display
-                updateHistoryDisplay();
-            }
-
-            // Function to update history display
-            function updateHistoryDisplay() {
-                historyList.innerHTML = '';
-                
-                chatHistoryData.forEach((item, index) => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    if (item.id === currentChatId) {
-                        historyItem.classList.add('active');
-                    }
-                    
-                    historyItem.innerHTML = `
-                        <div class="history-preview">
-                            <strong>Q:</strong> ${item.userMessage}
-                        </div>
-                        <div class="history-preview">
-                            <strong>A:</strong> ${item.botResponse}
-                        </div>
-                        <div class="history-time">
-                            <span>${new Date(item.timestamp).toLocaleDateString()}</span>
-                            <span>${item.timeString}</span>
-                        </div>
-                    `;
-                    
-                    historyItem.addEventListener('click', () => {
-                        loadChatFromHistory(item.id);
-                    });
-                    
-                    historyList.appendChild(historyItem);
-                });
-            }
-
-            // Function to load chat from history
-            function loadChatFromHistory(chatId) {
-                // Clear current chat except the first bot message
-                const messages = chatArea.querySelectorAll('.message');
-                messages.forEach((msg, index) => {
-                    if (index > 0) {
-                        msg.remove();
-                    }
-                });
-                
-                // Find and load the chat
-                const chatToLoad = chatHistoryData.find(item => item.id === chatId);
-                if (chatToLoad) {
-                    currentChatId = chatId;
-                    
-                    // Add user message
-                    addMessage(chatToLoad.userMessage, true);
-                    
-                    // Add bot response
-                    addMessage(`<b>🧠 Blaze:</b> ${chatToLoad.botResponse}`, false);
-                    
-                    // Update active state in history
-                    updateHistoryDisplay();
-                }
             }
            
-            // Function to generate helpful links based on user query
-            function generateLinks(query) {
-                const queryLower = query.toLowerCase();
-                const links = [];
-               
-                if (queryLower.includes('python') || queryLower.includes('programming')) {
-                    links.push(
-                        { title: 'Python Official Documentation', url: 'https://docs.python.org/3/' },
-                        { title: 'W3Schools Python Tutorial', url: 'https://www.w3schools.com/python/' },
-                        { title: 'Real Python Tutorials', url: 'https://realpython.com/' }
-                    );
+            async function callOpenAI(prompt) {
+                if (!usingOpenAI || !openaiApiKey) {
+                    return null;
                 }
-               
-                if (queryLower.includes('quantum') || queryLower.includes('physics')) {
-                    links.push(
-                        { title: 'IBM Quantum Computing', url: 'https://www.ibm.com/quantum-computing/' },
-                        { title: 'Microsoft Quantum', url: 'https://azure.microsoft.com/en-us/solutions/quantum-computing/' },
-                        { title: 'Quantum Computing for the Very Curious', url: 'https://quantum.country/qcvc' }
-                    );
-                }
-               
-                if (queryLower.includes('productivity') || queryLower.includes('efficient')) {
-                    links.push(
-                        { title: 'Getting Things Done (GTD) Methodology', url: 'https://gettingthingsdone.com/' },
-                        { title: 'Trello Productivity Guide', url: 'https://trello.com/en/guide' },
-                        { title: 'Todoist Productivity Methods', url: 'https://todoist.com/productivity-methods' }
-                    );
-                }
-               
-                if (queryLower.includes('news') || queryLower.includes('tech')) {
-                    links.push(
-                        { title: 'TechCrunch', url: 'https://techcrunch.com/' },
-                        { title: 'The Verge', url: 'https://www.theverge.com/' },
-                        { title: 'Wired', url: 'https://www.wired.com/' }
-                    );
-                }
-               
-                if (queryLower.includes('learn') || queryLower.includes('tutorial')) {
-                    links.push(
-                        { title: 'Coursera', url: 'https://www.coursera.org/' },
-                        { title: 'edX', url: 'https://www.edx.org/' },
-                        { title: 'Khan Academy', url: 'https://www.khanacademy.org/' }
-                    );
-                }
-
-                if (queryLower.includes('math') || queryLower.includes('calculate')) {
-                    links.push(
-                        { title: 'Wolfram Alpha', url: 'https://www.wolframalpha.com/' },
-                        { title: 'Khan Academy Math', url: 'https://www.khanacademy.org/math' },
-                        { title: 'Desmos Graphing Calculator', url: 'https://www.desmos.com/calculator' }
-                    );
-                }
-
-                if (queryLower.includes('html') || queryLower.includes('css') || queryLower.includes('javascript')) {
-                    links.push(
-                        { title: 'MDN Web Docs', url: 'https://developer.mozilla.org/' },
-                        { title: 'W3Schools', url: 'https://www.w3schools.com/' },
-                        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' }
-                    );
-                }
-               
-                if (links.length === 0) {
-                    links.push(
-                        { title: 'Wikipedia', url: 'https://www.wikipedia.org/' },
-                        { title: 'Google Search', url: 'https://www.google.com/' },
-                        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' }
-                    );
-                }
-               
-                return links;
-            }
-            
-            // Function to generate code based on user request
-            function generateCode(query, language) {
-                const queryLower = query.toLowerCase();
                 
-                if (language === 'html') {
-                    if (queryLower.includes('button') || queryLower.includes('form')) {
-                        return {
-                            language: 'HTML',
-                            content: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Button Example</title>
-    <style>
-        .btn {
-            background: linear-gradient(45deg, #ff7e5f, #feb47b);
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-    </style>
-</head>
-<body>
-    <!-- Simple Button -->
-    <button class="btn">Click Me</button>
-    
-    <!-- Button with different styles -->
-    <button class="btn" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
-        Gradient Button
-    </button>
-</body>
-</html>`
-                        };
+                try {
+                    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${openaiApiKey}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            model: 'gpt-3.5-turbo',
+                            messages: [
+                                { role: "system", content: "You are Blaze AI, a helpful assistant." },
+                                { role: "user", content: prompt }
+                            ],
+                            temperature: 0.7,
+                            max_tokens: 1000
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
                     }
                     
-                    if (queryLower.includes('navbar') || queryLower.includes('navigation')) {
-                        return {
-                            language: 'HTML',
-                            content: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Navbar</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        .navbar {
-            background: linear-gradient(90deg, #1a2a6c, #b21f1f);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .logo {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: #ff7e5f;
-        }
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
+                    const data = await response.json();
+                    return data.choices[0].message.content;
+                    
+                } catch (error) {
+                    console.error('OpenAI error:', error);
+                    return null;
+                }
             }
             
-            .nav-links {
-                margin-top: 1rem;
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar">
-        <a href="#" class="logo">MyWebsite</a>
-        <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Services</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-</body>
-</html>`
-                        };
-                    }
-                }
-                
-                if (language === 'css') {
-                    if (queryLower.includes('grid') || queryLower.includes('layout')) {
-                        return {
-                            language: 'CSS',
-                            content: `/* CSS Grid Layout Example */
-.container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-.card-header {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #1a2a6c;
-}
-
-.card-content {
-    color: #666;
-    line-height: 1.6;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: 1fr;
-        gap: 15px;
-        padding: 15px;
-    }
-}
-
-/* Centering with Flexbox */
-.center-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-/* Centering with Grid */
-.center-grid {
-    display: grid;
-    place-items: center;
-    height: 100vh;
-}`
-                        };
-                    }
-                }
-                
-                if (language === 'javascript') {
-                    if (queryLower.includes('calculator') || queryLower.includes('calculate')) {
-                        return {
-                            language: 'JavaScript',
-                            content: `// Simple Calculator Class
-class Calculator {
-    constructor() {
-        this.result = 0;
-    }
-    
-    add(number) {
-        this.result += number;
-        return this;
-    }
-    
-    subtract(number) {
-        this.result -= number;
-        return this;
-    }
-    
-    multiply(number) {
-        this.result *= number;
-        return this;
-    }
-    
-    divide(number) {
-        if (number === 0) {
-            throw new Error('Division by zero is not allowed');
-        }
-        this.result /= number;
-        return this;
-    }
-    
-    getResult() {
-        return this.result;
-    }
-    
-    reset() {
-        this.result = 0;
-        return this;
-    }
-}
-
-// Usage examples
-const calc = new Calculator();
-
-// Chain operations
-const result1 = calc.add(5).multiply(3).subtract(10).getResult();
-console.log(result1); // 5
-
-// Reset and new calculation
-const result2 = calc.reset().add(10).divide(2).getResult();
-console.log(result2); // 5
-
-// DOM Calculator Implementation
-function createCalculator() {
-    let display = document.getElementById('display');
-    let currentInput = '';
-    let operator = '';
-    let previousInput = '';
-    
-    function updateDisplay() {
-        display.value = currentInput || '0';
-    }
-    
-    function inputNumber(num) {
-        currentInput = currentInput === '0' ? num : currentInput + num;
-        updateDisplay();
-    }
-    
-    function inputOperator(op) {
-        if (currentInput) {
-            previousInput = currentInput;
-            currentInput = '';
-            operator = op;
-        }
-    }
-    
-    function calculate() {
-        if (previousInput && currentInput && operator) {
-            const prev = parseFloat(previousInput);
-            const current = parseFloat(currentInput);
-            
-            switch(operator) {
-                case '+':
-                    currentInput = (prev + current).toString();
-                    break;
-                case '-':
-                    currentInput = (prev - current).toString();
-                    break;
-                case '*':
-                    currentInput = (prev * current).toString();
-                    break;
-                case '/':
-                    currentInput = (prev / current).toString();
-                    break;
-            }
-            
-            operator = '';
-            previousInput = '';
-            updateDisplay();
-        }
-    }
-    
-    function clearCalculator() {
-        currentInput = '';
-        previousInput = '';
-        operator = '';
-        updateDisplay();
-    }
-    
-    return {
-        inputNumber,
-        inputOperator,
-        calculate,
-        clearCalculator
-    };
-}`
-                        };
-                    }
-                }
-                
-                if (language === 'python') {
-                    if (queryLower.includes('sort') || queryLower.includes('list')) {
-                        return {
-                            language: 'Python',
-                            content: `# Python Sorting Algorithms and List Operations
-
-# Built-in sorting
-numbers = [5, 2, 8, 1, 9, 3]
-sorted_numbers = sorted(numbers)  # Returns new sorted list
-numbers.sort()  # Sorts the list in-place
-
-# Custom sorting with key
-words = ['apple', 'banana', 'cherry', 'date']
-sorted_words = sorted(words, key=len)  # Sort by length
-
-# Sorting dictionaries
-students = [
-    {'name': 'Alice', 'grade': 85},
-    {'name': 'Bob', 'grade': 92},
-    {'name': 'Charlie', 'grade': 78}
-]
-
-# Sort by grade
-sorted_students = sorted(students, key=lambda x: x['grade'], reverse=True)
-
-# Custom sorting algorithms
-def bubble_sort(arr):
-    """
-    Bubble Sort Algorithm
-    Time Complexity: O(n^2)
-    """
-    n = len(arr)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
-    return arr
-
-def quick_sort(arr):
-    """
-    Quick Sort Algorithm
-    Time Complexity: O(n log n) average, O(n^2) worst case
-    """
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    return quick_sort(left) + middle + quick_sort(right)
-
-# List comprehension examples
-squares = [x**2 for x in range(10)]  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
-even_numbers = [x for x in range(20) if x % 2 == 0]  # [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
-
-# Matrix operations with list comprehension
-matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-transpose = [[row[i] for row in matrix] for i in range(len(matrix[0]))]
-
-print("Original matrix:", matrix)
-print("Transposed matrix:", transpose)`
-                        };
-                    }
-                }
-                
-                if (language === 'java') {
-                    return {
-                        language: 'Java',
-                        content: `// Java Hello World Program
-public class HelloWorld {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}
-
-// Java Calculator Class
-public class Calculator {
-    private double result;
-    
-    public Calculator() {
-        this.result = 0;
-    }
-    
-    public Calculator add(double number) {
-        this.result += number;
-        return this;
-    }
-    
-    public Calculator subtract(double number) {
-        this.result -= number;
-        return this;
-    }
-    
-    public Calculator multiply(double number) {
-        this.result *= number;
-        return this;
-    }
-    
-    public Calculator divide(double number) {
-        if (number == 0) {
-            throw new ArithmeticException("Division by zero is not allowed");
-        }
-        this.result /= number;
-        return this;
-    }
-    
-    public double getResult() {
-        return this.result;
-    }
-    
-    public Calculator reset() {
-        this.result = 0;
-        return this;
-    }
-    
-    // Usage example
-    public static void main(String[] args) {
-        Calculator calc = new Calculator();
-        double result = calc.add(5).multiply(3).subtract(10).getResult();
-        System.out.println("Result: " + result); // Result: 5.0
-    }
-}
-
-// Java ArrayList Example
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-public class StudentManager {
-    private ArrayList<Student> students;
-    
-    public StudentManager() {
-        this.students = new ArrayList<>();
-    }
-    
-    public void addStudent(Student student) {
-        students.add(student);
-    }
-    
-    public void sortStudentsByGrade() {
-        Collections.sort(students, new Comparator<Student>() {
-            @Override
-            public int compare(Student s1, Student s2) {
-                return Double.compare(s2.getGrade(), s1.getGrade()); // Descending order
-            }
-        });
-    }
-    
-    // Using lambda expression (Java 8+)
-    public void sortStudentsByName() {
-        students.sort((s1, s2) -> s1.getName().compareTo(s2.getName()));
-    }
-}
-
-class Student {
-    private String name;
-    private double grade;
-    
-    public Student(String name, double grade) {
-        this.name = name;
-        this.grade = grade;
-    }
-    
-    // Getters and setters
-    public String getName() { return name; }
-    public double getGrade() { return grade; }
-}`
-                    };
-                }
-                
-                return {
-                    language: language.toUpperCase(),
-                    content: `// ${language.toUpperCase()} code for: ${query}\n// This is a template. Please provide more specific details about what you want to create.\n\nfunction example() {\n    // Your code here\n    console.log("Hello, World!");\n}`
-                };
-            }
-            
-            // ====== SEARCH AND SUMMARIZE ======
-            async function searchAndSummarize(query) {
-                try {
-                    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1`;
-                    const res = await fetch(url);
-                    const data = await res.json();
-
-                    if (data.AbstractText) {
-                        return summarizeText(data.AbstractText, query);
-                    }
-
-                    if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                        let results = [];
-                        for (let i = 0; i < Math.min(5, data.RelatedTopics.length); i++) {
-                            const topic = data.RelatedTopics[i];
-                            if (topic.Text && topic.FirstURL) {
-                                results.push({ title: topic.Text, link: topic.FirstURL });
-                            }
-                        }
-                        if (results.length > 0) {
-                            const summary = summarizeResults(results, query);
-                            let linksHTML = "<br><b>🔗 Useful Links:</b><ul>";
-                            results.forEach(r => {
-                                linksHTML += `<li><a href="${r.link}" target="_blank">${r.title}</a></li>`;
-                            });
-                            linksHTML += "</ul>";
-                            return summary + linksHTML;
-                        }
-                    }
-
-                    return "Sorry, I couldn't find anything useful for that.";
-                } catch (err) {
-                    console.error(err);
-                    return "⚠️ There was a problem searching the web.";
-                }
-            }
-
-            function summarizeText(text, query) {
-                const sentences = text.split(/[.!?]/).filter(s => s.trim().length > 0);
-                const summary = sentences.slice(0, 2).join('. ') + '.';
-                return `<b>🧠 Blaze:</b> Here's what I found about <b>${query}</b>:<br><br>${summary}`;
-            }
-
-            function summarizeResults(results, query) {
-                let summary = `Here's what I found about <b>${query}</b>: It seems to be related to `;
-                summary += results
-                    .map(r => r.title.split(' ')[0].toLowerCase())
-                    .slice(0, 3)
-                    .join(', ');
-                summary += `. You can read more from the sources below.`;
-                return `<b>🧠 Blaze:</b> ${summary}`;
-            }
-            
-            // Function to simulate bot response
-            async function getBotResponse(userMessage) {
+            async function getEnhancedResponse(userMessage) {
                 const queryLower = userMessage.toLowerCase();
                 
                 if (queryLower.includes('hello') || queryLower.includes('hi') || queryLower.includes('hey')) {
                     return {
-                        message: `<b>🧠 Blaze:</b> Hello! I'm Blaze AI, your advanced AI assistant. I can help with coding, questions, calculations, time information, and much more. What would you like to know today?`,
-                        links: null,
-                        calculation: null,
-                        code: null
-                    };
-                } else if (queryLower.includes('how are you')) {
-                    return {
-                        message: `<b>🧠 Blaze:</b> I'm just a bot, but I'm functioning perfectly! I'm ready to help you with any coding tasks, questions, calculations, or anything else you need. What can I assist you with today?`,
-                        links: null,
-                        calculation: null,
-                        code: null
-                    };
-                } else if (queryLower.includes('who are you') || queryLower.includes('what are you')) {
-                    return {
-                        message: `<b>🧠 Blaze:</b> I'm Blaze AI, your friendly AI assistant! I'm designed to help with a wide range of tasks from coding assistance to answering simple questions, performing calculations, and providing time information.`,
-                        links: null,
-                        calculation: null,
-                        code: null
-                    };
-                } else if (queryLower.includes('who made you') || queryLower.includes('who created you') || 
-                          queryLower.includes('who developed you') || queryLower.includes('who built you') ||
-                          queryLower.includes('who made blaze')) {
-                    return {
-                        message: `<b>🧠 Blaze:</b> I was created by <b>Richard Aveen</b> and <b>Aayush</b>! They're the brilliant developers behind this AI assistant.`,
-                        links: null,
-                        calculation: null,
-                        code: null
-                    };
-                } else if (queryLower.includes('thank')) {
-                    return {
-                        message: `<b>🧠 Blaze:</b> You're welcome! I'm glad I could help. Is there anything else you'd like to know or any other way I can assist you?`,
-                        links: null,
-                        calculation: null,
-                        code: null
-                    };
-                } else if (queryLower.includes('joke')) {
-                    const jokes = [
-                        "Why don't scientists trust atoms? Because they make up everything!",
-                        "Why did the scarecrow win an award? He was outstanding in his field!",
-                        "Why don't skeletons fight each other? They don't have the guts!",
-                        "What do you call a fake noodle? An impasta!",
-                        "Why did the math book look so sad? Because it had too many problems!"
-                    ];
-                    return {
-                        message: `<b>🧠 Blaze:</b> ${jokes[Math.floor(Math.random() * jokes.length)]}`,
+                        message: `<b>🧠 Blaze AI:</b> Hello! I'm Blaze AI. ${usingOpenAI ? 'I can help with any question!' : 'Enter your OpenAI API key for better responses.'}`,
                         links: null,
                         calculation: null,
                         code: null
                     };
                 }
                 
-                if (queryLower.includes('time') && 
-                   (queryLower.includes('what') || queryLower.includes('current') || 
-                    queryLower.includes('now'))) {
-                    const detailedTime = getDetailedTime();
+                if (usingOpenAI) {
+                    const openaiResponse = await callOpenAI(userMessage);
+                    if (openaiResponse) {
+                        return {
+                            message: `<b>🧠 Blaze AI:</b> ${openaiResponse}`,
+                            links: null,
+                            calculation: null,
+                            code: null
+                        };
+                    }
+                }
+                
+                if (queryLower.includes('who made you')) {
                     return {
-                        message: `<b>🧠 Blaze:</b> The current time is:<br><br><b>${detailedTime}</b>`,
+                        message: `<b>🧠 Blaze AI:</b> I was created by <b>Richard Aveen</b> and <b>Aayush</b>!`,
                         links: null,
                         calculation: null,
                         code: null
                     };
                 }
-
+                
+                if (queryLower.includes('thank')) {
+                    return {
+                        message: `<b>🧠 Blaze AI:</b> You're welcome!`,
+                        links: null,
+                        calculation: null,
+                        code: null
+                    };
+                }
+                
                 const calculationMatch = userMessage.match(/(?:calculate|compute|what is|solve)\s+(.+)/i) || 
                                        userMessage.match(/(\d+[\s\d+\-*/().×÷]+)/);
                 
@@ -2224,67 +1778,28 @@ class Student {
                     
                     if (calculation.success) {
                         return {
-                            message: `<b>🧠 Blaze:</b> Here's your calculation result:`,
+                            message: `<b>🧠 Blaze AI:</b> Calculation Result:`,
                             links: null,
                             calculation: calculation,
-                            code: null
-                        };
-                    } else {
-                        return {
-                            message: `<b>🧠 Blaze:</b> I couldn't calculate that expression. Please make sure it's a valid mathematical expression.`,
-                            links: generateLinks('math'),
-                            calculation: null,
                             code: null
                         };
                     }
                 }
                 
-                if (queryLower.includes('code') || queryLower.includes('create') || 
-                    queryLower.includes('make') || queryLower.includes('build') ||
-                    queryLower.includes('html') || queryLower.includes('css') ||
-                    queryLower.includes('javascript') || queryLower.includes('python') ||
-                    queryLower.includes('java')) {
-                    
-                    let detectedLanguage = 'javascript';
-                    if (queryLower.includes('html')) detectedLanguage = 'html';
-                    else if (queryLower.includes('css')) detectedLanguage = 'css';
-                    else if (queryLower.includes('python')) detectedLanguage = 'python';
-                    else if (queryLower.includes('java') && !queryLower.includes('javascript')) detectedLanguage = 'java';
-                    
-                    const code = generateCode(userMessage, detectedLanguage);
-                    return {
-                        message: `<b>🧠 Blaze:</b> Here's the ${detectedLanguage.toUpperCase()} code you requested:`,
-                        links: generateLinks(userMessage),
-                        calculation: null,
-                        code: code
-                    };
-                }
-                
-                const webResponse = await searchAndSummarize(userMessage);
-                if (webResponse && !webResponse.includes("Sorry, I couldn't find anything")) {
-                    return {
-                        message: webResponse,
-                        links: generateLinks(userMessage),
-                        calculation: null,
-                        code: null
-                    };
-                }
-                
-                const defaultResponses = [
-                    `<b>🧠 Blaze:</b> I understand you're asking about '${userMessage}'. While I don't have specific information about that topic in my current knowledge base, I'd be happy to help with coding, general information, calculations, time queries, or point you to resources where you can learn more.`,
-                    `<b>🧠 Blaze:</b> That's an interesting question about '${userMessage}'. I'm still learning about various topics, but I can provide general guidance, help with coding, perform calculations, tell you the time, or suggest resources that might have the information you're looking for.`,
-                    `<b>🧠 Blaze:</b> I appreciate your question about '${userMessage}'. While I don't have a detailed answer prepared, I can offer some general insights, help with coding tasks, provide time information, or direct you to authoritative sources on this subject.`
+                const responses = [
+                    `<b>🧠 Blaze AI:</b> I understand you're asking about "${userMessage}".`,
+                    `<b>🧠 Blaze AI:</b> That's an interesting question!`,
                 ];
                
                 return {
-                    message: defaultResponses[Math.floor(Math.random() * defaultResponses.length)],
-                    links: generateLinks(userMessage),
+                    message: responses[Math.floor(Math.random() * responses.length)] + 
+                            (usingOpenAI ? '' : '<br><div class="note-box"><i class="fas fa-key"></i> Add OpenAI API key for detailed answers</div>'),
+                    links: null,
                     calculation: null,
                     code: null
                 };
             }
             
-            // Text-to-Speech using browser's built-in API
             function speakResponse(text) {
                 if (!audioEnabled) return;
                 
@@ -2299,12 +1814,9 @@ class Student {
                     utterance.volume = speechVolume;
                     
                     window.speechSynthesis.speak(utterance);
-                } else {
-                    console.log("Text-to-speech not supported in this browser");
                 }
             }
            
-            // Function to handle sending a message
             async function sendMessage() {
                 const message = messageInput.value.trim();
                 if (message === '') return;
@@ -2316,53 +1828,19 @@ class Student {
                 typingIndicator.classList.add('active');
                
                 try {
-                    const botResponse = await getBotResponse(message);
+                    const botResponse = await getEnhancedResponse(message);
                     typingIndicator.classList.remove('active');
                     addMessage(botResponse.message, false, botResponse.links, botResponse.calculation, botResponse.code);
                     
-                    // Save to chat history
                     saveChatHistory(message, botResponse);
                     
                     speakResponse(botResponse.message);
                 } catch (error) {
                     typingIndicator.classList.remove('active');
-                    addMessage("Sorry, I encountered an error while processing your request. Please try again.", false);
-                    console.error(error);
+                    addMessage("Sorry, I encountered an error.", false);
                 }
             }
             
-            // Function to handle code generation
-            function handleCodeGeneration() {
-                const description = codeInput.value.trim();
-                if (description === '') return;
-                
-                addMessage(`I want to generate ${selectedLanguage.toUpperCase()} code for: ${description}`, true);
-                codeInput.value = '';
-                
-                typingIndicator.classList.add('active');
-                
-                setTimeout(() => {
-                    const code = generateCode(description, selectedLanguage);
-                    typingIndicator.classList.remove('active');
-                    addMessage(
-                        `<b>🧠 Blaze:</b> Here's the ${selectedLanguage.toUpperCase()} code you requested:`,
-                        false, 
-                        generateLinks(description),
-                        null,
-                        code
-                    );
-                    
-                    // Save to chat history
-                    saveChatHistory(`Generate ${selectedLanguage} code for: ${description}`, {
-                        message: `<b>🧠 Blaze:</b> Here's the ${selectedLanguage.toUpperCase()} code you requested:`,
-                        links: generateLinks(description),
-                        calculation: null,
-                        code: code
-                    });
-                }, 1500);
-            }
-            
-            // Voice recognition
             function toggleListening() {
                 if (recognizing) {
                     stopListening();
@@ -2373,7 +1851,7 @@ class Student {
             
             function startListening() {
                 if (!('webkitSpeechRecognition' in window)) {
-                    alert("Your browser doesn't support voice recognition. Try Chrome or Edge.");
+                    alert("Your browser doesn't support voice recognition.");
                     return;
                 }
                 
@@ -2395,14 +1873,9 @@ class Student {
                 };
                 
                 recognition.onerror = (e) => {
-                    console.error(e);
                     recognizing = false;
                     voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
                     voiceButton.classList.remove('listening');
-                    
-                    if (e.error === 'not-allowed') {
-                        addMessage("Microphone access denied. Please allow microphone permissions.", false);
-                    }
                 };
                 
                 recognition.onend = () => {
@@ -2420,26 +1893,21 @@ class Student {
                 }
             }
 
-            // Toggle audio response
             function toggleAudio() {
                 audioEnabled = !audioEnabled;
                 if (audioEnabled) {
                     audioToggleBtn.classList.add('active');
                     audioToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-                    addMessage("Audio responses enabled. I'll now speak my responses.", false);
                 } else {
                     audioToggleBtn.classList.remove('active');
                     audioToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    addMessage("Audio responses disabled.", false);
                 }
             }
 
-            // Toggle settings dropdown
             function toggleSettingsDropdown() {
                 settingsDropdown.classList.toggle('show');
             }
 
-            // Change theme
             function changeTheme(theme) {
                 currentTheme = theme;
                 chatContainer.className = `chat-container ${theme}-theme`;
@@ -2451,51 +1919,183 @@ class Student {
                     }
                 });
                 
-                // Save theme preference
                 localStorage.setItem('blazeTheme', theme);
             }
 
-            // Toggle chat history
-            function toggleChatHistory() {
-                chatHistory.classList.toggle('active');
-            }
-
-            // Clear chat history
-            function clearChatHistory() {
-                if (confirm("Are you sure you want to clear all chat history? This action cannot be undone.")) {
-                    chatHistoryData = [];
-                    localStorage.removeItem('blazeChatHistory');
-                    updateHistoryDisplay();
-                    addMessage("Chat history has been cleared.", false);
+            async function saveApiKey() {
+                const key = apiKeyInput.value.trim();
+                
+                if (!key.startsWith('sk-')) {
+                    apiStatus.textContent = "Invalid API key format.";
+                    apiStatus.className = "api-status error";
+                    return;
+                }
+                
+                apiStatus.textContent = "Testing API key...";
+                apiStatus.className = "api-status";
+                apiStatus.style.display = 'block';
+                
+                openaiApiKey = key;
+                const testResult = await testOpenAIKey();
+                
+                if (testResult) {
+                    localStorage.setItem('blazeOpenAIKey', key);
+                    apiStatus.textContent = "API key saved successfully!";
+                    apiStatus.className = "api-status success";
+                    
+                    setTimeout(() => {
+                        apiModal.classList.remove('show');
+                        chatContainer.classList.add('visible');
+                    }, 1000);
+                } else {
+                    apiStatus.textContent = "Invalid API key.";
+                    apiStatus.className = "api-status error";
+                    openaiApiKey = '';
                 }
             }
 
-            // Load saved theme preference
+            function skipApiKey() {
+                apiModal.classList.remove('show');
+                chatContainer.classList.add('visible');
+            }
+
+            function goToMessageUs() {
+                const messageUsHTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Us - Blaze AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .message-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .back-btn {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ff7e5f;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        .contact-item i {
+            color: #ff7e5f;
+            width: 24px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i> Back to Blaze AI
+        </button>
+        
+        <h1><i class="fas fa-comment-alt"></i> Message Us</h1>
+        <p>Get in touch with the Blaze AI team!</p>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-users"></i>
+                <div>
+                    <strong>Creators</strong><br>
+                    Richard Aveen & Aayush
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+                const newWindow = window.open();
+                newWindow.document.write(messageUsHTML);
+                newWindow.document.close();
+            }
+
             const savedTheme = localStorage.getItem('blazeTheme') || 'device';
             changeTheme(savedTheme);
 
-            // Set saved volume
             const savedVolume = localStorage.getItem('blazeVolume');
             if (savedVolume) {
                 speechVolume = parseFloat(savedVolume);
                 volumeSlider.value = speechVolume;
             }
+
+            if (openaiApiKey) {
+                testOpenAIKey();
+            }
            
-            // Auto-resize textarea
             messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
            
-            // Event listeners
             sendButton.addEventListener('click', sendMessage);
             voiceButton.addEventListener('click', toggleListening);
             audioToggleBtn.addEventListener('click', toggleAudio);
-            generateCodeBtn.addEventListener('click', handleCodeGeneration);
             settingsBtn.addEventListener('click', toggleSettingsDropdown);
-            historyToggle.addEventListener('click', toggleChatHistory);
-            closeHistory.addEventListener('click', toggleChatHistory);
-            clearHistoryBtn.addEventListener('click', clearChatHistory);
+            apiKeyBtn.addEventListener('click', () => apiModal.classList.add('show'));
+            messageUsBtn.addEventListener('click', goToMessageUs);
+            saveApiBtn.addEventListener('click', saveApiKey);
+            skipApiBtn.addEventListener('click', skipApiKey);
+           
+            apiModal.addEventListener('click', (e) => {
+                if (e.target === apiModal) {
+                    apiModal.classList.remove('show');
+                    if (!chatContainer.classList.contains('visible')) {
+                        chatContainer.classList.add('visible');
+                    }
+                }
+            });
            
             messageInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -2503,24 +2103,7 @@ class Student {
                     sendMessage();
                 }
             });
-            
-            codeInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleCodeGeneration();
-                }
-            });
            
-            // Code language selection
-            codeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    codeOptions.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    selectedLanguage = this.getAttribute('data-lang');
-                });
-            });
-           
-            // Theme selection
             themeOptions.forEach(option => {
                 option.addEventListener('click', function() {
                     const theme = this.getAttribute('data-theme');
@@ -2528,13 +2111,11 @@ class Student {
                 });
             });
            
-            // Volume slider
             volumeSlider.addEventListener('input', function() {
                 speechVolume = parseFloat(this.value);
                 localStorage.setItem('blazeVolume', speechVolume);
             });
            
-            // New chat button
             newChatBtn.addEventListener('click', function() {
                 const messages = chatArea.querySelectorAll('.message');
                 messages.forEach(msg => {
@@ -2543,16 +2124,11 @@ class Student {
                     }
                 });
                
-                // Generate new chat ID
                 currentChatId = Date.now().toString();
-                
-                // Update history display
-                updateHistoryDisplay();
                
-                addMessage("Hello! I'm Blaze AI. How can I help you with coding today?", false);
+                addMessage("Hello! I'm Blaze AI. How can I help you today?", false);
             });
            
-            // Suggestion chips
             document.querySelectorAll('.suggestion-chip').forEach(chip => {
                 chip.addEventListener('click', function() {
                     messageInput.value = this.textContent;
@@ -2560,17 +2136,12 @@ class Student {
                 });
             });
            
-            // Close dropdown when clicking outside
             document.addEventListener('click', function(event) {
                 if (!settingsBtn.contains(event.target) && !settingsDropdown.contains(event.target)) {
                     settingsDropdown.classList.remove('show');
                 }
             });
 
-            // Initial history display
-            updateHistoryDisplay();
-           
-            // Focus on input when page loads
             setTimeout(() => {
                 messageInput.focus();
             }, 1000);
