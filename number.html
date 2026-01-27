@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Number Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 20, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        .loading-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ff7b00, #ffaa00, #ff7b00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 123, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .loading-text {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 40px;
+        }
+        
+        .loading-animation {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .flame {
+            width: 50px;
+            height: 80px;
+            position: relative;
+            margin: 0 15px;
+        }
+        
+        .flame::before, .flame::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, transparent, #ff7b00, #ffaa00);
+            border-radius: 50% 50% 20% 20%;
+            transform-origin: bottom center;
+        }
+        
+        .flame::before {
+            animation: flicker 0.8s infinite alternate ease-in-out;
+            opacity: 0.9;
+        }
+        
+        .flame::after {
+            background: linear-gradient(to top, transparent, #ff5500, #ff7b00);
+            filter: blur(10px);
+            opacity: 0.7;
+            animation: flicker2 1s infinite alternate-reverse ease-in-out;
+        }
+        
+        .flame:nth-child(2)::before {
+            animation-delay: 0.2s;
+        }
+        
+        .flame:nth-child(2)::after {
+            animation-delay: 0.4s;
+        }
+        
+        .flame:nth-child(3)::before {
+            animation-delay: 0.4s;
+        }
+        
+        .flame:nth-child(3)::after {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-progress {
+            width: 300px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+        
+        .loading-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #ff5500, #ffaa00);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 123, 0, 0.7);
+        }
+        
+        .loading-counter {
+            font-size: 1.5rem;
+            margin-top: 15px;
+            color: #ffaa00;
+            font-weight: 600;
+        }
+        
+        .loading-tip {
+            margin-top: 30px;
+            font-style: italic;
+            color: #888;
+            font-size: 0.9rem;
+            max-width: 400px;
+        }
+        
+        @keyframes flicker {
+            0% { transform: scaleY(1) scaleX(1); opacity: 0.9; }
+            25% { transform: scaleY(1.1) scaleX(0.95); opacity: 0.8; }
+            50% { transform: scaleY(0.9) scaleX(1.05); opacity: 1; }
+            75% { transform: scaleY(1.05) scaleX(0.98); opacity: 0.85; }
+            100% { transform: scaleY(0.95) scaleX(1.02); opacity: 0.9; }
+        }
+        
+        @keyframes flicker2 {
+            0% { transform: scaleY(1) scaleX(1); opacity: 0.7; }
+            33% { transform: scaleY(1.2) scaleX(0.9); opacity: 0.5; }
+            66% { transform: scaleY(0.8) scaleX(1.1); opacity: 0.8; }
+            100% { transform: scaleY(1.1) scaleX(0.95); opacity: 0.6; }
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff7b00, #ffaa00, #ff7b00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(255, 123, 0, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .generator-container {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 123, 0, 0.2);
+            margin-bottom: 40px;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 10px;
+            color: #ffaa00;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        input, select {
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background-color: #111;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff7b00;
+            box-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 16px 32px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        #generateBtn {
+            background: linear-gradient(to right, #ff7b00, #ff5500);
+            color: white;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        #generateBtn:hover {
+            background: linear-gradient(to right, #ff8c00, #ff6a00);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 123, 0, 0.4);
+        }
+        
+        #resetBtn {
+            background: #333;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        #resetBtn:hover {
+            background: #444;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .result-label {
+            font-size: 1.3rem;
+            color: #ffaa00;
+            margin-bottom: 20px;
+        }
+        
+        #result {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #ff7b00;
+            text-shadow: 0 0 20px rgba(255, 123, 0, 0.7);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.5s ease;
+            border: 2px solid rgba(255, 123, 0, 0.3);
+            letter-spacing: 5px;
+        }
+        
+        .history-container {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 123, 0, 0.2);
+        }
+        
+        .history-title {
+            font-size: 1.5rem;
+            color: #ffaa00;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #historyList {
+            list-style-type: none;
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        #historyList::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #historyList::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        #historyList::-webkit-scrollbar-thumb {
+            background: #ff7b00;
+            border-radius: 10px;
+        }
+        
+        .history-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 123, 0, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #ff7b00;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .history-number {
+            font-weight: 700;
+            color: #ffaa00;
+        }
+        
+        .history-range {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        .blaze-effect {
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, transparent, #ff7b00, transparent);
+            bottom: -10px;
+            left: 0;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .generator-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            #result {
+                font-size: 4rem;
+                min-height: 100px;
+            }
+            
+            button {
+                padding: 14px 20px;
+                font-size: 1.1rem;
+            }
+            
+            .loading-title {
+                font-size: 2rem;
+            }
+            
+            .loading-progress {
+                width: 250px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            #result {
+                font-size: 3rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            #generateBtn, #resetBtn {
+                max-width: 100%;
+                width: 100%;
+            }
+            
+            .loading-title {
+                font-size: 1.8rem;
+            }
+            
+            .flame {
+                width: 40px;
+                height: 65px;
+                margin: 0 10px;
+            }
+            
+            .loading-progress {
+                width: 200px;
+            }
+        }
+        
+        /* Animation for generated numbers */
+        @keyframes blazePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: blazePulse 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <h2 class="loading-title">Blaze Number Generator</h2>
+            <p class="loading-text">Igniting random numbers with fiery intensity...</p>
+            
+            <div class="loading-animation">
+                <div class="flame"></div>
+                <div class="flame"></div>
+                <div class="flame"></div>
+            </div>
+            
+            <div class="loading-progress">
+                <div class="loading-progress-bar" id="loadingProgress"></div>
+            </div>
+            
+            <div class="loading-counter" id="loadingCounter">0%</div>
+            
+            <div class="loading-tip" id="loadingTip">
+                <i class="fas fa-lightbulb"></i> Tip: You can generate multiple numbers at once by changing the "How Many Numbers?" setting.
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>Blaze Number Generator</h1>
+            <div class="tagline">Generate random numbers with fiery intensity!</div>
+            <div class="blaze-effect"></div>
+        </header>
+        
+        <main>
+            <div class="generator-container">
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="minValue"><i class="fas fa-arrow-down"></i> Minimum Value</label>
+                        <input type="number" id="minValue" value="1" min="-999999" max="999999">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="maxValue"><i class="fas fa-arrow-up"></i> Maximum Value</label>
+                        <input type="number" id="maxValue" value="100" min="-999999" max="999999">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="count"><i class="fas fa-list-ol"></i> How Many Numbers?</label>
+                        <select id="count">
+                            <option value="1">1 Number</option>
+                            <option value="2">2 Numbers</option>
+                            <option value="3">3 Numbers</option>
+                            <option value="5">5 Numbers</option>
+                            <option value="10">10 Numbers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="decimalPlaces"><i class="fas fa-decimal-point"></i> Decimal Places</label>
+                        <select id="decimalPlaces">
+                            <option value="0">No decimals (integers)</option>
+                            <option value="1">1 decimal place</option>
+                            <option value="2">2 decimal places</option>
+                            <option value="3">3 decimal places</option>
+                            <option value="4">4 decimal places</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button id="generateBtn">
+                        <i class="fas fa-fire"></i> Generate Random Numbers
+                    </button>
+                    <button id="resetBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="result-container">
+                    <div class="result-label">Your Blazing Random Number(s):</div>
+                    <div id="result">--</div>
+                </div>
+            </div>
+            
+            <div class="history-container">
+                <h3 class="history-title"><i class="fas fa-history"></i> Generation History</h3>
+                <ul id="historyList">
+                    <!-- History items will be added here dynamically -->
+                </ul>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>Blaze Number Generator &copy; 2023 | Made with <i class="fas fa-fire" style="color:#ff7b00"></i> for random needs</p>
+            <p>Refresh the page to clear history or use the reset button to start over</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM elements
+        const generateBtn = document.getElementById('generateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const minValueInput = document.getElementById('minValue');
+        const maxValueInput = document.getElementById('maxValue');
+        const countSelect = document.getElementById('count');
+        const decimalPlacesSelect = document.getElementById('decimalPlaces');
+        const resultDisplay = document.getElementById('result');
+        const historyList = document.getElementById('historyList');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const loadingProgress = document.getElementById('loadingProgress');
+        const loadingCounter = document.getElementById('loadingCounter');
+        const loadingTip = document.getElementById('loadingTip');
+        
+        // Loading tips array
+        const loadingTips = [
+            "Tip: You can generate negative numbers by setting a negative minimum value.",
+            "Tip: The more numbers you generate, the longer it takes to process.",
+            "Tip: Use decimal places for more precise random numbers.",
+            "Tip: The history stores up to 20 of your most recent generations.",
+            "Tip: Press Enter while focused on any input to generate numbers quickly.",
+            "Tip: You can generate huge numbers by setting a high maximum value.",
+            "Tip: All generated numbers are cryptographically secure using Math.random()."
+        ];
+        
+        // History array to store generated numbers
+        let history = [];
+        
+        // Show loading screen with animation
+        function showLoadingScreen() {
+            loadingScreen.classList.remove('hidden');
+            
+            // Reset progress bar
+            loadingProgress.style.width = '0%';
+            loadingCounter.textContent = '0%';
+            
+            // Select a random tip
+            const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
+            loadingTip.innerHTML = `<i class="fas fa-lightbulb"></i> ${randomTip}`;
+            
+            // Simulate progress with realistic delays
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5; // Random increment between 5-20%
+                if (progress > 100) progress = 100;
+                
+                loadingProgress.style.width = `${progress}%`;
+                loadingCounter.textContent = `${Math.round(progress)}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // Hide loading screen after a short delay
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                    }, 300);
+                }
+            }, 150); // Update every 150ms
+        }
+        
+        // Generate random numbers based on settings
+        function generateRandomNumbers() {
+            // Show loading screen
+            showLoadingScreen();
+            
+            // Small delay to ensure loading screen is visible
+            setTimeout(() => {
+                const min = parseFloat(minValueInput.value);
+                const max = parseFloat(maxValueInput.value);
+                const count = parseInt(countSelect.value);
+                const decimalPlaces = parseInt(decimalPlacesSelect.value);
+                
+                // Validate inputs
+                if (min > max) {
+                    loadingScreen.classList.add('hidden');
+                    alert("Minimum value cannot be greater than maximum value!");
+                    return;
+                }
+                
+                if (isNaN(min) || isNaN(max)) {
+                    loadingScreen.classList.add('hidden');
+                    alert("Please enter valid numbers for min and max values!");
+                    return;
+                }
+                
+                // Generate the requested number of random values
+                let results = [];
+                for (let i = 0; i < count; i++) {
+                    let randomNum = Math.random() * (max - min) + min;
+                    
+                    // Apply decimal places rounding
+                    if (decimalPlaces > 0) {
+                        randomNum = parseFloat(randomNum.toFixed(decimalPlaces));
+                    } else {
+                        randomNum = Math.floor(randomNum);
+                    }
+                    
+                    results.push(randomNum);
+                }
+                
+                // Display results
+                if (count === 1) {
+                    resultDisplay.textContent = results[0];
+                } else {
+                    resultDisplay.textContent = results.join("   |   ");
+                }
+                
+                // Add pulse animation
+                resultDisplay.classList.remove('pulse');
+                void resultDisplay.offsetWidth; // Trigger reflow to restart animation
+                resultDisplay.classList.add('pulse');
+                
+                // Add to history
+                addToHistory(results, min, max);
+                
+                // Update page title for a moment to show generation happened
+                const originalTitle = document.title;
+                document.title = "✓ " + originalTitle;
+                setTimeout(() => {
+                    document.title = originalTitle;
+                }, 500);
+            }, 100);
+        }
+        
+        // Add generated numbers to history
+        function addToHistory(numbers, min, max) {
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const count = numbers.length;
+            
+            // Create history item
+            const historyItem = document.createElement('li');
+            historyItem.className = 'history-item';
+            
+            // Format the numbers for display
+            let numbersText;
+            if (count === 1) {
+                numbersText = numbers[0];
+            } else if (count <= 3) {
+                numbersText = numbers.join(", ");
+            } else {
+                numbersText = `${numbers[0]}, ${numbers[1]}, ... , ${numbers[count-1]} (${count} total)`;
+            }
+            
+            historyItem.innerHTML = `
+                <div>
+                    <span class="history-number">${numbersText}</span>
+                    <div class="history-range">Range: ${min} to ${max}</div>
+                </div>
+                <div>${timestamp}</div>
+            `;
+            
+            // Add to beginning of history list
+            historyList.insertBefore(historyItem, historyList.firstChild);
+            
+            // Add to history array (limit to 20 items)
+            history.unshift({
+                numbers: numbers,
+                min: min,
+                max: max,
+                timestamp: timestamp
+            });
+            
+            if (history.length > 20) {
+                history.pop();
+                if (historyList.children.length > 20) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+        }
+        
+        // Reset all inputs to default values
+        function resetGenerator() {
+            // Show loading screen briefly for reset animation
+            loadingProgress.style.width = '100%';
+            loadingCounter.textContent = '100%';
+            loadingScreen.classList.remove('hidden');
+            
+            setTimeout(() => {
+                minValueInput.value = 1;
+                maxValueInput.value = 100;
+                countSelect.value = 1;
+                decimalPlacesSelect.value = 0;
+                resultDisplay.textContent = "--";
+                
+                // Add a quick animation to show reset
+                resultDisplay.style.opacity = '0.5';
+                setTimeout(() => {
+                    resultDisplay.style.opacity = '1';
+                    loadingScreen.classList.add('hidden');
+                }, 300);
+            }, 500);
+        }
+        
+        // Initialize the page with a loading screen
+        window.addEventListener('load', () => {
+            // Show loading screen on initial load
+            setTimeout(() => {
+                // Generate a single random number between 1 and 1000 on load
+                const randomNum = Math.floor(Math.random() * 1000) + 1;
+                resultDisplay.textContent = randomNum;
+                
+                // Add it to history
+                addToHistory([randomNum], 1, 1000);
+                
+                // Add some example history items
+                const examples = [
+                    {numbers: [42], min: 1, max: 100, timestamp: "12:30"},
+                    {numbers: [7, 14, 21], min: 1, max: 30, timestamp: "11:45"},
+                    {numbers: [3.1416], min: 3, max: 3.2, timestamp: "10:15", decimal: 4}
+                ];
+                
+                examples.forEach(example => {
+                    const historyItem = document.createElement('li');
+                    historyItem.className = 'history-item';
+                    
+                    let numbersText;
+                    if (example.numbers.length === 1) {
+                        numbersText = example.numbers[0];
+                    } else {
+                        numbersText = example.numbers.join(", ");
+                    }
+                    
+                    historyItem.innerHTML = `
+                        <div>
+                            <span class="history-number">${numbersText}</span>
+                            <div class="history-range">Range: ${example.min} to ${example.max}</div>
+                        </div>
+                        <div>${example.timestamp}</div>
+                    `;
+                    
+                    historyList.appendChild(historyItem);
+                });
+                
+                // Hide loading screen after content is ready
+                loadingScreen.classList.add('hidden');
+            }, 1500); // Show loading screen for 1.5 seconds on initial load
+        });
+        
+        // Event listeners
+        generateBtn.addEventListener('click', generateRandomNumbers);
+        resetBtn.addEventListener('click', resetGenerator);
+        
+        // Allow generating with Enter key when focused on inputs
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                generateRandomNumbers();
+            }
+        });
+        
+        // Validate min/max values in real-time
+        minValueInput.addEventListener('change', function() {
+            if (parseFloat(this.value) > parseFloat(maxValueInput.value)) {
+                maxValueInput.value = parseFloat(this.value) + 1;
+            }
+        });
+        
+        maxValueInput.addEventListener('change', function() {
+            if (parseFloat(this.value) < parseFloat(minValueInput.value)) {
+                minValueInput.value = parseFloat(this.value) - 1;
+            }
+        });
+    </script>
+</body>
+</html>

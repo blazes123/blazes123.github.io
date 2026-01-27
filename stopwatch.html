@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Countdown and Stopwatch</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0c0c0c, #1a1a2e);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #ff5e00, #ffbb00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
+        }
+        
+        .loading-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #aaa;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 8px;
+            background-color: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #ff5e00, #ffbb00);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-text {
+            font-size: 1rem;
+            color: #ffbb00;
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 1rem;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #ff5e00, #ffbb00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 2rem;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        
+        .card {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 94, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 94, 0, 0.2);
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffbb00;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: #ff5e00;
+        }
+        
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(10, 10, 20, 0.7);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 94, 0, 0.2);
+            color: #ffbb00;
+            text-shadow: 0 0 10px rgba(255, 187, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ddd;
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .time-input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid rgba(255, 94, 0, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .time-input:focus {
+            outline: none;
+            border-color: #ff5e00;
+            box-shadow: 0 0 10px rgba(255, 94, 0, 0.5);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #ff5e00, #ff8c00);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(to right, #ff8c00, #ff5e00);
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ddd;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 94, 0, 0.5);
+        }
+        
+        .lap-times {
+            margin-top: 2rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .lap-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: #ffbb00;
+        }
+        
+        .lap-list {
+            list-style: none;
+        }
+        
+        .lap-item {
+            padding: 0.7rem;
+            background: rgba(10, 10, 20, 0.5);
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Orbitron', sans-serif;
+            border-left: 3px solid #ff5e00;
+        }
+        
+        .lap-number {
+            color: #ffbb00;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 94, 0, 0.1);
+        }
+        
+        .active {
+            background: linear-gradient(to right, #ff3300, #ff5e00) !important;
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.7) !important;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100%;
+            }
+            
+            .timer-display {
+                font-size: 2.5rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .loading-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Animation for timer */
+        @keyframes pulse {
+            0% { text-shadow: 0 0 10px rgba(255, 187, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 187, 0, 0.8); }
+            100% { text-shadow: 0 0 10px rgba(255, 187, 0, 0.5); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <h1 class="loading-title">BLAZE</h1>
+        <p class="loading-subtitle">Countdown and Stopwatch</p>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <p class="loading-text" id="loadingText">Loading application...</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1 class="logo">BLAZE</h1>
+            <p class="tagline">Precision Countdown & Stopwatch Tool</p>
+        </header>
+        
+        <div class="app-container">
+            <!-- Countdown Card -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-hourglass-half"></i> Countdown Timer</h2>
+                
+                <div class="input-group">
+                    <label class="input-label">Set Countdown Time:</label>
+                    <div class="time-inputs">
+                        <input type="number" id="hours" class="time-input" placeholder="HH" min="0" max="99">
+                        <input type="number" id="minutes" class="time-input" placeholder="MM" min="0" max="59">
+                        <input type="number" id="seconds" class="time-input" placeholder="SS" min="0" max="59">
+                    </div>
+                </div>
+                
+                <div class="timer-display" id="countdownDisplay">
+                    00:00:00
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="startCountdown">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn btn-secondary" id="pauseCountdown">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" id="resetCountdown">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="notification" id="countdownNotification" style="margin-top: 1rem; color: #ffbb00; text-align: center; display: none;">
+                    <i class="fas fa-bell"></i> Countdown finished!
+                </div>
+            </div>
+            
+            <!-- Stopwatch Card -->
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-stopwatch"></i> Stopwatch</h2>
+                
+                <div class="timer-display" id="stopwatchDisplay">
+                    00:00:00.00
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="startStopwatch">
+                        <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn btn-secondary" id="pauseStopwatch">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" id="lapStopwatch">
+                        <i class="fas fa-flag"></i> Lap
+                    </button>
+                    <button class="btn btn-secondary" id="resetStopwatch">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+                
+                <div class="lap-times">
+                    <h3 class="lap-title"><i class="fas fa-list-ol"></i> Lap Times</h3>
+                    <ul class="lap-list" id="lapList">
+                        <!-- Lap times will be added here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Blaze Countdown and Stopwatch &copy; 2023 | Precision timing for your needs</p>
+        </footer>
+    </div>
+
+    <script>
+        // Loading screen functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingProgress = document.getElementById('loadingProgress');
+            const loadingText = document.getElementById('loadingText');
+            
+            // Simulate loading progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                loadingProgress.style.width = `${progress}%`;
+                
+                if (progress < 30) {
+                    loadingText.textContent = "Initializing components...";
+                } else if (progress < 60) {
+                    loadingText.textContent = "Loading timers...";
+                } else if (progress < 90) {
+                    loadingText.textContent = "Preparing interface...";
+                } else {
+                    loadingText.textContent = "Almost ready...";
+                }
+                
+                if (progress === 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                    }, 500);
+                }
+            }, 150);
+        });
+
+        // Countdown Timer Logic
+        let countdownInterval;
+        let countdownTime = 0;
+        let countdownRunning = false;
+        
+        const countdownDisplay = document.getElementById('countdownDisplay');
+        const startCountdownBtn = document.getElementById('startCountdown');
+        const pauseCountdownBtn = document.getElementById('pauseCountdown');
+        const resetCountdownBtn = document.getElementById('resetCountdown');
+        const countdownNotification = document.getElementById('countdownNotification');
+        
+        // Input elements
+        const hoursInput = document.getElementById('hours');
+        const minutesInput = document.getElementById('minutes');
+        const secondsInput = document.getElementById('seconds');
+        
+        // Set default values
+        hoursInput.value = '0';
+        minutesInput.value = '1';
+        secondsInput.value = '0';
+        
+        // Format time to always show 2 digits
+        function formatTime(unit) {
+            return unit < 10 ? `0${unit}` : unit;
+        }
+        
+        // Format time for countdown display
+        function formatCountdownTime(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            
+            return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+        }
+        
+        // Format time for stopwatch display
+        function formatStopwatchTime(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor((ms % 1000) / 10);
+            
+            return `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}.${formatTime(milliseconds)}`;
+        }
+        
+        // Start countdown
+        function startCountdown() {
+            if (countdownRunning) return;
+            
+            // If countdown is not set, get values from inputs
+            if (countdownTime === 0) {
+                const hours = parseInt(hoursInput.value) || 0;
+                const minutes = parseInt(minutesInput.value) || 0;
+                const seconds = parseInt(secondsInput.value) || 0;
+                
+                countdownTime = (hours * 3600 + minutes * 60 + seconds) * 1000;
+                
+                if (countdownTime <= 0) {
+                    alert("Please set a valid time for countdown!");
+                    return;
+                }
+            }
+            
+            countdownRunning = true;
+            startCountdownBtn.classList.add('active');
+            countdownDisplay.classList.add('pulse');
+            countdownNotification.style.display = 'none';
+            
+            const startTime = Date.now();
+            const endTime = startTime + countdownTime;
+            
+            countdownInterval = setInterval(() => {
+                const currentTime = Date.now();
+                const remainingTime = endTime - currentTime;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownDisplay.textContent = "00:00:00";
+                    countdownRunning = false;
+                    startCountdownBtn.classList.remove('active');
+                    countdownDisplay.classList.remove('pulse');
+                    countdownNotification.style.display = 'block';
+                    
+                    // Play notification sound
+                    playNotificationSound();
+                    return;
+                }
+                
+                countdownDisplay.textContent = formatCountdownTime(remainingTime);
+                countdownTime = remainingTime;
+            }, 10);
+        }
+        
+        // Pause countdown
+        function pauseCountdown() {
+            if (!countdownRunning) return;
+            
+            clearInterval(countdownInterval);
+            countdownRunning = false;
+            startCountdownBtn.classList.remove('active');
+            countdownDisplay.classList.remove('pulse');
+        }
+        
+        // Reset countdown
+        function resetCountdown() {
+            clearInterval(countdownInterval);
+            countdownRunning = false;
+            countdownTime = 0;
+            countdownDisplay.textContent = "00:00:00";
+            startCountdownBtn.classList.remove('active');
+            countdownDisplay.classList.remove('pulse');
+            countdownNotification.style.display = 'none';
+            
+            // Reset inputs to default
+            hoursInput.value = '0';
+            minutesInput.value = '1';
+            secondsInput.value = '0';
+        }
+        
+        // Add event listeners for countdown
+        startCountdownBtn.addEventListener('click', startCountdown);
+        pauseCountdownBtn.addEventListener('click', pauseCountdown);
+        resetCountdownBtn.addEventListener('click', resetCountdown);
+        
+        // Stopwatch Logic
+        let stopwatchInterval;
+        let stopwatchTime = 0;
+        let stopwatchRunning = false;
+        let lapTimes = [];
+        
+        const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+        const startStopwatchBtn = document.getElementById('startStopwatch');
+        const pauseStopwatchBtn = document.getElementById('pauseStopwatch');
+        const lapStopwatchBtn = document.getElementById('lapStopwatch');
+        const resetStopwatchBtn = document.getElementById('resetStopwatch');
+        const lapList = document.getElementById('lapList');
+        
+        // Start stopwatch
+        function startStopwatch() {
+            if (stopwatchRunning) return;
+            
+            stopwatchRunning = true;
+            startStopwatchBtn.classList.add('active');
+            stopwatchDisplay.classList.add('pulse');
+            
+            const startTime = Date.now() - stopwatchTime;
+            
+            stopwatchInterval = setInterval(() => {
+                stopwatchTime = Date.now() - startTime;
+                stopwatchDisplay.textContent = formatStopwatchTime(stopwatchTime);
+            }, 10);
+        }
+        
+        // Pause stopwatch
+        function pauseStopwatch() {
+            if (!stopwatchRunning) return;
+            
+            clearInterval(stopwatchInterval);
+            stopwatchRunning = false;
+            startStopwatchBtn.classList.remove('active');
+            stopwatchDisplay.classList.remove('pulse');
+        }
+        
+        // Reset stopwatch
+        function resetStopwatch() {
+            clearInterval(stopwatchInterval);
+            stopwatchRunning = false;
+            stopwatchTime = 0;
+            stopwatchDisplay.textContent = "00:00:00.00";
+            startStopwatchBtn.classList.remove('active');
+            stopwatchDisplay.classList.remove('pulse');
+            
+            // Clear lap times
+            lapTimes = [];
+            updateLapList();
+        }
+        
+        // Record lap time
+        function recordLap() {
+            if (!stopwatchRunning && stopwatchTime === 0) return;
+            
+            lapTimes.unshift({
+                lapNumber: lapTimes.length + 1,
+                time: stopwatchTime
+            });
+            
+            // Keep only the last 10 laps
+            if (lapTimes.length > 10) {
+                lapTimes.pop();
+            }
+            
+            updateLapList();
+        }
+        
+        // Update lap list display
+        function updateLapList() {
+            lapList.innerHTML = '';
+            
+            lapTimes.forEach(lap => {
+                const li = document.createElement('li');
+                li.className = 'lap-item';
+                li.innerHTML = `
+                    <span class="lap-number">Lap ${lap.lapNumber}</span>
+                    <span class="lap-time">${formatStopwatchTime(lap.time)}</span>
+                `;
+                lapList.appendChild(li);
+            });
+        }
+        
+        // Play notification sound
+        function playNotificationSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1);
+            } catch (e) {
+                console.log("Audio context not supported");
+            }
+        }
+        
+        // Add event listeners for stopwatch
+        startStopwatchBtn.addEventListener('click', startStopwatch);
+        pauseStopwatchBtn.addEventListener('click', pauseStopwatch);
+        lapStopwatchBtn.addEventListener('click', recordLap);
+        resetStopwatchBtn.addEventListener('click', resetStopwatch);
+        
+        // Prevent form submission on Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

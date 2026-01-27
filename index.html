@@ -444,16 +444,30 @@
             text-shadow: 0 0 10px rgba(255, 100, 0, 0.7);
         }
 
+        /* Button Container - IMPORTANT FIX HERE */
         .button-container {
             margin-top: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 20px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
+            flex-wrap: wrap;
             padding: 10px;
             max-width: 95vw;
+            width: 100%;
+        }
+
+        /* Force line break after 4th button */
+        .button-container a:nth-child(5) {
+            order: 2;
+            width: 100%;
+            margin-top: 20px;
+            flex-basis: auto;
+        }
+
+        .button-container a:nth-child(6),
+        .button-container a:nth-child(7) {
+            order: 2;
         }
 
         .button {
@@ -472,6 +486,7 @@
             min-width: 160px;
             white-space: nowrap;
             flex-shrink: 0;
+            margin: 5px;
         }
 
         .button:hover {
@@ -752,8 +767,9 @@
             <a href="ask chatgpt.html" class="button" target="_blank"><i>Blazebot</i></a>
             <a href="cook.html" class="button" target="_blank"><i>Blaze Kitchen</i></a>
             <a href="connect.html" class="button" target="_blank"><i>Blaze AI Talk</i></a>
-			<a href="calculator.html" class="button" target="_blank"><i>Blaze calculator</i></a>
             <a href="message us.html" class="button" target="_blank"><i>Message Us</i></a>
+            <a href="age.html" class="button" target="_blank"><i>Blaze Age Calculator</i></a>
+            <a href="Meme.html" class="button" target="_blank"><i>Blaze Meme Generator</i></a>
         </nav>
     </div>
 
@@ -899,7 +915,4 @@
         setTimeout(nextScene, 3000);
     </script>
 </body>
-
 </html>
-
-

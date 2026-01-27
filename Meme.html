@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Meme Generator 🔥</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(255, 69, 0, 0.4);
+            overflow: hidden;
+            border: 2px solid #ff4500;
+            position: relative;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #ff4500, #ff8c00, #ff4500);
+            z-index: 2;
+        }
+        
+        header {
+            background: linear-gradient(to right, #8B0000, #FF4500, #FF8C00);
+            color: white;
+            text-align: center;
+            padding: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fire-effect {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to top, rgba(255, 69, 0, 0.7), transparent);
+            z-index: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(255, 69, 0, 0.8);
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ff8c00, #ff4500, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 900;
+        }
+        
+        .tagline {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .fire-icon {
+            font-size: 2.5em;
+            animation: fire 1.5s infinite alternate;
+        }
+        
+        @keyframes fire {
+            0% { transform: scale(1); color: #ff8c00; }
+            100% { transform: scale(1.2); color: #ff4500; }
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 35px;
+            gap: 35px;
+        }
+        
+        .editor-panel {
+            flex: 1;
+            min-width: 320px;
+        }
+        
+        .meme-display {
+            flex: 1;
+            min-width: 320px;
+        }
+        
+        .panel {
+            background: rgba(30, 30, 40, 0.9);
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 69, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(255, 69, 0, 0.3);
+        }
+        
+        h2 {
+            color: #ff8c00;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 69, 0, 0.5);
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ff4500;
+            border-radius: 15px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover {
+            background: rgba(255, 69, 0, 0.1);
+            transform: translateY(-5px);
+            border-color: #ff8c00;
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            color: #ff8c00;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .text-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        input[type="text"] {
+            padding: 18px;
+            border: 2px solid #444;
+            border-radius: 12px;
+            font-size: 17px;
+            transition: all 0.3s;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #ff4500;
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 16px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(to right, #ff4500, #ff8c00);
+            color: white;
+            flex: 1;
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+        
+        .secondary-btn {
+            background: linear-gradient(to right, #333, #555);
+            color: white;
+            flex: 1;
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .primary-btn:hover {
+            background: linear-gradient(to right, #ff8c00, #ff4500);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.6);
+        }
+        
+        #memeCanvas {
+            width: 100%;
+            max-width: 550px;
+            height: 450px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            border: 4px solid #ff4500;
+            display: block;
+            margin: 0 auto 25px;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+            width: 100%;
+            justify-content: center;
+            margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+        }
+        
+        .download-btn:hover {
+            background: linear-gradient(to right, #96c93d, #00b09b);
+        }
+        
+        .meme-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 69, 0, 0.3);
+        }
+        
+        .stat h3 {
+            font-size: 2.5em;
+            color: #ff4500;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+        }
+        
+        .stat p {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            #memeCanvas {
+                height: 350px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+        
+        .color-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .color-btn {
+            height: 45px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+        
+        .font-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .font-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid #444;
+        }
+        
+        .font-btn.active {
+            background: linear-gradient(to right, #ff4500, #ff8c00);
+            border-color: #ff8c00;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 69, 0, 0.2);
+        }
+        
+        .fire-emoji {
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #ff8c00;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            border: 1px solid #ff4500;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .blaze-text {
+            background: linear-gradient(45deg, #ff8c00, #ff4500, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="fire-icon">🔥</div>
+                <h1>BLAZE MEME GENERATOR</h1>
+                <div class="fire-icon">🔥</div>
+            </div>
+            <p class="tagline">Create <span class="blaze-text">FIERY MEMES</span> in seconds that spread like wildfire!</p>
+            <div class="fire-effect"></div>
+        </header>
+        
+        <div class="content">
+            <div class="editor-panel">
+                <div class="panel">
+                    <h2><i class="fas fa-fire"></i> IGNITE YOUR IMAGE</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">🔥📤</div>
+                        <p><strong>DROP YOUR IMAGE HERE</strong></p>
+                        <p>or click to browse for fuel</p>
+                        <p style="font-size: 0.9em; margin-top: 10px; color: #aaa;">Supports JPG, PNG, GIF</p>
+                        <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2><i class="fas fa-font"></i> ADD BLAZING TEXT <span class="tooltip">ℹ️
+                        <span class="tooltiptext">Top text for setup, bottom text for punchline. Keep it short and spicy!</span>
+                    </span></h2>
+                    <div class="text-inputs">
+                        <input type="text" id="topText" placeholder="🔥 TOP TEXT (e.g., WHEN SOMEONE SAYS...)">
+                        <input type="text" id="bottomText" placeholder="🔥 BOTTOM TEXT (e.g., MEMES AREN'T FUNNY)">
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2><i class="fas fa-palette"></i> CUSTOMIZE THE FIRE</h2>
+                    <h3>Text Color:</h3>
+                    <div class="color-controls">
+                        <div class="color-btn" style="background: white;" data-color="white" title="Classic White"></div>
+                        <div class="color-btn" style="background: black;" data-color="black" title="Bold Black"></div>
+                        <div class="color-btn" style="background: #ff0000;" data-color="#ff0000" title="Fire Red"></div>
+                        <div class="color-btn" style="background: #ff8c00;" data-color="#ff8c00" title="Blaze Orange"></div>
+                        <div class="color-btn" style="background: #ffff00;" data-color="#ffff00" title="Hot Yellow"></div>
+                        <div class="color-btn" style="background: #00ff00;" data-color="#00ff00" title="Toxic Green"></div>
+                        <div class="color-btn" style="background: #0000ff;" data-color="#0000ff" title="Cool Blue"></div>
+                        <div class="color-btn" style="background: #ff00ff;" data-color="#ff00ff" title="Neon Pink"></div>
+                    </div>
+                    
+                    <h3>Font Style:</h3>
+                    <div class="font-controls">
+                        <button class="font-btn" data-font="Impact">IMPACT</button>
+                        <button class="font-btn" data-font="Arial Black">BOLD</button>
+                        <button class="font-btn" data-font="Comic Sans MS">FUN</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Text Size:</h3>
+                    <input type="range" id="fontSize" min="20" max="80" value="40" style="width: 100%; margin-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span>Small</span>
+                        <span id="fontSizeValue">Medium</span>
+                        <span>Large</span>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="primary-btn" id="generateBtn">
+                        <i class="fas fa-fire"></i> GENERATE MEME
+                    </button>
+                    <button class="secondary-btn" id="clearBtn">
+                        <i class="fas fa-trash-alt"></i> CLEAR ALL
+                    </button>
+                </div>
+            </div>
+            
+            <div class="meme-display">
+                <div class="panel">
+                    <h2><i class="fas fa-eye"></i> MEME PREVIEW</h2>
+                    <canvas id="memeCanvas" width="550" height="450"></canvas>
+                    <button class="download-btn" id="downloadBtn">
+                        <i class="fas fa-download"></i> DOWNLOAD BLAZING MEME
+                    </button>
+                </div>
+                
+                <div class="meme-stats">
+                    <div class="stat">
+                        <h3 id="memeCount">0</h3>
+                        <p>Memes Created</p>
+                    </div>
+                    <div class="stat">
+                        <h3 id="textCount">0</h3>
+                        <p>Characters Used</p>
+                    </div>
+                    <div class="stat">
+                        <h3 id="fireLevel">🔥</h3>
+                        <p>Fire Level</p>
+                    </div>
+                </div>
+                
+                <div class="panel" style="margin-top: 25px;">
+                    <h2><i class="fas fa-bolt"></i> QUICK TIPS</h2>
+                    <ul style="padding-left: 20px; line-height: 1.6; color: #ccc;">
+                        <li>Use contrasting colors for better readability</li>
+                        <li>Keep text short and impactful</li>
+                        <li>Popular memes work best with Impact font</li>
+                        <li>Try the fire colors for extra heat!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🔥 <span class="blaze-text">BLAZE MEME GENERATOR</span> 🔥 | Create memes that set the internet on fire!</p>
+            <p style="margin-top: 5px; font-size: 0.8em;">Made with <span class="fire-emoji">🔥</span> for meme enthusiasts worldwide</p>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const canvas = document.getElementById('memeCanvas');
+        const ctx = canvas.getContext('2d');
+        const uploadArea = document.getElementById('uploadArea');
+        const imageUpload = document.getElementById('imageUpload');
+        const topTextInput = document.getElementById('topText');
+        const bottomTextInput = document.getElementById('bottomText');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const memeCount = document.getElementById('memeCount');
+        const textCount = document.getElementById('textCount');
+        const fireLevel = document.getElementById('fireLevel');
+        const colorButtons = document.querySelectorAll('.color-btn');
+        const fontButtons = document.querySelectorAll('.font-btn');
+        const fontSizeSlider = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+
+        // State variables
+        let image = null;
+        let textColor = 'white';
+        let fontSize = 40;
+        let fontFamily = 'Impact';
+        let memesCreated = 0;
+        let totalCharacters = 0;
+
+        // Initialize canvas with cool message
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = 'bold 28px Arial';
+        ctx.fillStyle = '#ff8c00';
+        ctx.textAlign = 'center';
+        ctx.fillText('🔥 BLAZE MEME GENERATOR 🔥', canvas.width/2, canvas.height/2 - 30);
+        ctx.font = '20px Arial';
+        ctx.fillStyle = '#aaa';
+        ctx.fillText('Upload an image to start the fire!', canvas.width/2, canvas.height/2 + 20);
+        
+        // Draw a small fire icon
+        ctx.font = '40px Arial';
+        ctx.fillText('🔥', canvas.width/2, canvas.height/2 + 70);
+
+        // Event Listeners
+        uploadArea.addEventListener('click', () => imageUpload.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(255, 69, 0, 0.2)';
+            uploadArea.style.borderColor = '#ff8c00';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = 'rgba(0, 0, 0, 0.5)';
+            uploadArea.style.borderColor = '#ff4500';
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(0, 0, 0, 0.5)';
+            uploadArea.style.borderColor = '#ff4500';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                loadImage(file);
+            } else {
+                alert('Please upload a valid image file (JPG, PNG, GIF)');
+            }
+        });
+
+        imageUpload.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                loadImage(e.target.files[0]);
+            }
+        });
+
+        generateBtn.addEventListener('click', generateMeme);
+        clearBtn.addEventListener('click', clearAll);
+        downloadBtn.addEventListener('click', downloadMeme);
+        
+        fontSizeSlider.addEventListener('input', function() {
+            fontSize = parseInt(this.value);
+            const sizes = ['Small', 'Medium', 'Large'];
+            fontSizeValue.textContent = sizes[Math.floor((fontSize - 20) / 20)];
+            if (image) generateMeme();
+        });
+
+        // Color buttons
+        colorButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                colorButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                textColor = btn.dataset.color;
+                if (image) generateMeme();
+            });
+        });
+
+        // Font buttons
+        fontButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                fontButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                fontFamily = btn.dataset.font;
+                if (image) generateMeme();
+            });
+        });
+
+        // Load image function
+        function loadImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                image = new Image();
+                image.onload = function() {
+                    generateMeme();
+                    // Add fire effect
+                    uploadArea.innerHTML = '<div class="upload-icon">🔥</div><p><strong>IMAGE LOADED!</strong></p><p>Ready to add blazing text</p>';
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Generate meme function
+        function generateMeme() {
+            if (!image) {
+                alert('🔥 Please upload an image first to start the fire!');
+                return;
+            }
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw image (scaled to fit)
+            const scale = Math.min(canvas.width / image.width, canvas.height / image.height);
+            const width = image.width * scale;
+            const height = image.height * scale;
+            const x = (canvas.width - width) / 2;
+            const y = (canvas.height - height) / 2;
+            
+            ctx.drawImage(image, x, y, width, height);
+            
+            // Add a fiery border effect
+            ctx.strokeStyle = '#ff4500';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x, y, width, height);
+            
+            // Draw top text
+            const topText = topTextInput.value;
+            if (topText) {
+                drawText(topText, y + 60, true);
+            }
+            
+            // Draw bottom text
+            const bottomText = bottomTextInput.value;
+            if (bottomText) {
+                drawText(bottomText, y + height - 40, false);
+            }
+            
+            // Update stats
+            updateStats(topText + bottomText);
+        }
+
+        // Draw text function with fire effects
+        function drawText(text, y, isTop) {
+            // Set font
+            ctx.font = `bold ${fontSize}px ${fontFamily}`;
+            ctx.fillStyle = textColor;
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 4;
+            ctx.textAlign = 'center';
+            
+            // Add text shadow/outline
+            const x = canvas.width / 2;
+            
+            // Draw multiple outlines for a bolder look
+            ctx.strokeText(text, x, y);
+            ctx.strokeText(text, x-1, y-1);
+            ctx.strokeText(text, x+1, y+1);
+            
+            // Draw fill
+            ctx.fillText(text, x, y);
+            
+            // Add a small fire emoji for top text
+            if (isTop && textColor === '#ff8c00' || textColor === '#ff0000') {
+                ctx.font = '30px Arial';
+                ctx.fillText('🔥', x + ctx.measureText(text).width/2 + 20, y - 10);
+            }
+        }
+
+        // Update statistics
+        function updateStats(text) {
+            memesCreated++;
+            totalCharacters += text.length;
+            
+            memeCount.textContent = memesCreated;
+            textCount.textContent = totalCharacters;
+            
+            // Update fire level based on memes created
+            let fire = '🔥';
+            if (memesCreated > 5) fire = '🔥🔥';
+            if (memesCreated > 10) fire = '🔥🔥🔥';
+            if (memesCreated > 20) fire = '🔥🔥🔥🔥';
+            if (memesCreated > 50) fire = '🔥🔥🔥🔥🔥';
+            
+            fireLevel.textContent = fire;
+            
+            // Add a little animation to the stats
+            memeCount.style.transform = 'scale(1.2)';
+            textCount.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                memeCount.style.transform = 'scale(1)';
+                textCount.style.transform = 'scale(1)';
+            }, 300);
+        }
+
+        // Clear all function
+        function clearAll() {
+            if (confirm('Are you sure you want to clear everything? This cannot be undone.')) {
+                topTextInput.value = '';
+                bottomTextInput.value = '';
+                image = null;
+                fontSizeSlider.value = 40;
+                fontSizeValue.textContent = 'Medium';
+                
+                // Reset color and font buttons
+                colorButtons[0].classList.add('active');
+                fontButtons[0].classList.add('active');
+                textColor = 'white';
+                fontFamily = 'Impact';
+                fontSize = 40;
+                
+                // Reset upload area
+                uploadArea.innerHTML = '<div class="upload-icon">🔥📤</div><p><strong>DROP YOUR IMAGE HERE</strong></p><p>or click to browse for fuel</p><p style="font-size: 0.9em; margin-top: 10px; color: #aaa;">Supports JPG, PNG, GIF</p>';
+                
+                // Reset canvas
+                ctx.fillStyle = '#111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.font = 'bold 28px Arial';
+                ctx.fillStyle = '#ff8c00';
+                ctx.textAlign = 'center';
+                ctx.fillText('🔥 BLAZE MEME GENERATOR 🔥', canvas.width/2, canvas.height/2 - 30);
+                ctx.font = '20px Arial';
+                ctx.fillStyle = '#aaa';
+                ctx.fillText('Upload an image to start the fire!', canvas.width/2, canvas.height/2 + 20);
+                ctx.font = '40px Arial';
+                ctx.fillText('🔥', canvas.width/2, canvas.height/2 + 70);
+            }
+        }
+
+        // Download meme function
+        function downloadMeme() {
+            if (!image) {
+                alert('🔥 Please generate a meme first!');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.download = `blaze-meme-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            // Add a cool download effect
+            downloadBtn.innerHTML = '<i class="fas fa-check"></i> MEME DOWNLOADED!';
+            setTimeout(() => {
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> DOWNLOAD BLAZING MEME';
+            }, 2000);
+        }
+
+        // Add sample memes text on load
+        window.addEventListener('load', () => {
+            topTextInput.value = "WHEN YOU SEE";
+            bottomTextInput.value = "A PERFECT MEME TEMPLATE";
+            
+            // Activate default color and font
+            colorButtons[0].classList.add('active');
+            fontButtons[0].classList.add('active');
+            
+            // Add some instructions tooltips
+            topTextInput.title = "Enter the setup text here (usually the situation)";
+            bottomTextInput.title = "Enter the punchline here (the funny part)";
+            
+            // Add animation to generate button
+            setInterval(() => {
+                generateBtn.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    generateBtn.style.transform = 'scale(1)';
+                }, 500);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
