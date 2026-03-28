@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0c29 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffaa33);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .tool-card {
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 20px;
+            padding: 30px 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff6b35;
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.3);
+            background: rgba(30, 30, 46, 1);
+        }
+
+        .tool-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .tool-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #ff8c42;
+        }
+
+        .tool-card p {
+            color: #aaa;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 25px;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .search-box input::placeholder {
+            color: #888;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 25px;
+            color: #666;
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tool-card {
+                padding: 25px 20px;
+            }
+            
+            .tool-card h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔥 BLAZE TOOLS 🔥</h1>
+            <div class="subtitle">Powerful tools at your fingertips</div>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search tools...">
+        </div>
+
+        <div class="tools-grid" id="toolsGrid">
+            <!-- Tools will be loaded here -->
+        </div>
+
+        <footer>
+            <p>Blaze Tools | All tools are ready to use</p>
+        </footer>
+    </div>
+
+    <script>
+        // =============================================
+        // YOUR 6 TOOLS - Edit this array to add more tools
+        // =============================================
+        const tools = [
+            {
+                id: 1,
+                name: "Age Calculator",
+                description: "Calculate your exact age in years, months, weeks, days, and hours. Shows life progress and next birthday countdown.",
+                icon: "🎂",
+                file: "age.html"
+            },
+            {
+                id: 2,
+                name: "Meme Generator",
+                description: "Create custom memes with your own images. Add top and bottom text, choose colors, fonts, and download your creation.",
+                icon: "😂",
+                file: "Meme.html"
+            },
+            {
+                id: 3,
+                name: "Number Generator",
+                description: "Generate random numbers with custom ranges. Choose how many numbers, decimal places, and view generation history.",
+                icon: "🔢",
+                file: "number.html"
+            },
+            {
+                id: 4,
+                name: "Stopwatch & Timer",
+                description: "Precision stopwatch with lap times and countdown timer. Perfect for workouts, cooking, or timing tasks.",
+                icon: "⏱️",
+                file: "stopwatch.html"
+            },
+            {
+                id: 5,
+                name: "Calculator",
+                description: "Full-featured calculator with basic operations. Supports keyboard input and decimal calculations.",
+                icon: "🧮",
+                file: "calculator.html"
+            }
+        ];
+
+        // DOM elements
+        const toolsGrid = document.getElementById('toolsGrid');
+        const searchInput = document.getElementById('searchInput');
+
+        // Load tools on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTools(tools);
+            setupSearch();
+        });
+
+        // Render tools to the grid
+        function renderTools(toolsList) {
+            toolsGrid.innerHTML = '';
+            
+            if (toolsList.length === 0) {
+                toolsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: white;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🔍</div>
+                        <h3>No tools found</h3>
+                        <p style="color: #888;">Try a different search term</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            toolsList.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.onclick = () => openTool(tool.file);
+                
+                toolCard.innerHTML = `
+                    <div class="tool-icon">${tool.icon}</div>
+                    <h2>${tool.name}</h2>
+                    <p>${tool.description}</p>
+                `;
+                
+                toolsGrid.appendChild(toolCard);
+            });
+        }
+
+        // Open tool in new tab
+        function openTool(filename) {
+            // Check if file exists before opening
+            fetch(filename)
+                .then(response => {
+                    if (response.ok) {
+                        window.open(filename, '_blank');
+                    } else {
+                        alert(`❌ Tool file "${filename}" not found!\n\nMake sure the file exists in the same folder as this page.`);
+                    }
+                })
+                .catch(() => {
+                    alert(`❌ Could not open "${filename}".\n\nPlease check if the file exists in the same folder.`);
+                });
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                
+                if (!searchTerm) {
+                    renderTools(tools);
+                    return;
+                }
+                
+                const filteredTools = tools.filter(tool => 
+                    tool.name.toLowerCase().includes(searchTerm) ||
+                    tool.description.toLowerCase().includes(searchTerm)
+                );
+                
+                renderTools(filteredTools);
+            });
+        }
+
+        // =============================================
+        // HOW TO ADD MORE TOOLS:
+        // =============================================
+        // 1. Add your HTML file to the same folder
+        // 2. Add a new object to the tools array above:
+        //
+        // {
+        //     id: 6,
+        //     name: "Your Tool Name",
+        //     description: "What your tool does",
+        //     icon: "🔥",
+        //     file: "yourfile.html"
+        // }
+        //
+        // 3. Save and refresh the page
+        // =============================================
+    </script>
+</body>
+</html>
