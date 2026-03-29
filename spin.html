@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Blaze Spin the Wheel | Customizable & Shareable</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0f1222 0%, #080b14 100%);
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 24px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Main Dashboard Grid */
+        .blaze-dashboard {
+            max-width: 1400px;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            justify-content: center;
+        }
+
+        /* Wheel Card */
+        .wheel-card {
+            flex: 2;
+            min-width: 320px;
+            background: rgba(25, 22, 35, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 64px;
+            padding: 25px 22px 35px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 100, 0, 0.3);
+        }
+
+        .blaze-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffaa44, #ff6600);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 80, 0, 0.3);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .sub {
+            text-align: center;
+            font-weight: 500;
+            background: #ffffff10;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 20px;
+            padding: 6px 18px;
+            border-radius: 60px;
+            color: #ffbc7a;
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .canvas-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin: 10px 0 15px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            background: radial-gradient(circle at 30% 30%, #2a2418, #19140c);
+            border-radius: 50%;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6), 0 0 0 8px #ffaa44, 0 0 0 12px #ff6600;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin: 18px 0 20px;
+        }
+
+        .btn-spin {
+            background: radial-gradient(circle at 30% 20%, #ffaa44, #e05a00);
+            border: none;
+            padding: 16px 42px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 5px #a03300;
+            border-radius: 80px;
+            cursor: pointer;
+            box-shadow: 0 10px 0 #823b00, 0 5px 20px rgba(0,0,0,0.4);
+            transition: 0.07s linear;
+            font-family: inherit;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-spin:active {
+            transform: translateY(5px);
+            box-shadow: 0 5px 0 #823b00;
+        }
+
+        .btn-spin:disabled {
+            opacity: 0.6;
+            transform: translateY(0);
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            background: #2c2e3e;
+            box-shadow: 0 7px 0 #181c2c;
+            background: radial-gradient(circle at 30% 20%, #4a4e6b, #242838);
+            font-size: 1.2rem;
+            padding: 10px 26px;
+        }
+
+        /* Editor Panel inside wheel card */
+        .editor-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 48px;
+            padding: 16px 18px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 140, 0, 0.4);
+        }
+
+        .editor-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #ffbc7a;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .segments-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 6px 4px;
+            background: #1e1b2a;
+            border-radius: 40px;
+            margin-bottom: 12px;
+        }
+
+        .segment-item {
+            background: #2d283e;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px 5px 18px;
+            box-shadow: 0 1px 4px black;
+        }
+
+        .segment-item input {
+            border: none;
+            border-radius: 40px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            width: 130px;
+            font-weight: 500;
+            background: #fef3e0;
+            color: #2c1a0c;
+        }
+
+        .segment-item button {
+            background: #c3512f;
+            border: none;
+            color: white;
+            border-radius: 40px;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.1s;
+        }
+
+        .add-btn {
+            background: #4c8b3c;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.1s;
+        }
+
+        .add-btn:hover {
+            background: #2d6b1f;
+        }
+
+        /* History & Share Panel */
+        .history-card {
+            flex: 1.2;
+            min-width: 280px;
+            background: rgba(12, 10, 22, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 56px;
+            padding: 24px 20px;
+            border: 1px solid rgba(255, 110, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 2px solid #ff8c2e;
+            padding-bottom: 10px;
+        }
+
+        .history-header h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #ffb347, #ff6a00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .clear-history {
+            background: #2d1f16;
+            border: none;
+            color: #ffa15e;
+            border-radius: 40px;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .spin-history-list {
+            max-height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 6px;
+        }
+
+        .history-item {
+            background: #1e1b2a;
+            border-radius: 60px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s;
+            border-left: 6px solid #ff8c2e;
+        }
+
+        .history-prize {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #ffcd94;
+            word-break: break-word;
+            max-width: 65%;
+        }
+
+        .history-time {
+            font-size: 0.7rem;
+            color: #aaa6c0;
+        }
+
+        .share-buttons {
+            margin-top: 8px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            background: #2a241f;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 50px;
+            color: #ffb86b;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            flex: 1;
+            justify-content: center;
+            transition: 0.1s;
+            font-size: 0.85rem;
+        }
+
+        .share-btn:hover {
+            background: #ff6a2e;
+            color: white;
+        }
+
+        /* Popup Modal */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .popup-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .popup-card {
+            background: linear-gradient(145deg, #1f1b2c, #12101c);
+            border-radius: 60px;
+            padding: 30px 32px;
+            text-align: center;
+            max-width: 380px;
+            width: 85%;
+            border: 2px solid #ffaa44;
+            box-shadow: 0 20px 35px black;
+            animation: bounce 0.3s ease;
+        }
+        @keyframes bounce {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .popup-card h2 {
+            font-size: 2rem;
+            color: #ffaa55;
+            margin-bottom: 12px;
+        }
+        .popup-prize {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffd966, #ff9f2e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 15px 0;
+            word-break: break-word;
+        }
+        .popup-close {
+            background: #ff6a2e;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 850px) {
+            .blaze-title { font-size: 1.6rem; }
+            .btn-spin { padding: 12px 28px; font-size: 1.4rem; }
+            .segment-item input { width: 100px; }
+        }
+    </style>
+</head>
+<body>
+<div class="blaze-dashboard">
+    <!-- LEFT: WHEEL + EDITOR -->
+    <div class="wheel-card">
+        <div class="blaze-title">
+            🔥 BLAZE SPIN THE WHEEL ⚡
+        </div>
+        <div style="text-align:center"><div class="sub">⚡ Customize segments · Click wheel or SPIN ⚡</div></div>
+
+        <div class="canvas-area">
+            <canvas id="blazeCanvas" width="550" height="550" style="width:100%; height:auto; max-width:550px; aspect-ratio:1/1; cursor:pointer"></canvas>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-spin" id="blazeSpinBtn">🎡 SPIN NOW 🎲</button>
+            <button class="btn-spin reset-btn" id="blazeResetBtn">⟳ RESET</button>
+        </div>
+
+        <!-- Editable segments panel -->
+        <div class="editor-panel">
+            <div class="editor-title">✏️ EDIT WHEEL SEGMENTS (click to change content)</div>
+            <div id="segmentsList" class="segments-list"></div>
+            <button id="addSegmentBtn" class="add-btn">➕ Add new segment</button>
+            <div style="font-size:0.7rem; margin-top:8px; color:#ffbc7a;">💡 Text auto-fits – minimum 2 segments</div>
+        </div>
+    </div>
+
+    <!-- RIGHT: HISTORY & SHARE -->
+    <div class="history-card">
+        <div class="history-header">
+            <h3>📜 SPIN HISTORY</h3>
+            <button class="clear-history" id="clearHistoryBtn">🗑️ Clear</button>
+        </div>
+        <div id="historyListContainer" class="spin-history-list">
+            <div style="color:#aaa; text-align:center; padding:20px;">✨ No spins yet — spin the wheel!</div>
+        </div>
+        <div class="share-buttons">
+            <button id="shareLastSpinBtn" class="share-btn">📢 Share Last Spin</button>
+            <button id="shareHistoryBtn" class="share-btn">🌍 Share History Feed</button>
+        </div>
+        <div style="font-size:0.7rem; text-align:center; color:#ffae70;">Every spin recorded · Shareable results</div>
+    </div>
+</div>
+
+<!-- POPUP MODAL -->
+<div id="resultPopup" class="popup-overlay">
+    <div class="popup-card">
+        <h2>🔥 WINNER 🔥</h2>
+        <div id="popupPrizeText" class="popup-prize">---</div>
+        <button class="popup-close" id="closePopupBtn">SPIN AGAIN</button>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // DEFAULT SEGMENTS (fully customizable)
+        const DEFAULT_SEGMENTS = [
+            "🔥 MEGA JACKPOT", "⚡ FREE SPIN", "💎 500 COINS", "🎁 MYSTERY BOX", 
+            "🍕 PIZZA SLICE", "🎟️ VIP TICKET", "⭐ BONUS WHEEL", "🔥 DOUBLE FLAME"
+        ];
+        
+        let segments = [...DEFAULT_SEGMENTS];
+        let currentRotation = 0;
+        let spinning = false;
+        let animationId = null;
+        let spinStartTime = 0;
+        const SPIN_DURATION = 2000;
+        let spinStartRot = 0;
+        let spinTargetDelta = 0;
+        
+        // ---------- HISTORY STORAGE ----------
+        let spinHistory = [];
+        
+        function loadHistory() {
+            const stored = localStorage.getItem("blazeWheelHistory");
+            if(stored) {
+                try {
+                    spinHistory = JSON.parse(stored);
+                    if(!Array.isArray(spinHistory)) spinHistory = [];
+                } catch(e) { spinHistory = []; }
+            }
+            if(!spinHistory.length) spinHistory = [];
+            renderHistoryUI();
+        }
+        
+        function saveHistory() {
+            localStorage.setItem("blazeWheelHistory", JSON.stringify(spinHistory.slice(0, 40)));
+            renderHistoryUI();
+        }
+        
+        function addHistoryEntry(prizeName) {
+            const now = new Date();
+            const formatted = `${now.toLocaleDateString()} ${now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})}`;
+            spinHistory.unshift({ prize: prizeName, timestamp: now.toISOString(), formattedTime: formatted });
+            if(spinHistory.length > 40) spinHistory.pop();
+            saveHistory();
+        }
+        
+        function clearHistory() {
+            if(confirm("Clear all spin history?")) {
+                spinHistory = [];
+                saveHistory();
+                renderHistoryUI();
+            }
+        }
+        
+        function renderHistoryUI() {
+            const container = document.getElementById('historyListContainer');
+            if(!container) return;
+            if(spinHistory.length === 0) {
+                container.innerHTML = `<div style="color:#aaa; text-align:center; padding:20px;">✨ No spins yet — spin the wheel!</div>`;
+                return;
+            }
+            container.innerHTML = "";
+            spinHistory.forEach((entry) => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `
+                    <div class="history-prize">🎡 ${escapeHtml(entry.prize)}</div>
+                    <div class="history-time">${escapeHtml(entry.formattedTime)}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;});}
+        
+        // ---------- COLOR PALETTE ----------
+        const colorPalette = [
+            "#F44336", "#FF7043", "#FF8A65", "#FFAB40", "#FF6D00", "#E65100", "#BF360C", 
+            "#FF5722", "#FF9800", "#F57C00", "#E64A19", "#D84315", "#FFB74D", "#FFA726", "#FB8C00",
+            "#E65100", "#C2185B"
+        ];
+        
+        const canvas = document.getElementById('blazeCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('blazeSpinBtn');
+        const resetBtn = document.getElementById('blazeResetBtn');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const shareLastBtn = document.getElementById('shareLastSpinBtn');
+        const shareHistoryBtn = document.getElementById('shareHistoryBtn');
+        const popupOverlay = document.getElementById('resultPopup');
+        const popupPrizeSpan = document.getElementById('popupPrizeText');
+        const closePopupBtn = document.getElementById('closePopupBtn');
+        const segmentsContainer = document.getElementById('segmentsList');
+        const addSegmentBtn = document.getElementById('addSegmentBtn');
+        
+        // Smart font size: dynamically adjust based on text length and radius
+        function getFontSize(text, radius) {
+            let baseSize = Math.floor(radius * 0.1);
+            if(text.length > 12) baseSize = Math.floor(radius * 0.07);
+            if(text.length > 18) baseSize = Math.floor(radius * 0.055);
+            if(text.length > 24) baseSize = Math.floor(radius * 0.045);
+            return Math.max(10, baseSize);
+        }
+        
+        function resizeCanvas() {
+            const maxSize = Math.min(window.innerWidth - 80, 550);
+            canvas.width = maxSize;
+            canvas.height = maxSize;
+            drawWheel();
+        }
+        
+        function getSegmentColor(idx) { return colorPalette[idx % colorPalette.length]; }
+        
+        function drawWheel() {
+            if(!ctx) return;
+            const w = canvas.width, h = canvas.height;
+            const centerX = w/2, centerY = h/2;
+            const radius = w * 0.44;
+            ctx.clearRect(0, 0, w, h);
+            const count = segments.length;
+            if(count === 0) {
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 16px Poppins";
+                ctx.fillText("Add segments", centerX-60, centerY);
+                return;
+            }
+            const angleStep = (Math.PI * 2) / count;
+            const startAngleRad = (currentRotation * Math.PI) / 180;
+            
+            for(let i=0; i<count; i++) {
+                const start = startAngleRad + i * angleStep;
+                const end = start + angleStep;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, start, end);
+                ctx.closePath();
+                ctx.fillStyle = getSegmentColor(i);
+                ctx.fill();
+                ctx.save();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = "#FFD966";
+                ctx.lineWidth = 2.2;
+                ctx.stroke();
+                ctx.restore();
+                
+                // Draw text with dynamic font size
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(start + angleStep/2);
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                let label = segments[i];
+                const fontSize = getFontSize(label, radius);
+                ctx.font = `bold ${fontSize}px "Poppins", "Segoe UI"`;
+                ctx.fillStyle = "#FFF6E0";
+                ctx.shadowColor = "black";
+                ctx.shadowBlur = 3;
+                ctx.fillText(label, radius * 0.7, 6);
+                ctx.fillStyle = "#D95400";
+                ctx.fillText(label, radius*0.7-1, 5);
+                ctx.restore();
+            }
+            // center circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.12, 0, Math.PI*2);
+            ctx.fillStyle = "#FFB347";
+            ctx.shadowBlur = 5;
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.07, 0, Math.PI*2);
+            ctx.fillStyle = "#E65100";
+            ctx.fill();
+            // pointer marker (top)
+            const pointerX = centerX;
+            const pointerY = centerY - radius - 12;
+            ctx.beginPath();
+            ctx.moveTo(pointerX-15, pointerY+2);
+            ctx.lineTo(pointerX, pointerY-18);
+            ctx.lineTo(pointerX+15, pointerY+2);
+            ctx.fillStyle = "#FF7B24";
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(pointerX-8, pointerY+4);
+            ctx.lineTo(pointerX, pointerY-8);
+            ctx.lineTo(pointerX+8, pointerY+4);
+            ctx.fillStyle = "#FFB347";
+            ctx.fill();
+        }
+        
+        // Get winning segment index based on fixed top pointer
+        function getCurrentSegmentIndex() {
+            if(segments.length === 0) return -1;
+            const count = segments.length;
+            const angleStep = (Math.PI * 2) / count;
+            const pointerAngle = -Math.PI/2;
+            const rotationRad = (currentRotation * Math.PI) / 180;
+            for(let i=0; i<count; i++) {
+                let start = rotationRad + i * angleStep;
+                let end = start + angleStep;
+                let normPointer = ((pointerAngle % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+                let normStart = ((start % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+                let normEnd = ((end % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+                if(normStart < normEnd) {
+                    if(normPointer >= normStart && normPointer < normEnd) return i;
+                } else {
+                    if(normPointer >= normStart || normPointer < normEnd) return i;
+                }
+            }
+            return 0;
+        }
+        
+        function showPopup(prizeName) {
+            popupPrizeSpan.innerText = prizeName;
+            popupOverlay.classList.add('active');
+        }
+        
+        function closePopup() { popupOverlay.classList.remove('active'); }
+        
+        function recordSpinAndPopup() {
+            if(segments.length === 0) return;
+            const idx = getCurrentSegmentIndex();
+            const prize = (idx !== -1 && segments[idx]) ? segments[idx] : "Mystery Prize";
+            addHistoryEntry(prize);
+            showPopup(prize);
+        }
+        
+        // Animation
+        function spinAnimation(now) {
+            const elapsed = now - spinStartTime;
+            let t = Math.min(1, elapsed / SPIN_DURATION);
+            const easeOut = 1 - Math.pow(1 - t, 3);
+            const currentDelta = spinTargetDelta * easeOut;
+            currentRotation = (spinStartRot + currentDelta) % 360;
+            drawWheel();
+            if(t < 1) {
+                animationId = requestAnimationFrame(spinAnimation);
+            } else {
+                currentRotation = (spinStartRot + spinTargetDelta) % 360;
+                drawWheel();
+                spinning = false;
+                spinBtn.disabled = false;
+                recordSpinAndPopup();
+                animationId = null;
+            }
+        }
+        
+        function startSpin() {
+            if(spinning) return;
+            if(segments.length < 2) {
+                alert("Please add at least 2 segments to spin.");
+                return;
+            }
+            spinning = true;
+            spinBtn.disabled = true;
+            const fullSpins = Math.floor(Math.random() * 14) + 8; // 8-21 turns
+            const extraAngle = Math.random() * 360;
+            const deltaDegrees = 360 * fullSpins + extraAngle;
+            spinTargetDelta = deltaDegrees;
+            spinStartRot = currentRotation;
+            spinStartTime = performance.now();
+            if(animationId) cancelAnimationFrame(animationId);
+            animationId = requestAnimationFrame(spinAnimation);
+        }
+        
+        function resetWheel() {
+            if(spinning) return;
+            currentRotation = 0;
+            drawWheel();
+        }
+        
+        // ---------- SHARE LOGIC (working fallback) ----------
+        async function shareLastSpin() {
+            if(spinHistory.length === 0) {
+                alert("No spins yet! Spin the wheel first.");
+                return;
+            }
+            const last = spinHistory[0];
+            const shareText = `🔥 BLAZE SPIN THE WHEEL 🔥\nI just won: "${last.prize}" at ${last.formattedTime}!\nTry your luck!`;
+            if (navigator.share) {
+                try { await navigator.share({ title: 'Blaze Spin Result', text: shareText }); } catch(e) { copyToClipboard(shareText); alert("Shared via clipboard!"); }
+            } else {
+                copyToClipboard(shareText);
+                alert("📋 Copied last spin result to clipboard! You can paste and share.");
+            }
+        }
+        
+        async function shareHistoryFeed() {
+            if(spinHistory.length === 0) {
+                alert("No spins recorded yet. Spin first!");
+                return;
+            }
+            let historyText = "🔥 BLAZE WHEEL HISTORY 🔥\n";
+            spinHistory.slice(0,6).forEach((h,idx) => {
+                historyText += `${idx+1}. ${h.prize} — ${h.formattedTime}\n`;
+            });
+            if(spinHistory.length > 6) historyText += `... and ${spinHistory.length-6} more spins!`;
+            historyText += "\n\nCreate your own wheel at Blaze Spin!";
+            if (navigator.share) {
+                try { await navigator.share({ title: 'My Blaze Spin History', text: historyText }); } catch(e) { copyToClipboard(historyText); alert("History copied!"); }
+            } else {
+                copyToClipboard(historyText);
+                alert("📋 History copied to clipboard! Share with friends.");
+            }
+        }
+        
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+        
+        // ---------- EDITOR: dynamic segments (change contents, add, delete) ----------
+        function renderSegmentsEditor() {
+            segmentsContainer.innerHTML = '';
+            for (let i = 0; i < segments.length; i++) {
+                const div = document.createElement('div');
+                div.className = 'segment-item';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = segments[i];
+                input.maxLength = 32;
+                input.addEventListener('change', (function(idx) {
+                    return function(e) {
+                        let newVal = e.target.value.trim();
+                        if (newVal === "") newVal = "?";
+                        segments[idx] = newVal;
+                        drawWheel();
+                    };
+                })(i));
+                
+                const delBtn = document.createElement('button');
+                delBtn.textContent = '✕';
+                delBtn.addEventListener('click', (function(idx) {
+                    return function() {
+                        if (segments.length <= 2) {
+                            alert("Minimum 2 segments required!");
+                            return;
+                        }
+                        segments.splice(idx, 1);
+                        renderSegmentsEditor();
+                        drawWheel();
+                    };
+                })(i));
+                
+                div.appendChild(input);
+                div.appendChild(delBtn);
+                segmentsContainer.appendChild(div);
+            }
+        }
+        
+        function addNewSegment() {
+            let newName = prompt("Enter new segment name:", "✨ New Prize");
+            if (!newName) newName = "🎲 Mystery";
+            if (newName.trim() === "") newName = "🎁 Prize";
+            segments.push(newName.slice(0, 32));
+            renderSegmentsEditor();
+            drawWheel();
+        }
+        
+        // canvas click spins
+        function handleCanvasClick() { if(!spinning) startSpin(); }
+        
+        function init() {
+            loadHistory();
+            resizeCanvas();
+            renderSegmentsEditor();
+            drawWheel();
+            window.addEventListener('resize', () => { resizeCanvas(); drawWheel(); });
+            spinBtn.addEventListener('click', startSpin);
+            resetBtn.addEventListener('click', resetWheel);
+            canvas.addEventListener('click', handleCanvasClick);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+            shareLastBtn.addEventListener('click', shareLastSpin);
+            shareHistoryBtn.addEventListener('click', shareHistoryFeed);
+            closePopupBtn.addEventListener('click', closePopup);
+            popupOverlay.addEventListener('click', (e) => { if(e.target === popupOverlay) closePopup(); });
+            addSegmentBtn.addEventListener('click', addNewSegment);
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
